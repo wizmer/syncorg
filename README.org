@@ -35,4 +35,3 @@ Here are a few screenshots of the current state of the app.
 
 *** The TODO view
 [[https://github.com/wizmer/mobileorg-android/blob/master/picturesReadme/TodosResized.png]]
-
