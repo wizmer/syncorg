@@ -47,6 +47,12 @@ public abstract class Synchronizer {
             this.notify = new SynchronizerNotification(context);
         else
             this.notify = new SynchronizerNotificationCompat(context);
+
+
+        File dir = new File(context.getFilesDir() + "/" + getRelativeFilesDir());
+        if(!dir.exists()){
+            dir.mkdir();
+        }
     }
 
     public static Synchronizer getInstance() {

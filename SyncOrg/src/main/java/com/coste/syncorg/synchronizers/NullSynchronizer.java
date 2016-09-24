@@ -3,6 +3,7 @@ package com.coste.syncorg.synchronizers;
 import android.content.Context;
 
 import java.io.BufferedReader;
+import java.io.File;
 
 public class NullSynchronizer extends Synchronizer {
 
@@ -12,7 +13,7 @@ public class NullSynchronizer extends Synchronizer {
 
     @Override
     public String getRelativeFilesDir() {
-        return null;
+        return "null";
     }
 
     public boolean isConfigured() {

@@ -5,14 +5,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +40,7 @@ import com.coste.syncorg.R;
 import com.coste.syncorg.settings.SettingsActivity;
 import com.coste.syncorg.util.OrgNodeNotFoundException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -311,7 +316,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
             int count = getSelectedItemCount();
             if (count == 1) wordItem = activity.getResources().getString(R.string.file);
             else wordItem = activity.getResources().getString(R.string.files);
-            menu.findItem(R.id.action_text).setTitle(count + " " + wordItem);
+//            menu.findItem(R.id.action_text).setTitle(count + " " + wordItem);
             return false;
         }
 
@@ -351,6 +356,30 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
                             })
                             .setNegativeButton(android.R.string.no, null).show();
                     return true;
+                case R.id.share_files:
+
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+// set the type to 'email'
+                    emailIntent .setType("vnd.android.cursor.dir/email");
+                    emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                    List<Integer> selectedItems = getSelectedItems();
+                    ArrayList<Uri> uris = new ArrayList<>();
+                    for(Integer num: selectedItems) {
+                        num -= numExtraItems;
+                        OrgFile file = items.get(num);
+                        File f = new File(file.getFilePath(activity));
+                        Log.v("file","ori path:"+f.getPath());
+                        Uri fileUri = FileProvider.getUriForFile(activity, "com.coste.fileprovider", new File(f.getPath()));
+                        uris.add(fileUri);
+                    }
+
+                    emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+
+// the mail subject
+                    emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+                    activity.startActivity(Intent.createChooser(emailIntent , "Send email..."));
+
             }
             return false;
         }

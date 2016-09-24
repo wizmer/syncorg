@@ -2,18 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--<item-->
+        <!--android:id="@+id/action_text"-->
+        <!--android:title="Selected items"-->
+        <!--android:actionViewClass="android.widget.TextView">-->
+    <!--</item>-->
+
     <item
-        android:id="@+id/action_text"
-        android:title="Selected items"
-        android:actionViewClass="android.widget.TextView">
+        android:id="@+id/share_files"
+        android:icon="@android:drawable/ic_menu_share"
+        app:showAsAction="always"
+        android:title="@string/share_files"
+        >
     </item>
+
 
     <item
         android:id="@+id/item_delete"
         android:icon="@android:drawable/ic_menu_delete"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title="Delete"
         android:titleCondensed="Delete">
     </item>
+
 
 </menu>

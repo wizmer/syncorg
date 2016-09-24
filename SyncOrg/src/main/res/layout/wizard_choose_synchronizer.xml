@@ -42,7 +42,7 @@
        <!--android:text="@string/wizard_ubuntuone" />-->
     <RadioButton
        android:textSize="18sp"
-       android:id="@+id/ssh"
+       android:id="@+id/scp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:text="@string/wizard_ssh" />

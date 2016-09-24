@@ -2,20 +2,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/preferences" >
-        <PreferenceScreen android:title="@string/preference_synchronization" >
-            <PreferenceCategory android:title="@string/preference_general" >
-                <CheckBoxPreference
-                    android:key="doAutoSync"
-                    android:summary="@string/preference_autosync_summary"
-                    android:title="@string/preference_autosync" />
+        <!--<PreferenceScreen android:title="@string/preference_synchronization" >-->
+            <!--<PreferenceCategory android:title="@string/preference_general" >-->
+                <!--<CheckBoxPreference-->
+                    <!--android:key="doAutoSync"-->
+                    <!--android:summary="@string/preference_autosync_summary"-->
+                    <!--android:title="@string/preference_autosync" />-->
 
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="@string/key_syncWifiOnly"
-                    android:summary="@string/preference_sync_wifi_only_summary"
-                    android:title="@string/preference_sync_wifi_only" />
-            </PreferenceCategory>
-        </PreferenceScreen>
+                <!--<CheckBoxPreference-->
+                    <!--android:defaultValue="false"-->
+                    <!--android:key="@string/key_syncWifiOnly"-->
+                    <!--android:summary="@string/preference_sync_wifi_only_summary"-->
+                    <!--android:title="@string/preference_sync_wifi_only" />-->
+            <!--</PreferenceCategory>-->
+        <!--</PreferenceScreen>-->
         <!--<PreferenceScreen android:title="@string/preference_interface" >-->
             <!--<PreferenceCategory android:title="@string/preference_general" >-->
                 <!--<ListPreference-->

@@ -1,5 +1,6 @@
 package com.coste.syncorg.gui.wizard;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.coste.syncorg.gui.wizard.wizards.SSHWizard;
 import com.coste.syncorg.gui.wizard.wizards.UbuntuOneWizard;
 import com.coste.syncorg.gui.wizard.wizards.WebDAVWizard;
 import com.coste.syncorg.R;
+import com.coste.syncorg.orgdata.SyncOrgApplication;
 
 public class WizardActivity extends AppCompatActivity {
 
@@ -48,6 +50,8 @@ public class WizardActivity extends AppCompatActivity {
 				String syncName = getResources().getResourceEntryName(id);
 				editor.putString("syncSource", syncName);
 				editor.apply();
+
+				final int request_code = -1;
 				switch (syncName) {
 					case "webdav":
 						startActivity(new Intent(WizardActivity.this, WebDAVWizard.class));
@@ -61,15 +65,16 @@ public class WizardActivity extends AppCompatActivity {
 					case "sdcard":
 						startActivity(new Intent(WizardActivity.this, SDCardWizard.class));
 						break;
-					case "ssh":
+					case "scp":
 						startActivity(new Intent(WizardActivity.this, SSHWizard.class));
 						break;
 					default:
+						((SyncOrgApplication) getApplication()).startSynchronizer();
 						startActivity(new Intent(WizardActivity.this, OrgNodeListActivity.class));
 						break;
 				}
 			}
 		});
-
 	}
 }
+

@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+import static com.coste.syncorg.R.string.file;
+
 public class OrgFile {
 	public static final String CAPTURE_FILE = "mobileorg.org";
 	public static final String CAPTURE_FILE_ALIAS = "Captures";
@@ -149,7 +151,6 @@ public class OrgFile {
 		values.put(Files.NODE_ID, nodeId);
 
 		Uri uri = resolver.insert(Files.CONTENT_URI, values);
-//		Log.v("uri", "uri : " + uri);
 		return Long.parseLong(Files.getId(uri));
 	}
 
@@ -257,7 +258,6 @@ public class OrgFile {
 			// DB does not exist. No need to delete.
 		}
 
-//		Log.v("sync","remove all nodes : "+total);
 		return total;
 	}
 
@@ -270,7 +270,16 @@ public class OrgFile {
 		return filename.equals(file.filename) && name.equals(file.name);
     }
 
-    /**
+	/**
+	 * Returns the 'File' object
+	 * @param context
+	 * @return
+     */
+	public File getFile(Context context){
+		return new File(getFilePath(context));
+	}
+
+	/**
      * @return the absolute filename
      */
     public String getFilePath(Context context) {
@@ -293,8 +302,6 @@ public class OrgFile {
 			OrgNodeTree tree = new OrgNodeTree(root, resolver);
 			ArrayList<OrgNode> res = OrgNodeTree.getFullNodeArray(tree, true);
 			for (OrgNode node : res) {
-//				Log.v("content", "content");
-//				Log.v("content", node.toString());
 				result += FileUtils.stripLastNewLine(node.toString()) + "\n";
 			}
 		} catch (OrgNodeNotFoundException e) {
