@@ -188,7 +188,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
 
     public void runHelp(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("https://github.com/coste.syncorg-android/wiki"));
+                Uri.parse("https://github.com/coste.syncorg/wiki"));
         startActivity(intent);
     }
 
@@ -244,6 +244,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        ((OutlineAdapter)recyclerView.getAdapter()).refresh();
         runSynchronize();
     }
 

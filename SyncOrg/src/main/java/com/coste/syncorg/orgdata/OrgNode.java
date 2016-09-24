@@ -415,15 +415,25 @@ public class OrgNode {
 	}
 
 	/**
+	 * Construct the correct level of indentation by appending one space per level.
+	 * @param c: The characted used for the padding
+	 * @return
+     */
+	private String getLevelPadding(char c){
+		String result = "";
+		if(level > 0) for(int i = 0;i<level; i++) result += c;
+		result += " ";
+		return result;
+	}
+
+	/**
 	 * Build the the plain text string corresponding to this node
 	 * @return the node in plain text
      */
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		
-		for(int i = 0; i < level; i++)
-			result.append("*");
-		result.append(" ");
+		result.append(getLevelPadding('*'));
 
 		if (!TextUtils.isEmpty(todo))
 			result.append(todo + " ");
@@ -432,14 +442,22 @@ public class OrgNode {
 			result.append("[#" + priority + "] ");
 
 		result.append(name);
-		
+
+		if(!scheduled.isEmpty() || !deadline.isEmpty()){
+			result.append("\n"+getLevelPadding(' '));
+			if(!scheduled.isEmpty()){
+				result.append(scheduled.toFormatedString());
+				if(!deadline.isEmpty()) result.append(" ");
+			}
+			if(!deadline.isEmpty()) result.append(deadline.toFormatedString());
+		}
+
 		if(tags != null && !TextUtils.isEmpty(tags))
 			result.append(" ").append(":" + tags + ":");
-		
 
 		if (payload != null && !TextUtils.isEmpty(payload)){
 			result.append("\n");
-			if(level > 0) for(int i = 0;i<level+1; i++) result.append(" ");
+			result.append(getLevelPadding(' '));
 			result.append(payload.trim());
 		}
 

@@ -4,7 +4,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -39,63 +41,18 @@ import java.util.List;
 public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineItem> {
     private final AppCompatActivity activity;
     // Number of added items. Here it is two: Agenda and Todos.
-    final private int numExtraItems = 2;
+    private int numExtraItems;
     public List<OrgFile> items = new ArrayList<>();
-    ActionMode actionMode;
+    private ActionMode actionMode;
     private ContentResolver resolver;
 	private boolean mTwoPanes = false;
     private SparseBooleanArray selectedItems;
-    private ActionMode.Callback mDeleteMode = new ActionMode.Callback() {
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            String wordItem;
-            int count = getSelectedItemCount();
-            if (count == 1) wordItem = activity.getResources().getString(R.string.file);
-            else wordItem = activity.getResources().getString(R.string.files);
-            menu.findItem(R.id.action_text).setTitle(count + " " + wordItem);
-            return false;
-        }
+    private boolean calendarEnabled;
+    private int positionTodo;
+    private int positionCalendar;
 
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            OutlineAdapter.this.clearSelections();
-        }
 
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            MenuInflater inflater = activity.getMenuInflater();
-            inflater.inflate(R.menu.main_context_action_bar, menu);
 
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.item_delete:
-                    String message;
-                    int numSelectedItems = getSelectedItemCount();
-                    if (numSelectedItems == 1)
-                        message = activity.getResources().getString(R.string.prompt_delete_file);
-                    else {
-                        message = activity.getResources().getString(R.string.prompt_delete_files);
-                        message = message.replace("#", String.valueOf(numSelectedItems));
-                    }
-
-                    new AlertDialog.Builder(activity)
-                            .setMessage(message)
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    deleteSelectedFiles();
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, null).show();
-                    return true;
-            }
-            return false;
-        }
-    };
     private DefaultTheme theme;
 
 	public OutlineAdapter(AppCompatActivity activity) {
@@ -115,6 +72,11 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
 			add(file);
 		}
 
+        SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        calendarEnabled = appPreferences.getBoolean("calendarEnabled", false);
+        positionTodo = 0;
+        positionCalendar = calendarEnabled ? 1 : -1;
+        numExtraItems = calendarEnabled ? 2 : 1;
         notifyDataSetChanged();
     }
 
@@ -138,7 +100,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
         String title;
         if(position == 0) {
             title = activity.getResources().getString(R.string.menu_todos);
-        } else if (position == 1){
+        } else if (position == positionCalendar ){
             title = activity.getResources().getString(R.string.menu_agenda);
         } else {
             title = items.get(positionInItems).name;
@@ -179,7 +141,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
 
                         if(position == 0){
                             arguments.putLong(OrgContract.NODE_ID, OrgContract.TODO_ID);
-                        } else if (position == 1){
+                        } else if (position == positionCalendar){
                             arguments.putLong(OrgContract.NODE_ID, OrgContract.AGENDA_ID);
                         } else {
                             arguments.putLong(OrgContract.NODE_ID, itemId);
@@ -224,7 +186,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
 
                         if(position == 0){
                             intent.putExtra(OrgContract.NODE_ID, OrgContract.TODO_ID);
-                        } else if (position == 1){
+                        } else if (position == positionCalendar ){
                             intent.putExtra(OrgContract.NODE_ID, OrgContract.AGENDA_ID);
                         } else {
                             intent.putExtra(OrgContract.NODE_ID, itemId);
@@ -251,7 +213,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
 	}
 
     private boolean isSelectableItem(int position){
-        if(position < numExtraItems){
+        if(position == positionCalendar || position == positionTodo){
             String text = activity.getResources().getString(R.string.unselectable_item);
             Toast.makeText(activity, text, Toast.LENGTH_SHORT).show();
             return false;
@@ -340,6 +302,56 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
         }
     }
 
+    private ActionMode.Callback mDeleteMode = new ActionMode.Callback() {
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            String wordItem;
+            int count = getSelectedItemCount();
+            if (count == 1) wordItem = activity.getResources().getString(R.string.file);
+            else wordItem = activity.getResources().getString(R.string.files);
+            menu.findItem(R.id.action_text).setTitle(count + " " + wordItem);
+            return false;
+        }
 
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            OutlineAdapter.this.clearSelections();
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            MenuInflater inflater = activity.getMenuInflater();
+            inflater.inflate(R.menu.main_context_action_bar, menu);
+
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.item_delete:
+                    String message;
+                    int numSelectedItems = getSelectedItemCount();
+                    if (numSelectedItems == 1)
+                        message = activity.getResources().getString(R.string.prompt_delete_file);
+                    else {
+                        message = activity.getResources().getString(R.string.prompt_delete_files);
+                        message = message.replace("#", String.valueOf(numSelectedItems));
+                    }
+
+                    new AlertDialog.Builder(activity)
+                            .setMessage(message)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    deleteSelectedFiles();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null).show();
+                    return true;
+            }
+            return false;
+        }
+    };
 
 }

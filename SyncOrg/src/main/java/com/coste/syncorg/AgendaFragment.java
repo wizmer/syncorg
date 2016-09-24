@@ -2,15 +2,18 @@ package com.coste.syncorg;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +27,14 @@ import com.coste.syncorg.orgdata.OrgNodeTimeDate;
 import com.coste.syncorg.util.OrgNodeNotFoundException;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.TimeZone;
 import java.util.TreeMap;
+
+import static com.coste.syncorg.EditNodeFragment.nodeId;
 
 
 /**
@@ -83,6 +90,10 @@ public class AgendaFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.resolver = getActivity().getContentResolver();
 
+        SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean calendarShowDone = appPreferences.getBoolean("calendarShowDone", false);
+        boolean calendarShowPast = appPreferences.getBoolean("calendarShowPast", false);
+
 
         Cursor cursor = resolver.query(Timestamps.CONTENT_URI,
                 new String[]{Timestamps.NODE_ID, Timestamps.TIMESTAMP, Timestamps.TYPE},
@@ -113,6 +124,8 @@ public class AgendaFragment extends Fragment {
             cursor.close();
         }
 
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT0"));
 
         TreeMap<Long, ArrayList<AgendaItem>> nodeIdsForEachDay = new TreeMap<>();
 
@@ -128,6 +141,12 @@ public class AgendaFragment extends Fragment {
                     time = node.getScheduled().getEpochTime();
                     type = OrgNodeTimeDate.TYPE.Scheduled;
                 }
+
+                Log.v("time","name : "+node.name);
+                Log.v("time", "time : "+time);
+                Log.v("time", "now : "+cal.getTimeInMillis()/1000L);
+                if(!calendarShowPast && time < cal.getTimeInMillis()/1000L)
+                    continue;
 
                 day = time / (24*3600);
 

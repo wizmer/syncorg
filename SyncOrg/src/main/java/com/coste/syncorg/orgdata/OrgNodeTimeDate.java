@@ -43,8 +43,13 @@ public class OrgNodeTimeDate {
 	public int endTimeOfDay = -1;
 	public int endMinute = -1;
 	public int matchStart = -1, matchEnd = -1;
+
 	public OrgNodeTimeDate(TYPE type) {
 		this.type = type;
+	}
+
+	public boolean isEmpty(){
+		return this.year < 0 || this.dayOfMonth < 0 || this.monthOfYear < 0;
 	}
 
 
@@ -207,6 +212,18 @@ public class OrgNodeTimeDate {
 		return String.format("%d-%02d-%02d", year, monthOfYear + 1, dayOfMonth);
 	}
 
+	public String getTime(){
+		if(startMinute < 0 && startTimeOfDay < 0) return "";
+		return String.format("%02d:%02d", startTimeOfDay, startMinute);
+	}
+
+	public String getTimeDate() {
+		String date = getDate();
+		String time = getTime();
+		if(time.equals("")) return date;
+		return date + " " + time;
+
+	}
 	public String getStartTime() {
 		if(startMinute < 0 || startTimeOfDay < 0) return "";
 		return String.format("%02d:%02d", startTimeOfDay, startMinute);
@@ -225,7 +242,7 @@ public class OrgNodeTimeDate {
 		int hour = startTimeOfDay > -1 ? startTimeOfDay : 0;
 		int minute = startMinute > -1 ? startMinute : 0;
 		GregorianCalendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth, hour, minute);
-		calendar.setTimeZone(TimeZone.getTimeZone("GMT0"));
+		Log.v(calendar.getTimeInMillis() / 1000L;
 		return calendar.getTimeInMillis() / 1000L;
 	}
 
@@ -253,7 +270,7 @@ public class OrgNodeTimeDate {
 	}
 	
 	public String toFormatedString() {
-		return formatDate(type, getDate());
+		return formatDate(type, getTimeDate());
 	}
 	
 	private String getStartTimeFormated() {
