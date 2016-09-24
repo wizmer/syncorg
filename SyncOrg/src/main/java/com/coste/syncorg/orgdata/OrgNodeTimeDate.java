@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -150,7 +149,6 @@ public class OrgNodeTimeDate {
      */
     void setEpochTime(long epochTimeInSec, boolean allDay){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT0"));
         calendar.setTimeInMillis(epochTimeInSec * 1000L);
         year = calendar.get(Calendar.YEAR);
         monthOfYear = calendar.get(Calendar.MONTH);
@@ -242,7 +240,7 @@ public class OrgNodeTimeDate {
 		int hour = startTimeOfDay > -1 ? startTimeOfDay : 0;
 		int minute = startMinute > -1 ? startMinute : 0;
 		GregorianCalendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth, hour, minute);
-		Log.v(calendar.getTimeInMillis() / 1000L;
+		Log.v("time", "epoch time : " + calendar.getTimeInMillis() / 1000L);
 		return calendar.getTimeInMillis() / 1000L;
 	}
 
@@ -262,9 +260,7 @@ public class OrgNodeTimeDate {
      */
 	public String toString(boolean isDate) {
         GregorianCalendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth, startTimeOfDay, startMinute);
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT0"));
         DateFormat instance = isDate ? SimpleDateFormat.getDateInstance() : SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
-        instance.setTimeZone(TimeZone.getTimeZone("GMT0"));
         return instance.format(calendar.getTime());
 
 	}

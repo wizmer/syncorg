@@ -20,6 +20,7 @@ import com.coste.syncorg.settings.synchronizers.SDCardSettingsActivity;
 import com.coste.syncorg.settings.synchronizers.ScpSettingsActivity;
 import com.coste.syncorg.settings.synchronizers.UbuntuOneSettingsActivity;
 import com.coste.syncorg.settings.synchronizers.WebDAVSettingsActivity;
+import com.coste.syncorg.synchronizers.Synchronizer;
 import com.coste.syncorg.util.OrgUtils;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class SettingsActivity extends PreferenceActivity implements
 	private String KEY_FONT_SIZE;
 	private String KEY_QUICK_TODOS;
 	private SharedPreferences appSettings;
+
 	private Preference.OnPreferenceClickListener onClearDBClick = new Preference.OnPreferenceClickListener() {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
@@ -54,6 +56,7 @@ public class SettingsActivity extends PreferenceActivity implements
 								public void onClick(DialogInterface dialog,
 													int which) {
 									OrgProviderUtils.clearDB(getContentResolver());
+									Synchronizer.getInstance().clearRepository(SettingsActivity.this);
 								}
 
 							}).setNegativeButton(R.string.no, null).show();

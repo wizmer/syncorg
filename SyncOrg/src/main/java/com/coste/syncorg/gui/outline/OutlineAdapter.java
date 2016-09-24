@@ -33,6 +33,7 @@ import com.coste.syncorg.OrgNodeDetailActivity;
 import com.coste.syncorg.OrgNodeDetailFragment;
 import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.R;
+import com.coste.syncorg.settings.SettingsActivity;
 import com.coste.syncorg.util.OrgNodeNotFoundException;
 
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
 			add(file);
 		}
 
+        // Display calendar if enabled in Settings
         SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         calendarEnabled = appPreferences.getBoolean("calendarEnabled", false);
         positionTodo = 0;

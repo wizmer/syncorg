@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.coste.syncorg.orgdata.OrgContract.Timestamps;
 import com.coste.syncorg.orgdata.OrgNode;
 import com.coste.syncorg.orgdata.OrgNodeTimeDate;
+import com.coste.syncorg.orgdata.OrgProviderUtils;
 import com.coste.syncorg.util.OrgNodeNotFoundException;
 
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.TimeZone;
 import java.util.TreeMap;
 
 import static com.coste.syncorg.EditNodeFragment.nodeId;
@@ -113,7 +113,6 @@ public class AgendaFragment extends Fragment {
 
             while (cursor.moveToNext()) {
                 long nodeId = cursor.getLong(cursor.getColumnIndexOrThrow(Timestamps.NODE_ID));
-
                 if (orphanTimestampsNodes.contains(nodeId)) {
                     orphanTimestampsNodes.remove(nodeId);
                     rangedTimestampsNodes.add(nodeId);
@@ -125,13 +124,18 @@ public class AgendaFragment extends Fragment {
         }
 
         Calendar cal = Calendar.getInstance();
-        cal.setTimeZone(TimeZone.getTimeZone("GMT0"));
 
         TreeMap<Long, ArrayList<AgendaItem>> nodeIdsForEachDay = new TreeMap<>();
 
         for (Long nodeId : orphanTimestampsNodes) {
             try {
                 OrgNode node = new OrgNode(nodeId, resolver);
+
+                if(!calendarShowDone && !node.todo.equals("")){
+                    if(!OrgProviderUtils.isTodoActive(node.todo, getActivity().getContentResolver()))
+                        continue;
+                }
+
                 Long day, time;
                 OrgNodeTimeDate.TYPE type;
                 if (node.getScheduled().getEpochTime() < 0) {
@@ -142,9 +146,6 @@ public class AgendaFragment extends Fragment {
                     type = OrgNodeTimeDate.TYPE.Scheduled;
                 }
 
-                Log.v("time","name : "+node.name);
-                Log.v("time", "time : "+time);
-                Log.v("time", "now : "+cal.getTimeInMillis()/1000L);
                 if(!calendarShowPast && time < cal.getTimeInMillis()/1000L)
                     continue;
 
@@ -164,12 +165,33 @@ public class AgendaFragment extends Fragment {
         for (Long nodeId : rangedTimestampsNodes) {
             try {
                 OrgNode node = new OrgNode(nodeId, resolver);
+
+                // Remove done items is setting: calendarShowDone=false
+                if(!calendarShowDone && !node.todo.equals("")){
+                    if(!OrgProviderUtils.isTodoActive(node.todo, getActivity().getContentResolver()))
+                        continue;
+                }
+
                 boolean scheduledBeforeDeadline = node.getScheduled().getEpochTime() < node.getDeadline().getEpochTime();
 
                 long firstTime = scheduledBeforeDeadline ? node.getScheduled().getEpochTime() : node.getDeadline().getEpochTime();
                 long lastTime  = scheduledBeforeDeadline ? node.getDeadline().getEpochTime()  : node.getScheduled().getEpochTime();
                 long firstDay = firstTime / (24 * 3600);
                 long lastDay = lastTime / (24 * 3600);
+
+
+                if(!calendarShowPast) {
+                    // If event is totally finished and calendarShowPast==false, discard event
+                    if (firstTime < cal.getTimeInMillis() / 1000L && lastTime < cal.getTimeInMillis() / 1000L)
+                        continue;
+
+                    // If event is unfinished, change the starting point to now
+                    if (firstTime < cal.getTimeInMillis() / 1000L && lastTime > cal.getTimeInMillis() / 1000L){
+                        firstTime = cal.getTimeInMillis() / 1000L;
+                        firstDay = firstTime / (24 * 3600);
+                    }
+
+                }
                 OrgNodeTimeDate.TYPE type;
                 long time;
                 for (long day = firstDay; day <= lastDay; day++) {

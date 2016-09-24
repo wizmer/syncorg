@@ -105,26 +105,25 @@
                     android:summary="@string/preference_enable_calendar_summary"
                     />
 
-                <ListPreference
-                    android:defaultValue=""
-                    android:dependency="calendarEnabled"
-                    android:key="@string/key_calendarName"
-                    android:summary="@string/preference_calendar_name_summary"
-                    android:title="@string/preference_calendar_name" />
+                <!--<ListPreference-->
+                    <!--android:defaultValue=""-->
+                    <!--android:dependency="calendarEnabled"-->
+                    <!--android:key="@string/key_calendarName"-->
+                    <!--android:summary="@string/preference_calendar_name_summary"-->
+                    <!--android:title="@string/preference_calendar_name" />-->
+                <!--<CheckBoxPreference-->
+                    <!--android:dependency="calendarEnabled"-->
+                    <!--android:key="calendarReminder"-->
+                    <!--android:summary="@string/preference_calendar_reminder_summary"-->
+                    <!--android:title="@string/preference_calendar_reminder" />-->
 
-                <CheckBoxPreference
-                    android:dependency="calendarEnabled"
-                    android:key="calendarReminder"
-                    android:summary="@string/preference_calendar_reminder_summary"
-                    android:title="@string/preference_calendar_reminder" />
-
-                <EditTextPreference
-                    android:dependency="calendarReminder"
-                    android:key="@string/key_calendarReminderInterval"
-                    android:maxLength="3"
-                    android:numeric="integer"
-                    android:summary="@string/preference_calendar_reminder_interval_summary"
-                    android:title="@string/preference_calendar_reminder_interval" />
+                <!--<EditTextPreference-->
+                    <!--android:dependency="calendarReminder"-->
+                    <!--android:key="@string/key_calendarReminderInterval"-->
+                    <!--android:maxLength="3"-->
+                    <!--android:numeric="integer"-->
+                    <!--android:summary="@string/preference_calendar_reminder_interval_summary"-->
+                    <!--android:title="@string/preference_calendar_reminder_interval" />-->
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/preference_calendar_display" >
                 <CheckBoxPreference

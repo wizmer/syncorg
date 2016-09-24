@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
@@ -75,7 +76,10 @@ public class OrgNodeListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         node_id = intent.getLongExtra(NODE_ID, -1);
 
-        if (this.node_id == -1) displayNewUserDialogs();
+        if (this.node_id == -1){
+            PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+            displayNewUserDialogs();
+        }
 
         recyclerView = (RecyclerView) findViewById(R.id.orgnode_list);
         assert recyclerView != null;
