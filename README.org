@@ -15,7 +15,7 @@ A new implementation of [[https://github.com/matburt.mobileorg-android][MobileOr
 - Agenda notifications
 
 ** Developpers
-See [[https://github.com/wizmer/syncorg/wiki/Contributing][the contibuting page]] if you want to build the project.
+See [[https://github.com/wizmer/syncorg/wiki/Contributing][the contibuting page]], section Android Studio Setup, if you want to build the project.
 
 ** Screenshots
 Here are a few screenshots of the current state of the app.
