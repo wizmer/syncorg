@@ -1,7 +1,5 @@
 * SyncOrg
-A new implementation of [[https://github.com/matburt.mobileorg-android][MobileOrg]], an Org mode app for Android.
-
-The app is under heavy refactoring and is not out yet: a first release should be out in the following weeks.
+A new implementation of [[https://github.com/matburt.mobileorg-android][MobileOrg]], an Org mode app for Android. It is available on the [[https://play.google.com/store/apps/details?id=com.coste.syncorg][Play Store]]. 
 
 ** Current features
 
