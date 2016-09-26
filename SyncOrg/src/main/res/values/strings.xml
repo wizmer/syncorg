@@ -90,6 +90,7 @@
     <string name="error_dialog_title">Error</string>
     <string name="error_apg_not_found">APG not found</string>
     <string name="error_apg_version_not_supported">APG version not supported</string>
+    <string name="error_transport_error">Git error. This usually happens when there was a problem with the repository. Is the path correct? Is git installed on the server?</string>
 
     <!-- menu strings -->
     <string name="menu_outline">Outline</string>
