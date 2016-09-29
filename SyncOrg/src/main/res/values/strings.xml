@@ -8,6 +8,7 @@
     <string name="view_as_document">View as document</string>
     <string name="title">Title</string>
     <string name="search_results_for">Search results for</string>
+    <string name="no_result">No results</string>
     <string name="body">Click here to set the body text</string>
     <string name="tags">Tags</string>
     <string name="priority">Priority</string>
