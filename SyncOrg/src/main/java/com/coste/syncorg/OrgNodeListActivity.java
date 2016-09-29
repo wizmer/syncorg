@@ -192,7 +192,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
 
     public void runHelp(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("https://github.com/coste.syncorg/wiki"));
+                Uri.parse("https://github.com/wizmer/syncorg/wiki"));
         startActivity(intent);
     }
 
