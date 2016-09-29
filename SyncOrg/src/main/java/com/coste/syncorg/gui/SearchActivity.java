@@ -47,6 +47,18 @@ public class SearchActivity extends AppCompatActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             doSearch(query);
         }
+        
+        int size = adapter.getItemCount();
+        
+        TextView noResultText = (TextView) findViewById(R.id.no_result_text);
+
+        if (size == 0) {
+            recyclerView.setVisibility(View.GONE);
+            noResultText.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noResultText.setVisibility(View.GONE);
+        }
     }
 
     private void doSearch(String query) {
