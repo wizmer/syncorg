@@ -350,6 +350,8 @@ public class JGitWrapper {
             }else if(exception instanceof UnableToPushException) {
                 //				git config receive.denyCurrentBranch ignore
                 Toast.makeText(context, "Push test failed. Make sure the repository is bare.", Toast.LENGTH_LONG).show();
+            }else if(exception instanceof TransportException) {
+                Toast.makeText(context, context.getString(R.string.error_transport_error), Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(context, exception.toString(), Toast.LENGTH_LONG).show();
                 ((Exception)exception).printStackTrace();

@@ -45,6 +45,7 @@
 
   <string name="preference_autosync">Synchronisierung im Hintergrund</string>
 
+  <string name="error_transport_error">Git-Fehler. Dieser Fehler kommt normalerweise vor, wenn es ein Problem mit der Repository gibt. Ist der Pfad zur Repository richtig? Ist git auf dem Server installiert?</string>
   <string name="error_sqlio">Problem beim Lesen der Datenbank. Ist das Medium fehlerhaft oder die SD-Karte nicht verfügbar?</string>
   <string name="error_generic_database">Allgemeiner Datenbankfehler: %s</string>
   <string name="error_file_not_found">Die Datei %s wurde nicht gefunden</string>
