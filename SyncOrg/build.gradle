@@ -10,8 +10,8 @@ android {
         applicationId "com.coste.syncorg"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 2
-        versionName "2.0.3"
+        versionCode 3
+        versionName "2.0.4"
     }
 
     useLibrary 'org.apache.http.legacy'
