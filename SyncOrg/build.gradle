@@ -10,12 +10,16 @@ android {
         applicationId "com.coste.syncorg"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 3
-        versionName "2.0.4"
+        versionCode 4
+        versionName "2.0.5"
     }
 
     useLibrary 'org.apache.http.legacy'
 
+}
+
+repositories {
+    maven { url 'http://guardian.github.com/maven/repo-releases' }
 }
 
 dependencies {

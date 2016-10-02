@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 
 import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.gui.wizard.wizards.DropboxWizard;
+import com.coste.syncorg.gui.wizard.wizards.NoSyncWizard;
 import com.coste.syncorg.gui.wizard.wizards.SDCardWizard;
 import com.coste.syncorg.gui.wizard.wizards.SSHWizard;
 import com.coste.syncorg.gui.wizard.wizards.UbuntuOneWizard;
@@ -69,8 +70,7 @@ public class WizardActivity extends AppCompatActivity {
 						startActivity(new Intent(WizardActivity.this, SSHWizard.class));
 						break;
 					default:
-						((SyncOrgApplication) getApplication()).startSynchronizer();
-						startActivity(new Intent(WizardActivity.this, OrgNodeListActivity.class));
+						startActivity(new Intent(WizardActivity.this, NoSyncWizard.class));
 						break;
 				}
 			}
