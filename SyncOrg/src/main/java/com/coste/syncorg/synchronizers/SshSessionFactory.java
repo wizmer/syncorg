@@ -42,6 +42,7 @@ public class SshSessionFactory extends JschConfigSessionFactory {
 
     @Override
     protected void configure(OpenSshConfig.Host host, Session session) {
+        session.setPort(AuthData.getInstance(context).getPort());
         if (connection == ConnectionType.kSshPassword) {
             session.setPassword(AuthData.getInstance(context).getPassword());
         }
