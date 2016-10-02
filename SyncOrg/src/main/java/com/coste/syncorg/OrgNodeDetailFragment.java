@@ -149,7 +149,7 @@ public class OrgNodeDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.node_summary_recycler_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.detail_fragment, container, false);
 
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.node_recycler_view);

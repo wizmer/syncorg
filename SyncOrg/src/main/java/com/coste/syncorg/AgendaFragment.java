@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +32,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.TreeMap;
-
-import static com.coste.syncorg.EditNodeFragment.nodeId;
 
 
 /**
@@ -244,7 +241,7 @@ public class AgendaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.node_summary_recycler_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.detail_fragment, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.node_recycler_view);
         assert recyclerView != null;
