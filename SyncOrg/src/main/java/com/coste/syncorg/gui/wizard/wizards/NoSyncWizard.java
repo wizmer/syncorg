@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coste.syncorg.R;
+import com.coste.syncorg.directory_chooser.DirectoryChooserActivity;
 import com.coste.syncorg.synchronizers.JGitWrapper;
 
 public class NoSyncWizard extends AppCompatActivity {
@@ -34,14 +35,8 @@ public class NoSyncWizard extends AppCompatActivity {
 		folder.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent fileintent = new Intent(Intent.ACTION_GET_CONTENT);
-				fileintent.setType(DocumentsContract.Document.MIME_TYPE_DIR);
-
-				try {
-					startActivityForResult(fileintent, PICKFILE_RESULT_CODE);
-				} catch (ActivityNotFoundException e) {
-					Log.e("tag", "No activity can handle picking a file. Showing alternatives.");
-				}
+				Intent intent = new Intent(NoSyncWizard.this, DirectoryChooserActivity.class);
+				startActivity(intent);
 			}
 		});
 

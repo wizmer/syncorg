@@ -3,8 +3,9 @@
     package="com.coste.syncorg">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
-    <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"
@@ -136,5 +137,7 @@
         <activity android:name=".gui.wizard.wizards.NoSyncWizard"/>
         <activity android:name=".gui.wizard.wizards.UbuntuOneWizard"/>
         <activity android:name=".gui.wizard.wizards.WebDAVWizard"/>
+        <activity android:name=".directory_chooser.DirectoryChooserActivity"/>
+
     </application>
 </manifest>
