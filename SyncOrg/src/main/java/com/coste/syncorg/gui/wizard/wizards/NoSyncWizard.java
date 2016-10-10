@@ -7,24 +7,24 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.DocumentsContract;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.R;
 import com.coste.syncorg.directory_chooser.DirectoryChooserActivity;
-import com.coste.syncorg.synchronizers.JGitWrapper;
+
 
 public class NoSyncWizard extends AppCompatActivity {
 	final private int PICKFILE_RESULT_CODE = 1;
+	static public String FOLDER_PATH;
+	String syncFolder = null;
+	TextView orgFolder;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,10 +36,20 @@ public class NoSyncWizard extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(NoSyncWizard.this, DirectoryChooserActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, PICKFILE_RESULT_CODE);
 			}
 		});
 
+		orgFolder = ((TextView) findViewById(R.id.org_folder));
+		Button okButton = (Button) findViewById(R.id.ok);
+		okButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				saveSettings();
+				Intent intent = new Intent(NoSyncWizard.this, OrgNodeListActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override
@@ -48,38 +58,26 @@ public class NoSyncWizard extends AppCompatActivity {
 		switch(requestCode){
 			case PICKFILE_RESULT_CODE:
 				if(resultCode==RESULT_OK){
-//
-//					String FilePath = data.getData().getPath();
-//					String FileName = data.getData().getLastPathSegment();
-//					int lastPos = FilePath.length() - FileName.length();
-//					String Folder = FilePath.substring(0, lastPos);
-//
-//					textFile.setText("Full Path: \n" + FilePath + "\n");
-//					textFolder.setText("Folder: \n" + Folder + "\n");
-//					textFileName.setText("File Name: \n" + FileName + "\n");
-//
-//					filename thisFile = new filename(FileName);
-//					textFileName_WithoutExt.setText("Filename without Ext: " + thisFile.getFilename_Without_Ext());
-//					textFileName_Ext.setText("Ext: " + thisFile.getExt());
-
+					syncFolder = data.getExtras().getString(FOLDER_PATH);
+					String details = getResources().getString(R.string.org_folder) + " " +
+							syncFolder;
+					orgFolder.setText(details);
 				}
 				break;
-
 		}
 	}
 
 	private void loadSettings() {
-		SharedPreferences appSettings = PreferenceManager
-				.getDefaultSharedPreferences(this);
 
 	}
 
 	public void saveSettings() {
-//
-//		SharedPreferences.Editor editor = appSettings.edit();
-//
-//		editor.putString("syncSource", "scp");
+		SharedPreferences appSettings = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = appSettings.edit();
 
-
+		editor.putString("syncSource", "null");
+		editor.putString("syncFolder", syncFolder);
+		editor.apply();
 	}
 }

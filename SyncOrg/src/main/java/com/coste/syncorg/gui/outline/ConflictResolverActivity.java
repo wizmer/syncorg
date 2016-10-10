@@ -52,7 +52,7 @@ public class ConflictResolverActivity extends AppCompatActivity {
                     actionBar.setTitle(file.name);
                 }
 
-                String dir = Synchronizer.getInstance().getAbsoluteFilesDir(this);
+                String dir = Synchronizer.getInstance().getAbsoluteFilesDir();
                 this.filename = dir+"/"+file.filename;
                 editText.setText(OrgUtils.readAll(this.filename));
 

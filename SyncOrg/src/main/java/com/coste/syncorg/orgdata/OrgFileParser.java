@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.coste.syncorg.gui.FileDecryptionActivity;
 import com.coste.syncorg.util.FileUtils;
@@ -177,11 +178,6 @@ public class OrgFileParser {
 	 * @param context
 	 */
 	public static void parseFile(OrgFile orgFile, BufferedReader breader, Context context) {
-//		ContentResolver resolver = context.getContentResolver();
-//		try {
-//			new OrgFile(orgFile.filename, resolver).removeFile(context);
-//		} catch (OrgFileNotFoundException e) { /* file did not exist */ }
-
 		if (orgFile.isEncrypted())
 			decryptAndParseFile(orgFile, breader, context);
 		else {
@@ -212,7 +208,7 @@ public class OrgFileParser {
 	}
 
 	public void parse(OrgFile orgFile, BufferedReader breader) {
-//		Log.v("parse","parsing : "+orgFile.name);
+		Log.v("parse","parsing : "+orgFile.name);
 		init(orgFile);
 		db.beginTransaction();
 

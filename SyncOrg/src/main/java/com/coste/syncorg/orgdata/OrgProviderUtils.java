@@ -109,9 +109,7 @@ public class OrgProviderUtils {
 		Cursor cursor = resolver.query(Todos.CONTENT_URI, new String[] { Todos.NAME }, null, null, Todos.ID);
 		if(cursor==null) return new ArrayList<>();
 
-		ArrayList<String> todos = cursorToArrayList(cursor);
-
-		return todos;
+		return cursorToArrayList(cursor);
 	}
 	
 	public static void setPriorities(ArrayList<String> priorities, ContentResolver resolver) {

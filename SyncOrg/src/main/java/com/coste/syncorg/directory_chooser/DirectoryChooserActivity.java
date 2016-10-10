@@ -31,7 +31,7 @@ public class DirectoryChooserActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             final FragmentManager fragmentManager = getFragmentManager();
-            final DirectoryChooserFragment fragment = DirectoryChooserFragment.newInstance(getFilesDir().getAbsolutePath());
+            final DirectoryChooserFragment fragment = DirectoryChooserFragment.newInstance();
             fragmentManager.beginTransaction()
                     .add(R.id.main, fragment)
                     .commit();

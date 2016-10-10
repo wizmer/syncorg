@@ -226,10 +226,11 @@ public class OrgFile {
 	private long removeFileNode(ContentResolver resolver) {
 		int total = 0;
 		try {
-			total += resolver.delete(Files.buildIdUri(id), Files.NAME + "=? AND "
+			total += resolver.delete(Files.CONTENT_URI, Files.NAME + "=? AND "
 					+ Files.FILENAME + "=?", new String[]{name, filename});
 		} catch (IllegalArgumentException e){
 			// Uri does not exist, no need to delete
+			e.printStackTrace();
 		}
 		return total;
     }
@@ -283,7 +284,7 @@ public class OrgFile {
      * @return the absolute filename
      */
     public String getFilePath(Context context) {
-		return Synchronizer.getInstance().getAbsoluteFilesDir(context) + "/" + filename;
+		return Synchronizer.getInstance().getAbsoluteFilesDir() + "/" + filename;
 	}
 
 	/**

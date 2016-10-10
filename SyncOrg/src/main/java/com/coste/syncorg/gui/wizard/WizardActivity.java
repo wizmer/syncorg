@@ -1,6 +1,5 @@
 package com.coste.syncorg.gui.wizard;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,15 +10,11 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.coste.syncorg.OrgNodeListActivity;
-import com.coste.syncorg.gui.wizard.wizards.DropboxWizard;
 import com.coste.syncorg.gui.wizard.wizards.NoSyncWizard;
 import com.coste.syncorg.gui.wizard.wizards.SDCardWizard;
 import com.coste.syncorg.gui.wizard.wizards.SSHWizard;
-import com.coste.syncorg.gui.wizard.wizards.UbuntuOneWizard;
 import com.coste.syncorg.gui.wizard.wizards.WebDAVWizard;
 import com.coste.syncorg.R;
-import com.coste.syncorg.orgdata.SyncOrgApplication;
 
 public class WizardActivity extends AppCompatActivity {
 
@@ -56,12 +51,6 @@ public class WizardActivity extends AppCompatActivity {
 				switch (syncName) {
 					case "webdav":
 						startActivity(new Intent(WizardActivity.this, WebDAVWizard.class));
-						break;
-					case "dropbox":
-						startActivity(new Intent(WizardActivity.this, DropboxWizard.class));
-						break;
-					case "ubuntuone":
-						startActivity(new Intent(WizardActivity.this, UbuntuOneWizard.class));
 						break;
 					case "sdcard":
 						startActivity(new Intent(WizardActivity.this, SDCardWizard.class));

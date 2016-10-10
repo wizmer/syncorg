@@ -20,11 +20,15 @@ public class SSHSynchronizer extends Synchronizer {
         super(context);
         this.context = context;
         authData = AuthData.getInstance(context);
+        File dir = new File(getAbsoluteFilesDir());
+        if(!dir.exists()){
+            dir.mkdir();
+        }
     }
 
     @Override
-    public String getRelativeFilesDir() {
-        return JGitWrapper.GIT_DIR;
+    public String getAbsoluteFilesDir() {
+        return context.getFilesDir() + "/" + JGitWrapper.GIT_DIR;
     }
 
     @Override
@@ -99,7 +103,7 @@ public class SSHSynchronizer extends Synchronizer {
 
     @Override
     public void clearRepository(Context context) {
-        File dir = new File(getAbsoluteFilesDir(context));
+        File dir = new File(getAbsoluteFilesDir());
         for (File file : dir.listFiles()) {
             if (file.getName().equals(".git")) continue;
             file.delete();

@@ -47,12 +47,6 @@ public abstract class Synchronizer {
             this.notify = new SynchronizerNotification(context);
         else
             this.notify = new SynchronizerNotificationCompat(context);
-
-
-        File dir = new File(context.getFilesDir() + "/" + getRelativeFilesDir());
-        if(!dir.exists()){
-            dir.mkdir();
-        }
     }
 
     public static Synchronizer getInstance() {
@@ -98,24 +92,16 @@ public abstract class Synchronizer {
             SyncResult pulledFiles = synchronize();
 
             for (String filename : pulledFiles.deletedFiles) {
-
                 OrgFile orgFile = new OrgFile(filename, resolver);
                 orgFile.removeFile(context, true);
             }
 
-            for (String filename : pulledFiles.newFiles) {
+            HashSet<String> modifiedFiles = pulledFiles.newFiles;
+            modifiedFiles.addAll(pulledFiles.changedFiles);
+            for (String filename : modifiedFiles) {
                 OrgFile orgFile = new OrgFile(filename, filename);
-                FileReader fileReader = new FileReader(getAbsoluteFilesDir(context) + "/" + filename);
+                FileReader fileReader = new FileReader(getAbsoluteFilesDir() + "/" + filename);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-                OrgFileParser.parseFile(orgFile, bufferedReader, context);
-            }
-
-            for (String filename : pulledFiles.changedFiles) {
-                OrgFile orgFile = new OrgFile(filename, filename);
-                FileReader fileReader = new FileReader(getAbsoluteFilesDir(context) + "/" + filename);
-                BufferedReader bufferedReader = new BufferedReader(fileReader);
-
                 OrgFileParser.parseFile(orgFile, bufferedReader, context);
             }
 
@@ -134,7 +120,7 @@ public abstract class Synchronizer {
     }
 
     private void announceProgressUpdate(int progress, String message) {
-        if (message != null && TextUtils.isEmpty(message) == false)
+        if (message != null && !TextUtils.isEmpty(message))
             notify.updateNotification(progress, message);
         else
             notify.updateNotification(progress);
@@ -169,11 +155,7 @@ public abstract class Synchronizer {
         OrgUtils.announceSyncDone(context);
     }
 
-    abstract public String getRelativeFilesDir();
-
-    public String getAbsoluteFilesDir(Context context) {
-        return context.getFilesDir() + "/" + getRelativeFilesDir();
-    }
+    public abstract String getAbsoluteFilesDir();
 
     /**
      * Delete all files from the synchronized repository
@@ -181,7 +163,7 @@ public abstract class Synchronizer {
      * @param context
      */
     public void clearRepository(Context context) {
-        File dir = new File(getAbsoluteFilesDir(context));
+        File dir = new File(getAbsoluteFilesDir());
         for (File file : dir.listFiles()) {
             file.delete();
         }

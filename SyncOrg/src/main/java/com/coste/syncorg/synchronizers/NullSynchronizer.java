@@ -1,19 +1,27 @@
 package com.coste.syncorg.synchronizers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.io.BufferedReader;
 import java.io.File;
 
 public class NullSynchronizer extends Synchronizer {
+    String syncFolder;
 
     public NullSynchronizer(Context context) {
         super(context);
+        syncFolder = PreferenceManager.getDefaultSharedPreferences(context).getString("syncFolder", "");
+        File dir = new File(getAbsoluteFilesDir());
+        if(!dir.exists()){
+            dir.mkdir();
+        }
     }
 
     @Override
-    public String getRelativeFilesDir() {
-        return "null";
+    public String getAbsoluteFilesDir() {
+        return syncFolder;
     }
 
     public boolean isConfigured() {
@@ -29,7 +37,13 @@ public class NullSynchronizer extends Synchronizer {
 
     @Override
     public SyncResult synchronize() {
-        return new SyncResult();
+        SyncResult result = new SyncResult();
+        File file = new File(getAbsoluteFilesDir());
+        File[] files = file.listFiles();
+        for(File f: files){
+            result.changedFiles.add(f.getName());
+        }
+        return result;
     }
 
 

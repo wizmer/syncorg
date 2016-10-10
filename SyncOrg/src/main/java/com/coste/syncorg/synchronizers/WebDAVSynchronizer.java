@@ -95,7 +95,7 @@ public class WebDAVSynchronizer extends Synchronizer {
     }
 
     @Override
-    public String getRelativeFilesDir() {
+    public String getAbsoluteFilesDir() {
         return null;
     }
 

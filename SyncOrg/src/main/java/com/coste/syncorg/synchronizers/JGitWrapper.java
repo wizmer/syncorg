@@ -83,14 +83,14 @@ public class JGitWrapper {
 
     public static String read(String filename, Context context) {
         Synchronizer.setInstance(new SSHSynchronizer(context));
-        File f = new File(Synchronizer.getInstance().getAbsoluteFilesDir(context));
+        File f = new File(Synchronizer.getInstance().getAbsoluteFilesDir());
         File file[] = f.listFiles();
         if (file == null) return "no file";
         if(filename.equals(".git")) return ".git";
         OrgFile orgFile = new OrgFile(filename, filename);
         FileReader fileReader = null;
         try {
-            fileReader = new FileReader(Synchronizer.getInstance().getAbsoluteFilesDir(context) + "/" + filename);
+            fileReader = new FileReader(Synchronizer.getInstance().getAbsoluteFilesDir() + "/" + filename);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             return FileUtils.read(bufferedReader);
@@ -362,7 +362,7 @@ public class JGitWrapper {
 
         void parseAll() {
             Synchronizer.setInstance(new SSHSynchronizer(context));
-            File f = new File(Synchronizer.getInstance().getAbsoluteFilesDir(context));
+            File f = new File(Synchronizer.getInstance().getAbsoluteFilesDir());
             File file[] = f.listFiles();
             if (file == null) return;
             for (int i=0; i < file.length; i++)
@@ -372,7 +372,7 @@ public class JGitWrapper {
                 OrgFile orgFile = new OrgFile(filename, filename);
                 FileReader fileReader = null;
                 try {
-                    fileReader = new FileReader(Synchronizer.getInstance().getAbsoluteFilesDir(context) + "/" + filename);
+                    fileReader = new FileReader(Synchronizer.getInstance().getAbsoluteFilesDir() + "/" + filename);
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
 
 

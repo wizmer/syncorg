@@ -57,8 +57,6 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
     private int positionTodo;
     private int positionCalendar;
 
-
-
     private DefaultTheme theme;
 
 	public OutlineAdapter(AppCompatActivity activity) {

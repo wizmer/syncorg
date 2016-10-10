@@ -122,7 +122,7 @@
           android:textSize="20dp"
           android:inputType="number"
           android:defaultValue="22"
-          android:singleLine="true"/>
+          android:maxLines="1"/>
       <Button
           android:layout_marginTop="20dp"
           android:id="@+id/done"
