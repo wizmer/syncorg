@@ -298,6 +298,29 @@
     <string name="create_folder_error_already_exists">Folder already exists</string>
     <string name="create_folder_error">Could not create folder</string>
     <string name="up_label">Up</string>
+    <string name="directory_empty">Directory is Empty</string>
+    <string name="kitkat_external_storage_warning">Warning: Your Android version does not allow syncing to external storage devices</string>
+    <string name="create_folder_failed">Failed to create folder</string>
+    <string name="select_folder">Select Folder</string>
+    <string name="create_fs_folder">Create new Folder</string>
+
 
     <!-- others -->
+
+
+    <string name="wizard_ssh_help">Examples:\n\n
+
+        _ User johndoe wants to sync /home/johndoe/my_notes/ from is private server 123.456.789.123:\n\n
+        Username: johndoe\n
+        Absolute path: /home/johndoe/my_notes\n
+        Host: 123.456.789.123\n
+        Port: 22 (or can be let blank)\n\n\n
+
+        _ User johndoe wants to sync with GitHub project johndoe/my_notes.git:\n\n
+        Username: git\n
+        Absolute path: johndoe/my_notes.git\n
+        Host: github.com\n
+        Port: 22 (or can be let blank)\n
+    </string>
+
 </resources>

@@ -103,6 +103,7 @@ public abstract class Synchronizer {
                 FileReader fileReader = new FileReader(getAbsoluteFilesDir() + "/" + filename);
                 BufferedReader bufferedReader = new BufferedReader(fileReader);
                 OrgFileParser.parseFile(orgFile, bufferedReader, context);
+                orgFile.updateTimeModified(context);
             }
 
             announceSyncDone();

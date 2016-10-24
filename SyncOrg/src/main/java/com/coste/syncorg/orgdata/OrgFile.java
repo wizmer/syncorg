@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.coste.syncorg.orgdata.OrgContract.Files;
@@ -18,8 +19,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
-import static com.coste.syncorg.R.string.file;
 
 public class OrgFile {
 	public static final String CAPTURE_FILE = "mobileorg.org";
@@ -199,10 +201,33 @@ public class OrgFile {
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-
         }
+
+		updateTimeModified(context);
     }
+
+	/**
+	 * Store in DB the last time the file was modified on disk
+	 * @param context
+     */
+	public void updateTimeModified(Context context){
+		SQLiteDatabase db = OrgDatabase.getInstance().getReadableDatabase();
+		long time = getFile(context).lastModified();
+
+		// New value for one column
+		ContentValues cv = new ContentValues();
+		cv.put(OrgContract.FilesColumns.TIME_MODIFIED,time); //These Fields should be your String values of actual column names
+
+		// Which row to update, based on the title
+		String selection = OrgContract.FilesColumns.NAME + " = ?";
+		String[] selectionArgs = { name };
+
+		db.update(
+				OrgDatabase.Tables.FILES,
+				cv,
+				selection,
+				selectionArgs);
+	}
 
 	/**
 	 * 1) Remove all OrgNode(s) associated with this file from the DB
@@ -311,6 +336,21 @@ public class OrgFile {
 		return result;
 	}
 
+	public static HashMap<String, Long> getLastModifiedTimes(Context context){
+		Cursor cursor = context.getContentResolver().query(Files.CONTENT_URI,
+				new String[]{OrgContract.FilesColumns.NAME, OrgContract.FilesColumns.TIME_MODIFIED},
+				null, null, null);
+		HashMap<String, Long> result = new HashMap<>();
+		if (cursor != null) {
+
+			while (cursor.moveToNext()) {
+				result.put(cursor.getString(cursor.getColumnIndexOrThrow(OrgContract.FilesColumns.NAME)),
+						cursor.getLong(cursor.getColumnIndexOrThrow(OrgContract.FilesColumns.TIME_MODIFIED)));
+			}
+			cursor.close();
+		}
+		return result;
+	}
 
 	public enum State {
 		kOK,

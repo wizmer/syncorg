@@ -134,6 +134,7 @@
         <activity android:name=".gui.wizard.wizards.NoSyncWizard"/>
         <activity android:name=".gui.wizard.wizards.WebDAVWizard"/>
         <activity android:name=".directory_chooser.DirectoryChooserActivity"/>
+        <activity android:name=".directory_chooser.FolderPickerActivity"/>
 
     </application>
 </manifest>

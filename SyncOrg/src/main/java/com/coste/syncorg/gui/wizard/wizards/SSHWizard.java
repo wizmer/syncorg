@@ -5,9 +5,13 @@ import android.content.ClipboardManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -78,13 +82,30 @@ public class SSHWizard extends AppCompatActivity {
 
 		loadSettings();
 
-        Button done = (Button) findViewById(R.id.done);
-        done.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveSettings();
-            }
-        });
+		Button done = (Button) findViewById(R.id.done);
+		done.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				saveSettings();
+			}
+		});
+
+		Button help = (Button) findViewById(R.id.help);
+		help.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// DialogFragment.show() will take care of adding the fragment
+				// in a transaction.  We also want to remove any currently showing
+				// dialog, so make our own transaction and take care of that here.
+				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+				// Create and show the dialog.
+				DialogFragment newFragment = MyDialogFragment.newInstance();
+				newFragment.show(ft, "dialog");
+			}
+		});
+
+
 	}
 
 	private void loadSettings() {
@@ -128,5 +149,24 @@ public class SSHWizard extends AppCompatActivity {
 
 		JGitWrapper.CloneGitRepoTask task = new JGitWrapper.CloneGitRepoTask(this);
 		task.execute(pathActual, sshPass.getText().toString(), userActual, hostActual, portActual);
+	}
+
+	public static class MyDialogFragment extends DialogFragment {
+
+		/**
+		 * Create a new instance of MyDialogFragment, providing "num"
+		 * as an argument.
+		 */
+		static MyDialogFragment newInstance() {
+			return new MyDialogFragment();
+		}
+
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+								 Bundle savedInstanceState) {
+			View v = inflater.inflate(R.layout.wizard_help, container, false);
+			return v;
+		}
 	}
 }

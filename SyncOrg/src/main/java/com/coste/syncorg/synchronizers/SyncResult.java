@@ -1,6 +1,7 @@
 package com.coste.syncorg.synchronizers;
 
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by bcoste on 18/06/16.
@@ -8,7 +9,7 @@ import java.util.HashSet;
 public class SyncResult {
     HashSet<String> newFiles;
     HashSet<String> changedFiles;
-    HashSet<String> deletedFiles;
+    Set<String> deletedFiles;
     State state;
 
     SyncResult(){

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.support.design.widget.TabLayout;
 
 import com.coste.syncorg.orgdata.OrgContract.OrgData;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 
 public class OrgDatabase extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "SyncOrg.db";
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	private static OrgDatabase mInstance = null;
 	private SQLiteStatement orgdataInsertStatement;
 	private SQLiteStatement addPayloadStatement;
@@ -63,7 +64,8 @@ public class OrgDatabase extends SQLiteOpenHelper {
 				+ "node_id integer,"
 				+ "filename text,"
 				+ "name text,"
-				+ "comment text)");
+				+ "comment text,"
+				+ "time_modified integer default 0)");
 		db.execSQL("CREATE TABLE IF NOT EXISTS todos("
 				+ "_id integer primary key autoincrement,"
 				+ "todogroup integer,"
@@ -118,18 +120,11 @@ public class OrgDatabase extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		switch (newVersion) {
-		case 4:
-			db.execSQL("DROP TABLE IF EXISTS priorities");
-			db.execSQL("DROP TABLE IF EXISTS files");
-			db.execSQL("DROP TABLE IF EXISTS todos");
-			db.execSQL("DROP TABLE IF EXISTS orgdata");
-			break;
-
-		case 5:
-			db.execSQL("alter table orgdata add tags_inherited text");
+		case 6:
+			db.execSQL("ALTER TABLE "+ Tables.FILES + " ADD time_modified integer default 0");
 			break;
 		}
-		onCreate(db);
+//		onCreate(db);
 	}
 
 	public long fastInsertNode(OrgNode node) {
@@ -186,6 +181,5 @@ public class OrgDatabase extends SQLiteOpenHelper {
 		String TODOS = "todos";
 		String ORGDATA = "orgdata";
 	}
-
 
 }

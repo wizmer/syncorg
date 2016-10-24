@@ -1,5 +1,6 @@
 package com.coste.syncorg.gui.wizard.wizards;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.R;
 import com.coste.syncorg.directory_chooser.DirectoryChooserActivity;
+import com.coste.syncorg.directory_chooser.FolderPickerActivity;
+import com.coste.syncorg.orgdata.SyncOrgApplication;
 
 
 public class NoSyncWizard extends AppCompatActivity {
@@ -35,7 +38,7 @@ public class NoSyncWizard extends AppCompatActivity {
 		folder.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(NoSyncWizard.this, DirectoryChooserActivity.class);
+				Intent intent = new Intent(NoSyncWizard.this, FolderPickerActivity.class);
 				startActivityForResult(intent, PICKFILE_RESULT_CODE);
 			}
 		});
@@ -46,6 +49,7 @@ public class NoSyncWizard extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				saveSettings();
+				((SyncOrgApplication) getApplication()).startSynchronizer();
 				Intent intent = new Intent(NoSyncWizard.this, OrgNodeListActivity.class);
 				startActivity(intent);
 			}

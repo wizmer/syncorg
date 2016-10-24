@@ -61,6 +61,7 @@ public class OrgContract {
 		String FILENAME = "filename";
 		String COMMENT = "comment";
 		String NODE_ID = "node_id";
+		String TIME_MODIFIED= "time_modified";
 	}
 	interface TodosColumns {
 		String ID = "_id";
