@@ -430,6 +430,9 @@ public class JGitWrapper {
             Git git = null;
             try {
                 git = Git.open(repoDir);
+                if (git.status().call().isClean()) {
+                    return null;
+                }
                 // Stage all changed files, omitting new files, and commit with one command
 
 //                org.eclipse.jgit.api.Status status = git.status().call();
