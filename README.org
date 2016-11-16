@@ -8,10 +8,11 @@ A new implementation of [[https://github.com/matburt.mobileorg-android][MobileOr
 - Independent of Emacs: it is no longer required to use it in conjunction with Emacs.
 - Agenda view and Todo list view generated from the org files.
 - Folding of items and sub-items.
+- Share files button
 
 ** Upcoming features
+- External synchronization
 - Item management: reordering of items by swiping them
-- Share files button
 - Agenda notifications
 
 ** Developpers
