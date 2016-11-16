@@ -1,6 +1,8 @@
 package com.coste.syncorg.synchronizers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -15,20 +17,29 @@ public class SSHSynchronizer extends Synchronizer {
     private final String LT = "SyncOrg";
     AuthData authData;
     private Session session;
+    String absoluteFileDir;
 
     public SSHSynchronizer(Context context) {
         super(context);
         this.context = context;
         authData = AuthData.getInstance(context);
+        SharedPreferences appSettings = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        this.absoluteFileDir = appSettings.getString("syncFolder",
+                context.getFilesDir() + "/" + JGitWrapper.GIT_DIR);
+
         File dir = new File(getAbsoluteFilesDir());
         if(!dir.exists()){
             dir.mkdir();
         }
+
+
+
     }
 
     @Override
     public String getAbsoluteFilesDir() {
-        return context.getFilesDir() + "/" + JGitWrapper.GIT_DIR;
+        return absoluteFileDir;
     }
 
     @Override

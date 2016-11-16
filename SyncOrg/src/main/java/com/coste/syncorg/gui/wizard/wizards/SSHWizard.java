@@ -2,6 +2,7 @@ package com.coste.syncorg.gui.wizard.wizards;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coste.syncorg.R;
+import com.coste.syncorg.directory_chooser.FolderPickerActivity;
 import com.coste.syncorg.synchronizers.JGitWrapper;
 
 public class SSHWizard extends AppCompatActivity {
@@ -27,10 +29,14 @@ public class SSHWizard extends AppCompatActivity {
 	private EditText sshPass;
 	private EditText sshPath;
 	private EditText sshHost;
-	private EditText sshPort;
+    private EditText sshPort;
+    private TextView parentFolder;
 
 	private TextView sshPubFileActual;
 	Switch auth_selector;
+
+	final private int PICKFILE_RESULT_CODE = 1;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,9 @@ public class SSHWizard extends AppCompatActivity {
 		sshPass = (EditText) findViewById(R.id.wizard_ssh_password);
 		sshPath = (EditText) findViewById(R.id.wizard_ssh_path);
 		sshHost = (EditText) findViewById(R.id.wizard_ssh_host);
-		sshPort = (EditText) findViewById(R.id.wizard_ssh_port);
+        sshPort = (EditText) findViewById(R.id.wizard_ssh_port);
+        parentFolder = (TextView) findViewById(R.id.parent_folder);
+
 		sshPubFileActual = (TextView) findViewById(R.id.wizard_ssh_pub_file_actual);
 		final Button sshPubFileSelect = (Button) findViewById(R.id.wizard_ssh_choose_pub_file);
 		sshPubFileSelect.setOnClickListener(new OnClickListener() {
@@ -86,6 +94,11 @@ public class SSHWizard extends AppCompatActivity {
 		done.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                if(parentFolder.getText().equals("")){
+                    Toast.makeText(SSHWizard.this,
+                            R.string.specify_parent_folder, Toast.LENGTH_LONG).show();
+                    return;
+                }
 				saveSettings();
 			}
 		});
@@ -94,19 +107,35 @@ public class SSHWizard extends AppCompatActivity {
 		help.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// DialogFragment.show() will take care of adding the fragment
-				// in a transaction.  We also want to remove any currently showing
-				// dialog, so make our own transaction and take care of that here.
 				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-				// Create and show the dialog.
 				DialogFragment newFragment = MyDialogFragment.newInstance();
 				newFragment.show(ft, "dialog");
 			}
 		});
 
-
+		Button folder = (Button) findViewById(R.id.containing_folder);
+		folder.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SSHWizard.this, FolderPickerActivity.class);
+				startActivityForResult(intent, PICKFILE_RESULT_CODE);
+			}
+		});
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		switch(requestCode){
+			case PICKFILE_RESULT_CODE:
+				if(resultCode==RESULT_OK){
+                    String syncFolder = data.getExtras().getString(FolderPickerActivity.EXTRA_RESULT_DIRECTORY);
+                    parentFolder.setText(syncFolder);
+				}
+				break;
+		}
+	}
+
 
 	private void loadSettings() {
 		SharedPreferences appSettings = PreferenceManager
@@ -116,7 +145,10 @@ public class SSHWizard extends AppCompatActivity {
 		sshPass.setText(appSettings.getString("scpPass", ""));
 		sshHost.setText(appSettings.getString("scpHost", ""));
 		sshPort.setText(appSettings.getString("scpPort", ""));
-		auth_selector.setChecked(appSettings.getBoolean("usePassword", true));
+        parentFolder.setText(appSettings.getString("syncFolder", ""));
+
+
+        auth_selector.setChecked(appSettings.getBoolean("usePassword", true));
 		auth_selector.performClick();
 		auth_selector.performClick();
 		sshPubFileActual.setText(appSettings.getString("scpPubFile", ""));
@@ -125,7 +157,8 @@ public class SSHWizard extends AppCompatActivity {
 	public void saveSettings() {
 		final String pathActual = sshPath.getText().toString();
 		final String userActual = sshUser.getText().toString();
-		final String hostActual = sshHost.getText().toString();
+        final String hostActual = sshHost.getText().toString();
+        final String folderActual = parentFolder.getText().toString() + "/SyncOrg";
 
 		String portActual = sshPort.getText().toString();
 		if(portActual.equals("")) portActual = "22";
@@ -142,12 +175,14 @@ public class SSHWizard extends AppCompatActivity {
 		editor.putString("scpUser", userActual);
 		editor.putString("scpHost", hostActual);
 		editor.putString("scpPort", portActual);
-		editor.putBoolean("usePassword", auth_selector.isChecked());
+        editor.putString("syncFolder", folderActual);
+
+        editor.putBoolean("usePassword", auth_selector.isChecked());
 		editor.putString("scpPubFile", sshPubFileActual.getText().toString());
 		editor.putString("scpPass", sshPass.getText().toString());
 		editor.apply();
 
-		JGitWrapper.CloneGitRepoTask task = new JGitWrapper.CloneGitRepoTask(this);
+		JGitWrapper.CloneGitRepoTask task = new JGitWrapper.CloneGitRepoTask(this, folderActual);
 		task.execute(pathActual, sshPass.getText().toString(), userActual, hostActual, portActual);
 	}
 

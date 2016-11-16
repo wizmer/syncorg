@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 import com.coste.syncorg.orgdata.OrgContract.Files;
 import com.coste.syncorg.orgdata.OrgContract.OrgData;
@@ -328,6 +329,7 @@ public class OrgFile {
 			OrgNodeTree tree = new OrgNodeTree(root, resolver);
 			ArrayList<OrgNode> res = OrgNodeTree.getFullNodeArray(tree, true);
 			for (OrgNode node : res) {
+				Log.v("node", "node : "+node.toString());
 				result += FileUtils.stripLastNewLine(node.toString()) + "\n";
 			}
 		} catch (OrgNodeNotFoundException e) {

@@ -15,7 +15,10 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,6 +70,15 @@ public class FolderPickerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_folder_picker);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Show the Up button in the action bar.
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
+
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(this);
         mListView.setEmptyView(findViewById(android.R.id.empty));
@@ -168,6 +180,7 @@ public class FolderPickerActivity extends AppCompatActivity
                 Intent intent = new Intent()
                         .putExtra(EXTRA_RESULT_DIRECTORY, mLocation.getAbsolutePath());
                 setResult(Activity.RESULT_OK, intent);
+                Log.v("path", mLocation.getAbsolutePath());
                 finish();
                 return true;
             case android.R.id.home:

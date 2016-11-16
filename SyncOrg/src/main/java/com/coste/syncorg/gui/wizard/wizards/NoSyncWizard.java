@@ -62,7 +62,7 @@ public class NoSyncWizard extends AppCompatActivity {
 		switch(requestCode){
 			case PICKFILE_RESULT_CODE:
 				if(resultCode==RESULT_OK){
-					syncFolder = data.getExtras().getString(FOLDER_PATH);
+					syncFolder = data.getExtras().getString(FolderPickerActivity.EXTRA_RESULT_DIRECTORY);
 					String details = getResources().getString(R.string.org_folder) + " " +
 							syncFolder;
 					orgFolder.setText(details);

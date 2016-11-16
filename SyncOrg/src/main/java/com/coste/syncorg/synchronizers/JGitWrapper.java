@@ -1,7 +1,6 @@
 package com.coste.syncorg.synchronizers;
 
 import android.app.Activity;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -63,7 +62,7 @@ public class JGitWrapper {
     public static String GIT_DIR = "git_dir";
 
     public static void add(String filename, Context context) {
-        File repoDir = new File(context.getFilesDir() + "/" + GIT_DIR + "/.git");
+        File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
         try {
             Git git = Git.open(repoDir);
             git.add()
@@ -105,7 +104,7 @@ public class JGitWrapper {
     }
 
     public static SyncResult pull(final Context context) {
-        File repoDir = new File(context.getFilesDir() + "/" + GIT_DIR + "/.git");
+        File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
         SyncResult result = new SyncResult();
         AuthData authData = AuthData.getInstance(context);
         Git git = null;
@@ -262,7 +261,7 @@ public class JGitWrapper {
 
         @Override
         protected org.eclipse.jgit.api.Status doInBackground(Void... voids) {
-            File repoDir = new File(context.getFilesDir() + "/" + GIT_DIR + "/.git");
+            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
             Git git = null;
 
             try {
@@ -278,9 +277,11 @@ public class JGitWrapper {
     static public class CloneGitRepoTask extends AsyncTask<String, Void, Object> {
         Context context;
         ProgressDialog progress;
+        String syncFolder;
 
-        public CloneGitRepoTask(Context context){
+        public CloneGitRepoTask(Context context, String syncFolder){
             this.context = context;
+            this.syncFolder = syncFolder;
         }
 
         protected Object doInBackground(String... params) {
@@ -288,7 +289,7 @@ public class JGitWrapper {
 
             final ConnectionType connection = SshSessionFactory.getConnectionType(context);
 
-            File localPath = new File(context.getFilesDir() + "/" + GIT_DIR);
+            File localPath = new File(syncFolder);
             FileUtils.deleteFile(localPath);
 
             CloneCommand cloneCommand = Git.cloneRepository();
@@ -300,7 +301,7 @@ public class JGitWrapper {
                 cloneCommand.setTransportConfigCallback(new CustomTransportConfigCallback(context));
 
 
-            System.setProperty("user.home", context.getFilesDir().getAbsolutePath() );
+            System.setProperty("user.home", syncFolder );
 
             try {
                 cloneCommand
@@ -396,7 +397,7 @@ public class JGitWrapper {
 
         protected Void doInBackground(String... params) {
 
-            File repoDir = new File(context.getFilesDir() + "/" + GIT_DIR + "/.git");
+            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
 
 //            File file = new File(context.getFilesDir() + "/" + GIT_DIR + "/SyncOrg");
 //            FileInputStream fis = null;
@@ -483,7 +484,7 @@ public class JGitWrapper {
 
         protected Void doInBackground(String... params) {
 
-            File repoDir = new File(context.getFilesDir() + "/" + GIT_DIR + "/.git");
+            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
             Git git = null;
             try {
                 git = Git.open(repoDir);

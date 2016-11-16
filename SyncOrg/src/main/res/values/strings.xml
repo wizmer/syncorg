@@ -28,6 +28,8 @@
     <string name="insert_node">Insert node</string>
     <string name="insert_child_node">Insert child node</string>
     <string name="new_file">Create new file</string>
+    <string name="parent_folder">Parent folder</string>
+    <string name="specify_parent_folder">Please specify a parent folder</string>
     <string name="file">File</string>
     <string name="files">Files</string>
     <string name="delete_node">Delete node</string>
@@ -130,7 +132,7 @@
     <string name="password">Password</string>
     <string name="host">Host</string>
     <string name="port">Port</string>
-    <string name="path">Absolute Path</string>
+    <string name="path">Path</string>
     <string name="login">Log in</string>
     <string name="login_webdav">Check Login</string>
     <string name="login_ssh">Check SSH Login</string>
@@ -312,13 +314,13 @@
 
         _ User johndoe wants to sync /home/johndoe/my_notes/ from is private server 123.456.789.123:\n\n
         Username: johndoe\n
-        Absolute path: /home/johndoe/my_notes\n
+        Path: /home/johndoe/my_notes\n
         Host: 123.456.789.123\n
         Port: 22 (or can be let blank)\n\n\n
 
         _ User johndoe wants to sync with GitHub project johndoe/my_notes.git:\n\n
         Username: git\n
-        Absolute path: johndoe/my_notes.git\n
+        Path: johndoe/my_notes.git\n
         Host: github.com\n
         Port: 22 (or can be let blank)\n
     </string>

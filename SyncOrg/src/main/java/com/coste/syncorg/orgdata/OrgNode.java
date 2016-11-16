@@ -456,9 +456,11 @@ public class OrgNode {
 			result.append(" ").append(":" + tags + ":");
 
 		if (payload != null && !TextUtils.isEmpty(payload)){
-			result.append("\n");
-			result.append(getLevelPadding(' '));
-			result.append(payload.trim());
+			for( String payload_line : payload.split("\\r?\\n")){
+				result.append("\n");
+				result.append(getLevelPadding(' '));
+				result.append(payload_line.trim());
+			}
 		}
 
 		return result.toString();
