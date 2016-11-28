@@ -94,10 +94,10 @@ public class FolderPickerActivity extends AppCompatActivity
             displayRoot();
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Toast.makeText(this, R.string.kitkat_external_storage_warning, Toast.LENGTH_LONG)
-                    .show();
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            Toast.makeText(this, R.string.kitkat_external_storage_warning, Toast.LENGTH_LONG)
+//                    .show();
+//        }
     }
 
     /**

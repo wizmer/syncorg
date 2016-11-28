@@ -301,7 +301,6 @@
     <string name="create_folder_error">Could not create folder</string>
     <string name="up_label">Up</string>
     <string name="directory_empty">Directory is Empty</string>
-    <string name="kitkat_external_storage_warning">Warning: Your Android version does not allow syncing to external storage devices</string>
     <string name="create_folder_failed">Failed to create folder</string>
     <string name="select_folder">Select Folder</string>
     <string name="create_fs_folder">Create new Folder</string>

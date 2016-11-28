@@ -51,6 +51,8 @@ public class NullSynchronizer extends Synchronizer {
         result.deletedFiles = times_modified.keySet();
 
         for(File f: files){
+            // Skip hidden files
+            if(f.getName().startsWith(".")) continue;
             result.deletedFiles.remove(f.getName());
             Long timeInDB = times_modified.get(f.getName());
             if(timeInDB == null || f.lastModified() != timeInDB){
