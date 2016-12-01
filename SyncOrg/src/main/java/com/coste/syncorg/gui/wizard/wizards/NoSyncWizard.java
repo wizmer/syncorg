@@ -4,23 +4,37 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.R;
 import com.coste.syncorg.directory_chooser.DirectoryChooserActivity;
 import com.coste.syncorg.directory_chooser.FolderPickerActivity;
+import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.SyncOrgApplication;
+import com.coste.syncorg.synchronizers.Synchronizer;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 public class NoSyncWizard extends AppCompatActivity {
@@ -48,12 +62,80 @@ public class NoSyncWizard extends AppCompatActivity {
 		okButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				saveSettings();
-				((SyncOrgApplication) getApplication()).startSynchronizer();
-				Intent intent = new Intent(NoSyncWizard.this, OrgNodeListActivity.class);
-				startActivity(intent);
+				checkPreviousSynchronizer(NoSyncWizard.this);
+
 			}
 		});
+	}
+
+
+
+	public static void copyDirectoryOneLocationToAnotherLocation(File sourceLocation, File targetLocation)
+			throws IOException {
+
+		if (sourceLocation.isDirectory()) {
+			if (!targetLocation.exists()) {
+				targetLocation.mkdir();
+			}
+
+			String[] children = sourceLocation.list();
+			for (int i = 0; i < sourceLocation.listFiles().length; i++) {
+
+				copyDirectoryOneLocationToAnotherLocation(new File(sourceLocation, children[i]),
+						new File(targetLocation, children[i]));
+			}
+		} else {
+
+			InputStream in = new FileInputStream(sourceLocation);
+
+			OutputStream out = new FileOutputStream(targetLocation);
+
+			// Copy the bits from instream to outstream
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			in.close();
+			out.close();
+		}
+
+	}
+
+	void checkPreviousSynchronizer(Context context){
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		String syncSource = sharedPreferences.getString("syncSource", "null");
+		if(syncSource.equals("null") || syncSource.equals("nullSync")){
+			Log.v("version", "blah");
+			AlertDialog.Builder alert = new AlertDialog.Builder(NoSyncWizard.this);
+			alert.setCancelable(false);
+			alert.setTitle(R.string.new_file);
+			alert.setMessage("You are creating a new org note folder. Do you want to keep you old notes ?");
+
+			alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					String currentSyncFolder = Synchronizer.getInstance().getAbsoluteFilesDir();
+					try {
+						copyDirectoryOneLocationToAnotherLocation(new File(currentSyncFolder), new File(syncFolder));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					saveSettings();
+					((SyncOrgApplication) getApplication()).startSynchronizer();
+					Intent intent = new Intent(NoSyncWizard.this, OrgNodeListActivity.class);
+					startActivity(intent);
+
+				}
+			});
+
+			alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+
+				}
+			});
+
+			alert.show();
+		}
 	}
 
 	@Override

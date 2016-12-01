@@ -3,6 +3,7 @@ package com.coste.syncorg.synchronizers;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.coste.syncorg.gui.SynchronizerNotification;
 import com.coste.syncorg.gui.SynchronizerNotificationCompat;

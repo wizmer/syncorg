@@ -18,7 +18,8 @@ public class NullSynchronizer extends Synchronizer {
 
     public NullSynchronizer(Context context) {
         super(context);
-        syncFolder = PreferenceManager.getDefaultSharedPreferences(context).getString("syncFolder", "");
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        syncFolder = preferences.getString("syncFolder", "null");
         File dir = new File(getAbsoluteFilesDir());
         if(!dir.exists()){
             dir.mkdir();
@@ -49,6 +50,8 @@ public class NullSynchronizer extends Synchronizer {
         HashMap<String, Long> times_modified = OrgFile.getLastModifiedTimes(context);
 
         result.deletedFiles = times_modified.keySet();
+
+        if(files == null) return result;
 
         for(File f: files){
             // Skip hidden files
