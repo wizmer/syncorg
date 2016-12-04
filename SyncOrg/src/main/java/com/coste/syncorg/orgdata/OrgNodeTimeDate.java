@@ -181,12 +181,9 @@ public class OrgNodeTimeDate {
 		if(line == null)
 			return;
 
-//		Log.v("timemap", "map : "+type);
-//		Log.v("timemap", "line : "+line);
 		if(patterns.get(type)==null) return;
 		Matcher propm = patterns.get(type).matcher(line);
 		if (propm.find()) {
-//			Log.v("timemap", "here");
 			matchStart = propm.start();
 			matchEnd = propm.end();
 			try {
@@ -240,7 +237,6 @@ public class OrgNodeTimeDate {
 		int hour = startTimeOfDay > -1 ? startTimeOfDay : 0;
 		int minute = startMinute > -1 ? startMinute : 0;
 		GregorianCalendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth, hour, minute);
-		Log.v("time", "epoch time : " + calendar.getTimeInMillis() / 1000L);
 		return calendar.getTimeInMillis() / 1000L;
 	}
 
@@ -301,7 +297,6 @@ public class OrgNodeTimeDate {
 				insert(
                         OrgContract.Timestamps.buildIdUri(nodeId),
 						getContentValues(nodeId, fileId));
-		Log.v("OrgNodeTimeDate","update epoch : "+getEpochTime() + " with type : "+type);
 	}
 
 	private ContentValues getContentValues(long nodeId, long fileId) {

@@ -180,7 +180,6 @@ public class FolderPickerActivity extends AppCompatActivity
                 Intent intent = new Intent()
                         .putExtra(EXTRA_RESULT_DIRECTORY, mLocation.getAbsolutePath());
                 setResult(Activity.RESULT_OK, intent);
-                Log.v("path", mLocation.getAbsolutePath());
                 finish();
                 return true;
             case android.R.id.home:

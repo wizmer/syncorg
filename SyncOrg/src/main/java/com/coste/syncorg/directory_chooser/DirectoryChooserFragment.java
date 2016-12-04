@@ -167,8 +167,6 @@ public class DirectoryChooserFragment extends DialogFragment {
                 final File parent;
                 if (mSelectedDir != null
                         && (parent = mSelectedDir.getParentFile()) != null) {
-                    Log.v("dir","nav up from"+mSelectedDir);
-                    Log.v("dir","parent is : " +parent);
                     changeDirectory(parent);
                 }
             }
@@ -196,7 +194,6 @@ public class DirectoryChooserFragment extends DialogFragment {
 
 
         mSelectedDir = initialDir;
-        Log.v("dir","initialdir : "+initialDir);
         changeDirectory(initialDir);
 
         return view;
@@ -347,14 +344,12 @@ public class DirectoryChooserFragment extends DialogFragment {
      *            will not be changed
      */
     private void changeDirectory(final File dir) {
-        Log.v("dir","change dir : "+dir);
         if (dir == null) {
             debug("Could not change folder: dir was null");
         } else if (!dir.isDirectory()) {
             debug("Could not change folder: dir is no directory");
         } else {
             final File[] contents = dir.listFiles();
-            Log.v("dir","dir : "+dir.getAbsolutePath());
 
             mTxtvSelectedFolder.setText(dir.getName());
             if (contents != null) {

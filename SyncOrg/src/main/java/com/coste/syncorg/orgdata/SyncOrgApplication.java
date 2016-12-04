@@ -42,10 +42,7 @@ public class SyncOrgApplication extends Application {
 
         if(prevousVersion < 4 && BuildConfig.VERSION_CODE >= 4){
             // TODO: update version number
-            Log.v("version", "New version");
-            Log.v("version", "sync "+syncSource);
             if(!syncSource.equals("sdcard") && !syncSource.equals("scp")){
-                Log.v("version", "Need to do stuff");
 
             }
 

@@ -34,7 +34,6 @@ public class WebDAVWizard extends AppCompatActivity {
 
 
 //	public void loginWebdav() {
-////		Log.v("webdav", "login");
 //		final String urlActual = webdavUrl.getText().toString();
 //		final String passActual = webdavPass.getText().toString();
 //		final String userActual = webdavUser.getText().toString();

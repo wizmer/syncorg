@@ -329,7 +329,6 @@ public class OrgFile {
 			OrgNodeTree tree = new OrgNodeTree(root, resolver);
 			ArrayList<OrgNode> res = OrgNodeTree.getFullNodeArray(tree, true);
 			for (OrgNode node : res) {
-				Log.v("node", "node : "+node.toString());
 				result += FileUtils.stripLastNewLine(node.toString()) + "\n";
 			}
 		} catch (OrgNodeNotFoundException e) {

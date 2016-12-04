@@ -23,7 +23,6 @@ public class OrgNodeParser {
 	public OrgNodeParser(ArrayList<String> todos) {
 		final String patternString = patternStart + "(?:("
 				+ getTodoRegex(todos) + ")\\s)?" + patternEnd;
-//		Log.v("regex","patternString : "+patternString);
 		this.pattern = Pattern.compile(patternString);
 	}
 

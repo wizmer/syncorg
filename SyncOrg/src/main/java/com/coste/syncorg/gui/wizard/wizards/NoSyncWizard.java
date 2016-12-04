@@ -58,6 +58,15 @@ public class NoSyncWizard extends AppCompatActivity {
 		});
 
 		orgFolder = ((TextView) findViewById(R.id.org_folder));
+
+		SharedPreferences appSettings = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		syncFolder = appSettings.getString("syncFolder", "");
+		if(!syncFolder.equals("")) {
+			String details = getResources().getString(R.string.org_folder) + " " +
+					syncFolder;
+			orgFolder.setText(details);
+		}
 		Button okButton = (Button) findViewById(R.id.ok);
 		okButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -80,14 +89,11 @@ public class NoSyncWizard extends AppCompatActivity {
 
 			String[] children = sourceLocation.list();
 			for (int i = 0; i < sourceLocation.listFiles().length; i++) {
-
 				copyDirectoryOneLocationToAnotherLocation(new File(sourceLocation, children[i]),
 						new File(targetLocation, children[i]));
 			}
 		} else {
-
 			InputStream in = new FileInputStream(sourceLocation);
-
 			OutputStream out = new FileOutputStream(targetLocation);
 
 			// Copy the bits from instream to outstream
@@ -99,43 +105,48 @@ public class NoSyncWizard extends AppCompatActivity {
 			in.close();
 			out.close();
 		}
-
 	}
 
 	void checkPreviousSynchronizer(Context context){
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		String syncSource = sharedPreferences.getString("syncSource", "null");
+		final String currentSyncFolder = Synchronizer.getInstance().getAbsoluteFilesDir();
 		if(syncSource.equals("null") || syncSource.equals("nullSync")){
-			Log.v("version", "blah");
-			AlertDialog.Builder alert = new AlertDialog.Builder(NoSyncWizard.this);
-			alert.setCancelable(false);
-			alert.setTitle(R.string.new_file);
-			alert.setMessage("You are creating a new org note folder. Do you want to keep you old notes ?");
-
-			alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-					String currentSyncFolder = Synchronizer.getInstance().getAbsoluteFilesDir();
-					try {
-						copyDirectoryOneLocationToAnotherLocation(new File(currentSyncFolder), new File(syncFolder));
-					} catch (IOException e) {
-						e.printStackTrace();
+			File[] currentNodes = new File(currentSyncFolder).listFiles();
+			if(currentNodes != null && currentNodes.length > 0) {
+				AlertDialog.Builder alert = new AlertDialog.Builder(NoSyncWizard.this);
+				alert.setCancelable(false);
+				alert.setTitle(R.string.new_file);
+				alert.setMessage(R.string.copy_old_sync_folder);
+				alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						try {
+							copyDirectoryOneLocationToAnotherLocation(new File(currentSyncFolder), new File(syncFolder));
+							proceed();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
-					saveSettings();
-					((SyncOrgApplication) getApplication()).startSynchronizer();
-					Intent intent = new Intent(NoSyncWizard.this, OrgNodeListActivity.class);
-					startActivity(intent);
+				});
 
-				}
-			});
+				alert.setNegativeButton(R.string.no_start_from_scratch, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						proceed();
+					}
+				});
 
-			alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-
-				}
-			});
-
-			alert.show();
+				alert.show();
+			}else{
+				proceed();
+			}
 		}
+	}
+
+	void proceed(){
+		saveSettings();
+		((SyncOrgApplication) getApplication()).startSynchronizer();
+		Intent intent = new Intent(NoSyncWizard.this, OrgNodeListActivity.class);
+		startActivity(intent);
 	}
 
 	@Override
@@ -162,7 +173,7 @@ public class NoSyncWizard extends AppCompatActivity {
 				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = appSettings.edit();
 
-		editor.putString("syncSource", "null");
+		editor.putString("syncSource", "nullSync");
 		editor.putString("syncFolder", syncFolder);
 		editor.apply();
 	}

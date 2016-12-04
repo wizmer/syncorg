@@ -367,7 +367,6 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
                         num -= numExtraItems;
                         OrgFile file = items.get(num);
                         File f = new File(file.getFilePath(activity));
-                        Log.v("file","ori path:"+f.getPath());
                         Uri fileUri = FileProvider.getUriForFile(activity, "com.coste.fileprovider", new File(f.getPath()));
                         uris.add(fileUri);
                     }

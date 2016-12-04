@@ -28,7 +28,6 @@ public class WizardActivity extends AppCompatActivity {
 		SharedPreferences srcPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		String syncSource = srcPrefs.getString("syncSource", "nullSync");
-		Log.v("sync", "source : "+ syncSource);
 		int id = getResources().getIdentifier(syncSource, "id", getPackageName() );
 		RadioButton radioButton = (RadioButton) findViewById(id);
 		if(radioButton != null) radioButton.setChecked(true);
