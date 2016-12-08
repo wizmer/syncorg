@@ -1,13 +1,17 @@
 package com.coste.syncorg.orgdata;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.coste.syncorg.BuildConfig;
+import com.coste.syncorg.R;
+import com.coste.syncorg.gui.wizard.wizards.NoSyncWizard;
 import com.coste.syncorg.services.SyncService;
 import com.coste.syncorg.synchronizers.NullSynchronizer;
 import com.coste.syncorg.synchronizers.SDCardSynchronizer;
@@ -23,11 +27,13 @@ public class SyncOrgApplication extends Application {
     public static Context getContext() {
         return instance;
     }
+    SharedPreferences sharedPreferences;
     
     @Override
     public void onCreate() {
         super.onCreate();
     	instance = this;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         OrgDatabase.startDB(this);
         startSynchronizer();
@@ -36,18 +42,8 @@ public class SyncOrgApplication extends Application {
     }
 
     public void startSynchronizer() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         String syncSource = sharedPreferences.getString("syncSource", "");
-        int prevousVersion = sharedPreferences.getInt("VERSION_CODE", -1);
-
-        if(prevousVersion < 4 && BuildConfig.VERSION_CODE >= 4){
-            // TODO: update version number
-            if(!syncSource.equals("sdcard") && !syncSource.equals("scp")){
-
-            }
-
-
-        }
 
         Context c = getApplicationContext();
 

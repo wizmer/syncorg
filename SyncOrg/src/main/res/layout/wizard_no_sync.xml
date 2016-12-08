@@ -31,8 +31,8 @@
             android:id="@+id/org_folder"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/org_folder"
+            android:gravity="left"
+            android:text="@string/folder"
             android:textSize="20dp"
             android:textStyle="bold"
             android:paddingBottom="20dp"/>

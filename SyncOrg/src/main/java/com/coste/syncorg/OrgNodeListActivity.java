@@ -219,7 +219,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
 
     private void showUpgradePopup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(OrgUtils.getStringFromResource(R.raw.upgrade, this));
+        builder.setMessage(R.string.upgrade);
         builder.setCancelable(false);
         builder.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {

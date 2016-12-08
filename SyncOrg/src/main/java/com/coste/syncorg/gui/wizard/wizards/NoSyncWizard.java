@@ -1,9 +1,5 @@
 package com.coste.syncorg.gui.wizard.wizards;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,19 +9,15 @@ import android.preference.PreferenceManager;
 
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.R;
-import com.coste.syncorg.directory_chooser.DirectoryChooserActivity;
 import com.coste.syncorg.directory_chooser.FolderPickerActivity;
-import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.SyncOrgApplication;
 import com.coste.syncorg.synchronizers.Synchronizer;
 
@@ -63,7 +55,7 @@ public class NoSyncWizard extends AppCompatActivity {
 				.getDefaultSharedPreferences(this);
 		syncFolder = appSettings.getString("syncFolder", "");
 		if(!syncFolder.equals("")) {
-			String details = getResources().getString(R.string.org_folder) + " " +
+			String details = getResources().getString(R.string.folder) + " " +
 					syncFolder;
 			orgFolder.setText(details);
 		}
@@ -107,12 +99,13 @@ public class NoSyncWizard extends AppCompatActivity {
 		}
 	}
 
-	void checkPreviousSynchronizer(Context context){
+	void checkPreviousSynchronizer(final Context context){
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		String syncSource = sharedPreferences.getString("syncSource", "null");
 		final String currentSyncFolder = Synchronizer.getInstance().getAbsoluteFilesDir();
 		if(syncSource.equals("null") || syncSource.equals("nullSync")){
-			File[] currentNodes = new File(currentSyncFolder).listFiles();
+			final File currentSyncFolderFile = new File(currentSyncFolder);
+			File[] currentNodes = currentSyncFolderFile.listFiles();
 			if(currentNodes != null && currentNodes.length > 0) {
 				AlertDialog.Builder alert = new AlertDialog.Builder(NoSyncWizard.this);
 				alert.setCancelable(false);
@@ -121,10 +114,10 @@ public class NoSyncWizard extends AppCompatActivity {
 				alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						try {
-							copyDirectoryOneLocationToAnotherLocation(new File(currentSyncFolder), new File(syncFolder));
+							copyDirectoryOneLocationToAnotherLocation(currentSyncFolderFile, new File(syncFolder));
 							proceed();
 						} catch (IOException e) {
-							e.printStackTrace();
+							Toast.makeText(context, "There was a problem: "+e.getMessage(), Toast.LENGTH_LONG).show();
 						}
 					}
 				});
@@ -156,7 +149,7 @@ public class NoSyncWizard extends AppCompatActivity {
 			case PICKFILE_RESULT_CODE:
 				if(resultCode==RESULT_OK){
 					syncFolder = data.getExtras().getString(FolderPickerActivity.EXTRA_RESULT_DIRECTORY);
-					String details = getResources().getString(R.string.org_folder) + " " +
+					String details = getResources().getString(R.string.folder) + " " +
 							syncFolder;
 					orgFolder.setText(details);
 				}

@@ -44,7 +44,7 @@
     <string name="file_exists">This file exists already !</string>
     <string name="all_day">All day</string>
     <string name="share_files">Share files</string>
-    <string name="org_folder">Org folder: </string>
+    <string name="folder">Folder: </string>
 
     <!-- toasts -->
     <string name="unselectable_item">You cannot select this item</string>
@@ -142,7 +142,7 @@
     <string name="wizard_ubuntuone">an UbuntuOne account</string>
     <string name="wizard_sdcard">my SD card</string>
     <string name="wizard_ssh">an SSH server</string>
-    <string name="wizard_null">nothing (capture only)</string>
+    <string name="wizard_null">External/No sync (default)</string>
     <string name="log_in_to_dropbox">Log in to Dropbox</string>
     <string name="log_in_to_ubuntuone">Log in to Ubuntu One</string>
     <string name="log_in_to_webdav">Log in to your WebDAV server</string>
@@ -323,6 +323,12 @@
         Path: johndoe/my_notes.git\n
         Host: github.com\n
         Port: 22 (or can be let blank)\n
+    </string>
+
+
+    <string name="upgrade">Update :\n\n
+        You can now choose the folder used to store org files. If org files are updated externally, SyncOrg will detect the changes.\n
+        Go to: Settings -> Setup wizard to set up the folder
     </string>
 
 </resources>
