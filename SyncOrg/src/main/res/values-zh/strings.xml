@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
   <string name="app_name">SyncOrgActivity</string>
   <string name="menu_outline">大纲</string>
   <string name="menu_capture">捕获</string>
@@ -17,7 +19,7 @@
   <string name="contextmenu_view">查看节点</string>
   <string name="contextmenu_delete">删除文件</string>
   <string name="contextmenu_node_delete">删除节点</string>
-  
+
   <string name="sync_wait">同步中，请稍候……</string>
   <string name="sync_failed">同步失败，要重试吗？</string>
   <string name="yes">是</string>
@@ -63,7 +65,7 @@
   <string name="todo_state">待办状态</string>
   <string name="back">返回</string>
   <string name="cancel">取消</string>
-  <string name="save">保存</string>  
+  <string name="save">保存</string>
   <string name="search_hint">搜索</string>
   <string name="warning">警告！</string>
   <string name="prompt_cert_changed">WebDAV 证书已经更改，如下为详情。如果您觉得正常请点击\'接受\'否则点击\'拒绝\'。如果授受新的证书，您还需要重新设置同步命令</string>
@@ -100,7 +102,7 @@
   <string name="null_sync_description">这只是个捕获同步。它不会与任何源进行同步。</string>
   <string name="url">URL</string>
   <string name="wizard_dropbox_email_hint">uri@frankandrobot.com</string>
-  
+
     <!-- preference strings -->
   <string name="preference_capture_with_timestamp">用时间戳捕获</string>
   <string name="preference_capture_with_timestamp_summary">捕获节点会添加一个时间戳</string>
@@ -156,5 +158,5 @@
   <string name="preference_calendar_show_done">显示己完成</string>
   <string name="edit_date_start">开始</string>
   <string name="edit_date_end">结束</string>
-  <string name="edit_date_date">日期</string>  
+  <string name="edit_date_date">日期</string>
 </resources>
