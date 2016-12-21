@@ -1,11 +1,18 @@
 package com.coste.syncorg.synchronizers;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.coste.syncorg.orgdata.OrgFile;
+import com.coste.syncorg.services.PermissionManagerActivity;
+import com.coste.syncorg.services.SyncService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,12 +25,26 @@ public class NullSynchronizer extends Synchronizer {
 
     public NullSynchronizer(Context context) {
         super(context);
+        SyncService syncServiceContext = (SyncService) context;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         syncFolder = preferences.getString("syncFolder", "null");
         File dir = new File(getAbsoluteFilesDir());
         if(!dir.exists()){
-            dir.mkdir();
+            if(Build.VERSION.SDK_INT >= 23){
+                int hasWritePermission = context.checkSelfPermission(Manifest.permission.WRITE_CONTACTS);
+                if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(context, PermissionManagerActivity.class);
+                    context.startActivity(intent);
+                    return;
+                }
+            }
+            createSyncFolder();
         }
+    }
+
+    public void createSyncFolder(){
+        File dir = new File(getAbsoluteFilesDir());
+        dir.mkdir();
     }
 
     @Override

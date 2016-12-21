@@ -6,17 +6,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-        />
-
-    <!-- TODO: look at this backup thing the above warning is talking about-->
+    <!-- TODO: look at this backup thing the above warning is talking about -->
     <application
         android:name=".orgdata.SyncOrgApplication"
         android:icon="@drawable/icon"
         android:label="SyncOrg"
         android:theme="@style/AppTheme.NoActionBar">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.coste.fileprovider"
@@ -40,7 +37,7 @@
         <provider
             android:name=".orgdata.OrgProvider"
             android:authorities="com.coste.syncorg.orgdata.OrgProvider"
-            android:exported="false"/>
+            android:exported="false" />
 
         <receiver
             android:name=".plugin.Synchronize"
@@ -102,7 +99,6 @@
         <activity
             android:name=".EditNodeActivity"
             android:theme="@style/ActionModeAppTheme" />
-
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
             android:configChanges="orientation|keyboard"
@@ -118,23 +114,23 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".gui.outline.ConflictResolverActivity"/>
-
+        <activity android:name=".gui.outline.ConflictResolverActivity" />
         <activity android:name=".gui.SearchActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".gui.wizard.wizards.SDCardWizard"/>
-        <activity android:name=".gui.wizard.wizards.SSHWizard"/>
-        <activity android:name=".gui.wizard.wizards.NoSyncWizard"/>
-        <activity android:name=".gui.wizard.wizards.WebDAVWizard"/>
-        <activity android:name=".directory_chooser.DirectoryChooserActivity"/>
-        <activity android:name=".directory_chooser.FolderPickerActivity"/>
-
+        <activity android:name=".gui.wizard.wizards.SDCardWizard" />
+        <activity android:name=".gui.wizard.wizards.SSHWizard" />
+        <activity android:name=".gui.wizard.wizards.NoSyncWizard" />
+        <activity android:name=".gui.wizard.wizards.WebDAVWizard" />
+        <activity android:name=".directory_chooser.DirectoryChooserActivity" />
+        <activity android:name=".directory_chooser.FolderPickerActivity" />
+        <activity android:name=".services.PermissionManagerActivity"></activity>
     </application>
+
 </manifest>

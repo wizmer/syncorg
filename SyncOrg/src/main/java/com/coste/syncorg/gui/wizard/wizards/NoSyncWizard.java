@@ -19,6 +19,7 @@ import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.R;
 import com.coste.syncorg.directory_chooser.FolderPickerActivity;
 import com.coste.syncorg.orgdata.SyncOrgApplication;
+import com.coste.syncorg.services.SyncService;
 import com.coste.syncorg.synchronizers.Synchronizer;
 
 import java.io.File;
@@ -137,8 +138,9 @@ public class NoSyncWizard extends AppCompatActivity {
 
 	void proceed(){
 		saveSettings();
-		((SyncOrgApplication) getApplication()).startSynchronizer();
-		Intent intent = new Intent(NoSyncWizard.this, OrgNodeListActivity.class);
+		// Restart the synchronization service
+		SyncService.restartAlarm(this);
+		Intent intent = new Intent(this, OrgNodeListActivity.class);
 		startActivity(intent);
 	}
 

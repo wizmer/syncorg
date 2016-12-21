@@ -14,20 +14,7 @@ import java.util.HashSet;
 public class PreferenceUtils {
 	private static final int DEFAULT_FONTSIZE = 14;
 
-	
-	public static boolean getCombineBlockAgendas() {
-		Context context = SyncOrgApplication.getContext();
-		try {
-			return PreferenceManager.getDefaultSharedPreferences(context)
-					.getBoolean("combineBlockAgendas", false);
-		} catch (UnsupportedOperationException e) { return false; }
-	}
-	
-	public static String getDefaultTodo() {
-		Context context = SyncOrgApplication.getContext();
-		return PreferenceManager.getDefaultSharedPreferences(context)
-				.getString("defaultTodo", "");
-	}
+
 
 	public static HashSet<String> getExcludedTags() {
 		Context context = SyncOrgApplication.getContext();

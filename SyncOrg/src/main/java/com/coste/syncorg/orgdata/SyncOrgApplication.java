@@ -36,22 +36,8 @@ public class SyncOrgApplication extends Application {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         OrgDatabase.startDB(this);
-        startSynchronizer();
         OrgFileParser.startParser(this);
         SyncService.startAlarm(this);
     }
 
-    public void startSynchronizer() {
-
-        String syncSource = sharedPreferences.getString("syncSource", "");
-
-        Context c = getApplicationContext();
-
-        if (syncSource.equals("sdcard"))
-            Synchronizer.setInstance(new SDCardSynchronizer(c));
-        else if (syncSource.equals("scp"))
-            Synchronizer.setInstance(new SSHSynchronizer(c));
-        else
-            Synchronizer.setInstance(new NullSynchronizer(c));
-    }
 }

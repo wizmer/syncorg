@@ -6,11 +6,16 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 
 import com.coste.syncorg.orgdata.SyncOrgApplication;
+import com.coste.syncorg.synchronizers.NullSynchronizer;
+import com.coste.syncorg.synchronizers.SDCardSynchronizer;
+import com.coste.syncorg.synchronizers.SSHSynchronizer;
 import com.coste.syncorg.synchronizers.Synchronizer;
+
 
 public class SyncService extends Service implements
 		SharedPreferences.OnSharedPreferenceChangeListener {
@@ -38,8 +43,14 @@ public class SyncService extends Service implements
 		intent.putExtra(ACTION, SyncService.START_ALARM);
 		context.startService(intent);
 	}
-	
-	@Override
+
+    public static void restartAlarm(Context context) {
+        stopAlarm(context);
+        startAlarm(context);
+    }
+
+
+    @Override
 	public void onCreate() {
 		super.onCreate();
 		this.appSettings = PreferenceManager
@@ -72,9 +83,23 @@ public class SyncService extends Service implements
 	}
 
 
+	public void startSynchronizer() {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+		String syncSource = preferences.getString("syncSource", "");
+
+		if (syncSource.equals("sdcard"))
+			Synchronizer.setInstance(new SDCardSynchronizer(this));
+		else if (syncSource.equals("scp"))
+			Synchronizer.setInstance(new SSHSynchronizer(this));
+		else
+			Synchronizer.setInstance(new NullSynchronizer(this));
+	}
 
 	private void runSynchronizer() {
 		unsetAlarm();
+		startSynchronizer();
+
 		final Synchronizer synchronizer = Synchronizer.getInstance();
 
 		Thread syncThread = new Thread() {
@@ -88,7 +113,6 @@ public class SyncService extends Service implements
 
 		syncThread.start();
 	}
-
 
 	private void setAlarm() {
 		boolean doAutoSync = this.appSettings.getBoolean("doAutoSync", false);
