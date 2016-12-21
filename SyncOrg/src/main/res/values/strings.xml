@@ -330,7 +330,9 @@
 
     <string name="upgrade">Update :\n\n
         You can now choose the folder used to store org files. If org files are updated externally, SyncOrg will detect the changes.\n
-        Go to: Settings -> Setup wizard to set up the folder
+        Go to: Settings -> Setup wizard to set up the folder\n\n
+
+        WARNING: For android 6 and high you need to manually add the STORAGE permission: Settings -> applications -> permissions
     </string>
 
 </resources>
