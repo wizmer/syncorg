@@ -15,7 +15,10 @@ A new implementation of [[https://github.com/matburt.mobileorg-android][MobileOr
 - Item management: reordering of items by swiping them
 - Agenda notifications
 
-** Developpers
+** Want to help ?
+*** Everyone
+Register to the Beta Testing mailing list and give me some feedbacks. This will keep your app up to date with the beta version. To register, just send me an email.
+*** Developpers
 See [[https://github.com/wizmer/syncorg/wiki/Contributing][the contibuting page]], section Android Studio Setup, if you want to build the project.
 
 ** Screenshots
