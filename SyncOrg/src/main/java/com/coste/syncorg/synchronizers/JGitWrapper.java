@@ -15,6 +15,7 @@ import com.coste.syncorg.orgdata.OrgProviderUtils;
 import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.R;
 import com.coste.syncorg.orgdata.SyncOrgApplication;
+import com.coste.syncorg.services.SyncService;
 import com.coste.syncorg.synchronizers.SshSessionFactory.ConnectionType;
 import com.coste.syncorg.util.FileUtils;
 import com.coste.syncorg.util.OrgFileNotFoundException;
@@ -340,7 +341,7 @@ public class JGitWrapper {
                 Toast.makeText(context, "Synchronization successful !", Toast.LENGTH_LONG).show();
                 ((Activity) context).finish();
 
-                ((SyncOrgApplication) ((Activity) context).getApplication()).startSynchronizer();
+                SyncService.restartAlarm(context);
                 Intent intent = new Intent(context, OrgNodeListActivity.class);
                 context.startActivity(intent);
                 return;
