@@ -1,5 +1,6 @@
 package com.coste.syncorg.directory_chooser;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coste.syncorg.R;
+import com.coste.syncorg.services.SyncService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -60,6 +63,9 @@ public class FolderPickerActivity extends AppCompatActivity
 
     private RootsAdapter mRootsAdapter;
 
+    final public static int MAKE_NULL_SYNC_DIR_PERMISSION = 0;
+
+
     /**
      * Location of null means that the list of roots is displayed.
      */
@@ -86,6 +92,19 @@ public class FolderPickerActivity extends AppCompatActivity
         mRootsAdapter = new RootsAdapter(this);
         mListView.setAdapter(mFilesAdapter);
 
+        if(Build.VERSION.SDK_INT >= 23){
+            int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+            if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MAKE_NULL_SYNC_DIR_PERMISSION);
+            }
+        }else{
+            populateAndDisplay();
+        }
+    }
+
+    private void populateAndDisplay() {
         populateRoots();
 
         if (getIntent().hasExtra(EXTRA_INITIAL_DIRECTORY)) {
@@ -93,11 +112,6 @@ public class FolderPickerActivity extends AppCompatActivity
         } else {
             displayRoot();
         }
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            Toast.makeText(this, R.string.kitkat_external_storage_warning, Toast.LENGTH_LONG)
-//                    .show();
-//        }
     }
 
     /**
@@ -187,6 +201,39 @@ public class FolderPickerActivity extends AppCompatActivity
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MAKE_NULL_SYNC_DIR_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+                    populateAndDisplay();
+                } else {
+                    // 1. Instantiate an AlertDialog.Builder with its constructor
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                    // 2. Chain together various setter methods to set the dialog characteristics
+                    builder.setMessage(R.string.write_permission_denied_warning_content)
+                            .setTitle(R.string.write_permission_denied_warning_title);
+
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+
+                    // 3. Get the AlertDialog from create()
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         }
     }
 

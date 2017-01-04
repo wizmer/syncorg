@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.coste.syncorg.services.PermissionManager;
+import com.coste.syncorg.services.PermissionManagerActivity;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -28,12 +30,13 @@ public class SSHSynchronizer extends Synchronizer {
         this.absoluteFileDir = appSettings.getString("syncFolder",
                 context.getFilesDir() + "/" + JGitWrapper.GIT_DIR);
 
+
+        if(PermissionManager.permissionGranted(context) == false) return;
+
         File dir = new File(getAbsoluteFilesDir());
         if(!dir.exists()){
             dir.mkdir();
         }
-
-
 
     }
 
@@ -77,6 +80,8 @@ public class SSHSynchronizer extends Synchronizer {
     }
 
     public SyncResult synchronize(){
+        if(PermissionManager.permissionGranted(context) == false) return new SyncResult();
+
         if (isCredentialsRequired()) return new SyncResult();
         SyncResult pullResult = JGitWrapper.pull(context);
 

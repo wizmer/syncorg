@@ -279,7 +279,8 @@ public class OrgNodeListActivity extends AppCompatActivity {
      * if it has not yet been prompt
      */
     private void connect() {
-        if (Synchronizer.getInstance().isCredentialsRequired() && passwordPrompt) {
+        Synchronizer syncer = Synchronizer.getInstance();
+        if (syncer != null && syncer.isCredentialsRequired() && passwordPrompt) {
             final AlertDialog.Builder alert = new AlertDialog.Builder(OrgNodeListActivity.this);
             final AuthData authData = AuthData.getInstance(OrgNodeListActivity.this);
             alert.setTitle(R.string.prompt_enter_password);

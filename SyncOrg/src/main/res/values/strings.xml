@@ -329,8 +329,9 @@
     <string name="upgrade">Update :\n\n
         You can now choose the folder used to store org files. If org files are updated externally, SyncOrg will detect the changes.\n
         Go to: Settings -> Setup wizard to set up the folder\n\n
-
-        WARNING: For android 6 and high you need to manually add the 'write' permission: Settings -> applications -> permissions
     </string>
+    <string name="write_permission_denied_warning_title">Warning: Storage permission denied</string>
+    <string name="write_permission_denied_warning_content">The "Storage" permission is mandatory to write notes on disk. When denied, the app can not run correctly.
+        Please activate it in: Android settings -> Apps -> SyncOrg -> Permissions.</string>
 
 </resources>
