@@ -102,8 +102,6 @@ public class OrgNodeDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.resolver = getActivity().getContentResolver();
 
-        OrgNodeTree tree = null;
-
         if (getArguments().containsKey(OrgContract.NODE_ID)) {
             Bundle arguments = getArguments();
             this.nodeId = arguments.getLong(OrgContract.NODE_ID);

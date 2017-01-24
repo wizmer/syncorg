@@ -11,6 +11,7 @@ import com.coste.syncorg.services.SyncService;
 import java.io.BufferedReader;
 import java.io.File;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 public class NullSynchronizer extends Synchronizer {
     String syncFolder;
@@ -61,7 +62,7 @@ public class NullSynchronizer extends Synchronizer {
         File[] files = file.listFiles();
         HashMap<String, Long> times_modified = OrgFile.getLastModifiedTimes(context);
 
-        result.deletedFiles = times_modified.keySet();
+        result.deletedFiles = new TreeSet<>(times_modified.keySet());
 
         if(files == null) return result;
 
