@@ -1,21 +1,24 @@
 * SyncOrg
-A new implementation of [[https://github.com/matburt.mobileorg-android][MobileOrg]], an Org mode app for Android. It is available on the [[https://play.google.com/store/apps/details?id=com.coste.syncorg][Play Store]]. 
+A new implementation of [[https://github.com/matburt/mobileorg-android][MobileOrg]], an Org mode app for Android. It is available on the [[https://play.google.com/store/apps/details?id=com.coste.syncorg][Play Store]]. 
 
 ** Current features
 
 - Modern design using Android's Material Design guidelines
 - Automatic [[https://en.wikipedia.org/wiki/Git_%28software%29][Git]] synchronization (via SSH and HTTP). Access to the raw files in case of conflict to solve.
+- External synchronization: The app can delegate org file synchronization to an external app.
 - Independent of Emacs: it is no longer required to use it in conjunction with Emacs.
 - Agenda view and Todo list view generated from the org files.
 - Folding of items and sub-items.
 - Share files button
 
 ** Upcoming features
-- External synchronization
 - Item management: reordering of items by swiping them
 - Agenda notifications
 
-** Developpers
+** Want to help ?
+*** Everyone
+Register to the Beta Testing mailing list and give me some feedbacks. This will keep your app up to date with the beta version. To register, just send me an email.
+*** Developpers
 See [[https://github.com/wizmer/syncorg/wiki/Contributing][the contibuting page]], section Android Studio Setup, if you want to build the project.
 
 ** Screenshots
