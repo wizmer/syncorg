@@ -10,7 +10,7 @@ android {
         applicationId "com.coste.syncorg"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 9
+        versionCode 10
         versionName "2.0.5.3"
     }
 
