@@ -55,6 +55,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 
 public class JGitWrapper {
@@ -63,22 +64,7 @@ public class JGitWrapper {
     public static String GIT_DIR = "git_dir";
 
     public static void add(String filename, Context context) {
-        File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
-        try {
-            Git git = Git.open(repoDir);
-            git.add()
-                    .addFilepattern(filename)
-                    .call();
-
-            String addMsg = context.getResources().getString(R.string.sync_git_file_added);
-            git.commit()
-                    .setMessage(addMsg + filename)
-                    .call();
-
-            new PushTask(context).execute();
-        } catch (GitAPIException | IOException e) {
-            e.printStackTrace();
-        }
+        new AddTask(context).execute(filename);
     }
 
     public static String read(String filename, Context context) {
@@ -389,6 +375,43 @@ public class JGitWrapper {
         }
     }
 
+
+    static public class AddTask extends AsyncTask<String, Void, Void> {
+        Context context;
+
+        public AddTask(Context context) {
+            this.context = context;
+        }
+
+        protected Void doInBackground(String... params) {
+            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+
+            try {
+                Git git = Git.open(repoDir);
+                git.add()
+                        .addFilepattern(params[0])
+                        .call();
+
+//                String addMsg = context.getResources().getString(R.string.sync_git_file_added);
+//                git.commit()
+//                        .setMessage(addMsg + params[0])
+//                        .call();
+
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            new PushTask(context).execute();
+        }
+    }
+
     static public class PushTask extends AsyncTask<String, Void, Void> {
         Context context;
 
@@ -400,41 +423,13 @@ public class JGitWrapper {
 
             File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
 
-//            File file = new File(context.getFilesDir() + "/" + GIT_DIR + "/SyncOrg");
-//            FileInputStream fis = null;
-//            BufferedInputStream bis = null;
-//            DataInputStream dis = null;
-//
-//            try {
-//                fis = new FileInputStream(file);
-//                // Here BufferedInputStream is added for fast reading.
-//                bis = new BufferedInputStream(fis);
-//                dis = new DataInputStream(bis);
-//
-//                // dis.available() returns 0 if the file does not have more lines.
-//                while (dis.available() != 0) {
-//
-//                    // this statement reads the line from the file and print it to
-//                    // the console.
-//                }
-//
-//                // dispose all the resources after using them.
-//                fis.close();
-//                bis.close();
-//                dis.close();
-//
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
             Git git = null;
             try {
                 git = Git.open(repoDir);
-//                if (git.status().call().isClean()) {
-//                    return null;
-//                }
+
+                if (git.status().call().isClean()) {
+                    return null;
+                }
                 // Stage all changed files, omitting new files, and commit with one command
 
 //                org.eclipse.jgit.api.Status status = git.status().call();
