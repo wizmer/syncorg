@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.coste.syncorg.gui.wizard.wizards.GoogleDriveWizard;
 import com.coste.syncorg.gui.wizard.wizards.NoSyncWizard;
 import com.coste.syncorg.gui.wizard.wizards.SDCardWizard;
 import com.coste.syncorg.gui.wizard.wizards.SSHWizard;
@@ -50,6 +51,9 @@ public class WizardActivity extends AppCompatActivity {
 				switch (syncName) {
 					case "webdav":
 						startActivity(new Intent(WizardActivity.this, WebDAVWizard.class));
+						break;
+					case "google_drive":
+						startActivity(new Intent(WizardActivity.this, GoogleDriveWizard.class));
 						break;
 					case "sdcard":
 						startActivity(new Intent(WizardActivity.this, SDCardWizard.class));

@@ -56,7 +56,7 @@ public class SettingsActivity extends PreferenceActivity implements
 								public void onClick(DialogInterface dialog,
 													int which) {
 									OrgProviderUtils.clearDB(getContentResolver());
-									Synchronizer.getInstance().clearRepository(SettingsActivity.this);
+									Synchronizer.getSynchronizer(SettingsActivity.this).clearRepository(SettingsActivity.this);
 								}
 
 							}).setNegativeButton(R.string.no, null).show();

@@ -8,10 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-import com.coste.syncorg.OrgNodeListActivity;
+import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.R;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class SynchronizerNotification extends SynchronizerNotificationCompat {
 	private NotificationManager notificationManager;
 	private Notification notification;
@@ -22,11 +22,15 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
 		super(context);
 		this.context = context;
 	}
-    
+
+	/**
+	 * Set the notification to be displayed in case of error.
+	 * Also prepare the intent to send if the user clicks on the notification"
+	 */
 	@Override
 	public void errorNotification(String errorMsg) {
 		this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		Intent notifyIntent = new Intent(context, OrgNodeListActivity.class);
+		Intent notifyIntent = new Intent(context, MainActivity.class);
 		notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                               | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notifyIntent.putExtra("ERROR_MESSAGE", errorMsg);
@@ -51,7 +55,7 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
 	public void setupNotification() {
 		this.notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Intent notifyIntent = new Intent(context, OrgNodeListActivity.class);
+		Intent notifyIntent = new Intent(context, MainActivity.class);
 		notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 

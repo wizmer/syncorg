@@ -9,13 +9,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgFileParser;
 import com.coste.syncorg.orgdata.OrgProviderUtils;
-import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.R;
-import com.coste.syncorg.orgdata.SyncOrgApplication;
-import com.coste.syncorg.services.SyncService;
 import com.coste.syncorg.synchronizers.SshSessionFactory.ConnectionType;
 import com.coste.syncorg.util.FileUtils;
 import com.coste.syncorg.util.OrgFileNotFoundException;
@@ -55,7 +53,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 
 public class JGitWrapper {
@@ -67,31 +64,14 @@ public class JGitWrapper {
         new AddTask(context).execute(filename);
     }
 
-    public static String read(String filename, Context context) {
-        Synchronizer.setInstance(new SSHSynchronizer(context));
-        File f = new File(Synchronizer.getInstance().getAbsoluteFilesDir());
-        File file[] = f.listFiles();
-        if (file == null) return "no file";
-        if(filename.equals(".git")) return ".git";
-        OrgFile orgFile = new OrgFile(filename, filename);
-        FileReader fileReader = null;
-        try {
-            fileReader = new FileReader(Synchronizer.getInstance().getAbsoluteFilesDir() + "/" + filename);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            return FileUtils.read(bufferedReader);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return "looser";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "looser";
-        }
-    }
-
-    public static SyncResult pull(final Context context) {
-        File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+    /**
+     * Perform a Git pull in the given folder
+     * @param context
+     * @param folder
+     * @return
+     */
+    static SyncResult pull(final Context context, String folder) {
+        File repoDir = new File(folder + "/.git");
         SyncResult result = new SyncResult();
         AuthData authData = AuthData.getInstance(context);
         Git git = null;
@@ -248,7 +228,7 @@ public class JGitWrapper {
 
         @Override
         protected org.eclipse.jgit.api.Status doInBackground(Void... voids) {
-            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
             Git git = null;
 
             try {
@@ -327,8 +307,7 @@ public class JGitWrapper {
                 Toast.makeText(context, "Synchronization successful !", Toast.LENGTH_LONG).show();
                 ((Activity) context).finish();
 
-                SyncService.restartAlarm(context);
-                Intent intent = new Intent(context, OrgNodeListActivity.class);
+                Intent intent = new Intent(context, MainActivity.class);
                 context.startActivity(intent);
                 return;
             }
@@ -349,8 +328,8 @@ public class JGitWrapper {
 
 
         void parseAll() {
-            Synchronizer.setInstance(new SSHSynchronizer(context));
-            File f = new File(Synchronizer.getInstance().getAbsoluteFilesDir());
+            String fileDir = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
+            File f = new File(fileDir);
             File file[] = f.listFiles();
             if (file == null) return;
             for (int i=0; i < file.length; i++)
@@ -360,9 +339,8 @@ public class JGitWrapper {
                 OrgFile orgFile = new OrgFile(filename, filename);
                 FileReader fileReader = null;
                 try {
-                    fileReader = new FileReader(Synchronizer.getInstance().getAbsoluteFilesDir() + "/" + filename);
+                    fileReader = new FileReader(fileDir + "/" + filename);
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
-
 
                     OrgFileParser.parseFile(orgFile, bufferedReader, context);
 
@@ -384,7 +362,7 @@ public class JGitWrapper {
         }
 
         protected Void doInBackground(String... params) {
-            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
 
             try {
                 Git git = Git.open(repoDir);
@@ -421,7 +399,7 @@ public class JGitWrapper {
 
         protected Void doInBackground(String... params) {
 
-            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
 
             Git git = null;
             try {
@@ -483,7 +461,7 @@ public class JGitWrapper {
 
         protected Void doInBackground(String... params) {
 
-            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
             Git git = null;
             try {
                 git = Git.open(repoDir);

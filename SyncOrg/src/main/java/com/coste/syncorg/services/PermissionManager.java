@@ -14,6 +14,7 @@ public class PermissionManager {
 
             if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(context, PermissionManagerActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 return false;
             }

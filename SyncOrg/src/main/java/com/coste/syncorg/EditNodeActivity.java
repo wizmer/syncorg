@@ -13,7 +13,7 @@ import android.view.MenuItem;
  * An activity representing a single OrgNode detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link OrgNodeListActivity}.
+ * in a {@link MainActivity}.
  */
 public class EditNodeActivity extends AppCompatActivity {
     EditNodeFragment fragment;
@@ -68,20 +68,20 @@ public class EditNodeActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            NavUtils.navigateUpTo(this, new Intent(this, OrgNodeListActivity.class));
+            NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
             return true;
 
             case R.id.edit_menu_ok:
 
                 boolean shouldFinish = ((EditNodeFragment)(getSupportFragmentManager().findFragmentByTag(EDIT_NODE_FRAGMENT))).onOKPressed();
                 if(shouldFinish) finish();
-//                Intent intent = new Intent(this, OrgNodeListActivity.class);
+//                Intent intent = new Intent(this, MainActivity.class);
 //                startActivity(intent);
                 return true;
             case R.id.edit_menu_cancel:
                 ((EditNodeFragment)(getSupportFragmentManager().findFragmentByTag(EDIT_NODE_FRAGMENT))).onCancelPressed();
                 finish();
-//                intent = new Intent(this, OrgNodeListActivity.class);
+//                intent = new Intent(this, MainActivity.class);
 //                startActivity(intent);
                 return true;
         }

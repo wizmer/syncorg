@@ -15,11 +15,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coste.syncorg.OrgNodeListActivity;
+import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.R;
 import com.coste.syncorg.directory_chooser.FolderPickerActivity;
-import com.coste.syncorg.orgdata.SyncOrgApplication;
-import com.coste.syncorg.services.SyncService;
 import com.coste.syncorg.synchronizers.Synchronizer;
 
 import java.io.File;
@@ -103,7 +101,8 @@ public class NoSyncWizard extends AppCompatActivity {
 	void checkPreviousSynchronizer(final Context context){
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		String syncSource = sharedPreferences.getString("syncSource", "null");
-		final String currentSyncFolder = Synchronizer.getInstance().getAbsoluteFilesDir();
+
+		final String currentSyncFolder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
 		if(syncSource.equals("null") || syncSource.equals("nullSync")){
 			final File currentSyncFolderFile = new File(currentSyncFolder);
 			File[] currentNodes = currentSyncFolderFile.listFiles();
@@ -138,9 +137,7 @@ public class NoSyncWizard extends AppCompatActivity {
 
 	void proceed(){
 		saveSettings();
-		// Restart the synchronization service
-		SyncService.restartAlarm(this);
-		Intent intent = new Intent(this, OrgNodeListActivity.class);
+		Intent intent = new Intent(this, MainActivity.class);
 		startActivity(intent);
 	}
 

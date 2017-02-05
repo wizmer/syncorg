@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -16,7 +15,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,16 +33,15 @@ import com.coste.syncorg.orgdata.OrgNode;
 import com.coste.syncorg.orgdata.OrgProviderUtils;
 import com.coste.syncorg.OrgNodeDetailActivity;
 import com.coste.syncorg.OrgNodeDetailFragment;
-import com.coste.syncorg.OrgNodeListActivity;
 import com.coste.syncorg.R;
-import com.coste.syncorg.settings.SettingsActivity;
+import com.coste.syncorg.synchronizers.Synchronizer;
 import com.coste.syncorg.util.OrgNodeNotFoundException;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineItem> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.OutlineItem> {
     private final AppCompatActivity activity;
     // Number of added items. Here it is two: Agenda and Todos.
     private int numExtraItems;
@@ -59,7 +56,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
 
     private DefaultTheme theme;
 
-	public OutlineAdapter(AppCompatActivity activity) {
+	public MainAdapter(AppCompatActivity activity) {
 		super();
 		this.activity = activity;
         this.resolver = activity.getContentResolver();
@@ -286,7 +283,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
             OrgFile file = items.get(num);
             file.removeFile(activity, true);
         }
-        ((OrgNodeListActivity) activity).runSynchronize();
+        Synchronizer.runSynchronize(activity);
         refresh();
         actionMode.finish();
     }
@@ -320,7 +317,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
-            OutlineAdapter.this.clearSelections();
+            MainAdapter.this.clearSelections();
         }
 
         @Override
@@ -366,7 +363,7 @@ public class OutlineAdapter extends RecyclerView.Adapter<OutlineAdapter.OutlineI
                     for(Integer num: selectedItems) {
                         num -= numExtraItems;
                         OrgFile file = items.get(num);
-                        File f = new File(file.getFilePath(activity));
+                        File f = new File(file.getFilePath());
                         Uri fileUri = FileProvider.getUriForFile(activity, "com.coste.fileprovider", new File(f.getPath()));
                         uris.add(fileUri);
                     }

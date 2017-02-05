@@ -36,7 +36,7 @@ import java.util.TreeMap;
 
 /**
  * A fragment representing a single OrgNode detail screen.
- * This fragment is either contained in a {@link OrgNodeListActivity}
+ * This fragment is either contained in a {@link MainActivity}
  * in two-pane mode (on tablets) or a {@link OrgNodeDetailActivity}
  * on handsets.
  */

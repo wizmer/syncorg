@@ -59,7 +59,6 @@
     <string name="prompt_cert_changed">The WebDAV Certificate has changed, below are the details.  If you are okay with this click \'Accept\' otherwise click \'Deny\'.  If you accept the new certificate you will need to re-issue your Synchronize command</string>
 
     <!-- synchronization -->
-    <string name="sync_not_configured">Sync not configured</string>
     <string name="sync_successful">Synchronization Successful</string>
     <string name="sync_error_occured">Error occurred during sync:</string>
     <string name="sync_synchronizing_changes">Synchronizing changes</string>
@@ -143,6 +142,7 @@
     <string name="wizard_sdcard">my SD card</string>
     <string name="wizard_ssh">an SSH server</string>
     <string name="wizard_null">External/No sync (default)</string>
+    <string name="wizard_google_drive">Google Drive</string>
     <string name="log_in_to_dropbox">Log in to Dropbox</string>
     <string name="log_in_to_ubuntuone">Log in to Ubuntu One</string>
     <string name="log_in_to_webdav">Log in to your WebDAV server</string>

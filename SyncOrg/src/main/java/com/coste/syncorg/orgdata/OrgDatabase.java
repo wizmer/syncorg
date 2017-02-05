@@ -6,15 +6,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.support.design.widget.TabLayout;
+import android.util.Log;
 
 import com.coste.syncorg.orgdata.OrgContract.OrgData;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.coste.syncorg.orgdata.OrgDatabase.Tables.ALL_TABLES;
+
 public class OrgDatabase extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "SyncOrg.db";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 7;
 	private static OrgDatabase mInstance = null;
 	private SQLiteStatement orgdataInsertStatement;
 	private SQLiteStatement addPayloadStatement;
@@ -63,7 +66,8 @@ public class OrgDatabase extends SQLiteOpenHelper {
 				+ "filename text,"
 				+ "name text,"
 				+ "comment text,"
-				+ "time_modified integer default 0)");
+				+ "time_modified integer default 0,"
+				+ "UNIQUE(filename) ON CONFLICT IGNORE)");
 		db.execSQL("CREATE TABLE IF NOT EXISTS todos("
 				+ "_id integer primary key autoincrement,"
 				+ "todogroup integer,"
@@ -118,11 +122,15 @@ public class OrgDatabase extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		switch (newVersion) {
-		case 6:
-			db.execSQL("ALTER TABLE "+ Tables.FILES + " ADD time_modified integer default 0");
-			break;
+			case 6:
+				db.execSQL("ALTER TABLE "+ Tables.FILES + " ADD time_modified integer default 0");
+				break;
+			case 7:
+				for(String table: ALL_TABLES){
+					db.delete(table, null, null);
+				}
+				onCreate(db);
 		}
-//		onCreate(db);
 	}
 
 	public long fastInsertNode(OrgNode node) {
@@ -176,6 +184,7 @@ public class OrgDatabase extends SQLiteOpenHelper {
 		String TAGS = "tags";
 		String TODOS = "todos";
 		String ORGDATA = "orgdata";
+		String[] ALL_TABLES = {TIMESTAMPS, FILES, PRIORITIES, TAGS, TODOS, ORGDATA};
 	}
 
 }

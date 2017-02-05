@@ -63,7 +63,7 @@ public class SDCardSynchronizer extends Synchronizer {
 	}
 
 	@Override
-	public void addFile(String filename) {
+	public void _addFile(String filename) {
 
 	}
 

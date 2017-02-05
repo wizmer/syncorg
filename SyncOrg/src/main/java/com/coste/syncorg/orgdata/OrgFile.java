@@ -141,7 +141,7 @@ public class OrgFile {
 		ContentValues values = new ContentValues();
 		values.put(OrgData.FILE_ID, id);
 		resolver.update(OrgData.buildIdUri(nodeId), values, null, null);
-		if(!new File(getFilePath(context)).exists()) createFile(context);
+		if(!new File(getFilePath()).exists()) createFile(context);
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class OrgFile {
      * @param context
      */
     public void updateFile(String content, Context context) {
-        File file = new File(getFilePath(context));
+        File file = new File(getFilePath());
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream(file);
@@ -213,15 +213,15 @@ public class OrgFile {
      */
 	public void updateTimeModified(Context context){
 		SQLiteDatabase db = OrgDatabase.getInstance().getReadableDatabase();
-		long time = getFile(context).lastModified();
+		long time = getFile().lastModified();
 
 		// New value for one column
 		ContentValues cv = new ContentValues();
 		cv.put(OrgContract.FilesColumns.TIME_MODIFIED,time); //These Fields should be your String values of actual column names
 
 		// Which row to update, based on the title
-		String selection = OrgContract.FilesColumns.NAME + " = ?";
-		String[] selectionArgs = { name };
+		String selection = OrgContract.FilesColumns.FILENAME + " = ?";
+		String[] selectionArgs = { filename };
 
 		db.update(
 				OrgDatabase.Tables.FILES,
@@ -244,7 +244,7 @@ public class OrgFile {
 
 		long entriesRemoved = removeFileOrgDataNodes(resolver);
 		removeFileNode(resolver);
-		if (fromDisk) new File(getFilePath(context)).delete();
+		if (fromDisk) new File(getFilePath()).delete();
 
         return entriesRemoved;
 	}
@@ -299,18 +299,17 @@ public class OrgFile {
 
 	/**
 	 * Returns the 'File' object
-	 * @param context
 	 * @return
      */
-	public File getFile(Context context){
-		return new File(getFilePath(context));
+	public File getFile(){
+		return new File(getFilePath());
 	}
 
 	/**
      * @return the absolute filename
      */
-    public String getFilePath(Context context) {
-		return Synchronizer.getInstance().getAbsoluteFilesDir() + "/" + filename;
+    public String getFilePath() {
+		return filename;
 	}
 
 	/**
@@ -339,13 +338,13 @@ public class OrgFile {
 
 	public static HashMap<String, Long> getLastModifiedTimes(Context context){
 		Cursor cursor = context.getContentResolver().query(Files.CONTENT_URI,
-				new String[]{OrgContract.FilesColumns.NAME, OrgContract.FilesColumns.TIME_MODIFIED},
+				new String[]{OrgContract.FilesColumns.FILENAME, OrgContract.FilesColumns.TIME_MODIFIED},
 				null, null, null);
 		HashMap<String, Long> result = new HashMap<>();
 		if (cursor != null) {
 
 			while (cursor.moveToNext()) {
-				result.put(cursor.getString(cursor.getColumnIndexOrThrow(OrgContract.FilesColumns.NAME)),
+				result.put(cursor.getString(cursor.getColumnIndexOrThrow(OrgContract.FilesColumns.FILENAME)),
 						cursor.getLong(cursor.getColumnIndexOrThrow(OrgContract.FilesColumns.TIME_MODIFIED)));
 			}
 			cursor.close();

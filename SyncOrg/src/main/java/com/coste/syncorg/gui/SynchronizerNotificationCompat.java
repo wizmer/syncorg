@@ -9,7 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.widget.RemoteViews;
 
-import com.coste.syncorg.OrgNodeListActivity;
+import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.R;
 
 public class SynchronizerNotificationCompat {
@@ -25,7 +25,7 @@ public class SynchronizerNotificationCompat {
 	public void errorNotification(String errorMsg) {
 		this.notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Intent notifyIntent = new Intent(context, OrgNodeListActivity.class);
+		Intent notifyIntent = new Intent(context, MainActivity.class);
 		notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
@@ -52,7 +52,7 @@ public class SynchronizerNotificationCompat {
 	public void setupNotification() {
 		this.notificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Intent notifyIntent = new Intent(context, OrgNodeListActivity.class);
+		Intent notifyIntent = new Intent(context, MainActivity.class);
 		notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 

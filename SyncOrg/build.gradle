@@ -10,8 +10,8 @@ android {
         applicationId "com.coste.syncorg"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 10
-        versionName "2.0.5.3"
+        versionCode 11
+        versionName "2.0.5.4"
     }
 
     useLibrary 'org.apache.http.legacy'
@@ -25,6 +25,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.jcraft:jsch:0.1.50'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:support-v4:24.0.0'

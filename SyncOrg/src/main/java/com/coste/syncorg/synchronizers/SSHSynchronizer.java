@@ -83,7 +83,8 @@ public class SSHSynchronizer extends Synchronizer {
         if(PermissionManager.permissionGranted(context) == false) return new SyncResult();
 
         if (isCredentialsRequired()) return new SyncResult();
-        SyncResult pullResult = JGitWrapper.pull(context);
+        String folder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
+        SyncResult pullResult = JGitWrapper.pull(context, folder);
 
         new JGitWrapper.PushTask(context).execute();
         return pullResult;
@@ -105,7 +106,7 @@ public class SSHSynchronizer extends Synchronizer {
     }
 
     @Override
-    public void addFile(String filename) {
+    public void _addFile(String filename) {
         JGitWrapper.add(filename, context);
     }
 

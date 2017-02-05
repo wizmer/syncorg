@@ -14,7 +14,7 @@ import android.widget.EditText;
 
 import com.coste.syncorg.orgdata.OrgContract;
 import com.coste.syncorg.orgdata.OrgFile;
-import com.coste.syncorg.OrgNodeListActivity;
+import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.R;
 import com.coste.syncorg.synchronizers.JGitWrapper;
 import com.coste.syncorg.synchronizers.Synchronizer;
@@ -52,7 +52,7 @@ public class ConflictResolverActivity extends AppCompatActivity {
                     actionBar.setTitle(file.name);
                 }
 
-                String dir = Synchronizer.getInstance().getAbsoluteFilesDir();
+                String dir = Synchronizer.getSynchronizer(this).getAbsoluteFilesDir();
                 this.filename = dir+"/"+file.filename;
                 editText.setText(OrgUtils.readAll(this.filename));
 
@@ -74,7 +74,7 @@ public class ConflictResolverActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit_menu_cancel:
-                NavUtils.navigateUpTo(this, new Intent(this, OrgNodeListActivity.class));
+                NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
                 return true;
             case R.id.edit_menu_ok:
                 if(this.filename!=null && !this.filename.equals("")){
@@ -91,7 +91,7 @@ public class ConflictResolverActivity extends AppCompatActivity {
                     }
 
                 }
-                NavUtils.navigateUpTo(this, new Intent(this, OrgNodeListActivity.class));
+                NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
                 return true;
         }
         return false;

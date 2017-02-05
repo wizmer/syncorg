@@ -24,31 +24,13 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
-        <service
-            android:name=".services.SyncService"
-            android:exported="false">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <action android:name="com.coste.syncorg.SYNC_SERVICE" />
-            </intent-filter>
-        </service>
-
         <provider
             android:name=".orgdata.OrgProvider"
             android:authorities="com.coste.syncorg.orgdata.OrgProvider"
             android:exported="false" />
 
-        <receiver
-            android:name=".plugin.Synchronize"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
-            </intent-filter>
-        </receiver>
-
         <activity
-            android:name=".OrgNodeListActivity"
+            android:name=".MainActivity"
             android:label="SyncOrg"
             android:theme="@style/ActionModeAppTheme">
             <intent-filter>
@@ -125,12 +107,13 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity android:name=".gui.wizard.wizards.SDCardWizard" />
+        <activity android:name=".gui.wizard.wizards.GoogleDriveWizard" />
         <activity android:name=".gui.wizard.wizards.SSHWizard" />
         <activity android:name=".gui.wizard.wizards.NoSyncWizard" />
         <activity android:name=".gui.wizard.wizards.WebDAVWizard" />
         <activity android:name=".directory_chooser.DirectoryChooserActivity" />
         <activity android:name=".directory_chooser.FolderPickerActivity" />
-        <activity android:name=".services.PermissionManagerActivity"></activity>
+        <activity android:name=".services.PermissionManagerActivity" />
+        <activity android:name="com.coste.google_drive.FolderPicker"/>
     </application>
-
 </manifest>
