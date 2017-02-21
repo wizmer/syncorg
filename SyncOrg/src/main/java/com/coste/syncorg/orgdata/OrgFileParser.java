@@ -63,39 +63,7 @@ public class OrgFileParser {
 			return 0;
 	}
 
-	/**
-	 * Parses the checksum file.
-	 *
-	 * @return HashMap with Filename->checksum
-	 */
-	public static HashMap<String, String> getChecksums(String filecontents) {
-		HashMap<String, String> checksums = new HashMap<String, String>();
-		for (String line : filecontents.split("[\\n\\r]+")) {
-			if (TextUtils.isEmpty(line))
-				continue;
-			String[] chksTuple = line.split("  ", 2);
-			if (chksTuple.length == 2)
-				checksums.put(chksTuple[1], chksTuple[0]);
-		}
-		return checksums;
-	}
 
-	/**
-	 * Parses the file list from index file.
-	 *
-	 * @return HashMap with Filename->Filename Alias
-	 */
-	public static HashMap<String, String> getFilesFromIndex(String filecontents) {
-		Pattern indexOrgFilePattern = Pattern.compile(fileMatchPattern);
-		Matcher indexOrgFileMatcher = indexOrgFilePattern.matcher(filecontents);
-		HashMap<String, String> allOrgFiles = new HashMap<>();
-
-		while (indexOrgFileMatcher.find()) {
-			allOrgFiles.put(indexOrgFileMatcher.group(1), indexOrgFileMatcher.group(2));
-		}
-
-		return allOrgFiles;
-	}
 
 	public static HashMap<String, Boolean> parseTodos(String line) {
 		HashMap<String, Boolean> result = null;
@@ -123,39 +91,6 @@ public class OrgFileParser {
 			}
 		}
 		return result;
-	}
-
-	public static ArrayList<String> getPrioritiesFromIndex(String filecontents) {
-		Matcher t = getPriorities.matcher(filecontents);
-
-		ArrayList<String> priorities = new ArrayList<String>();
-
-		if (t.find()) {
-			if (t.group(1) != null && t.group(1).trim().length() > 0) {
-				String[] grouping = t.group(1).trim().split("\\s+");
-				for (String group : grouping)
-					priorities.add(group.trim());
-			}
-		}
-		return priorities;
-	}
-
-	public static ArrayList<String> getTagsFromIndex(String filecontents) {
-		Matcher matcher = getTags.matcher(filecontents);
-		ArrayList<String> tagList = new ArrayList<String>();
-
-		if (matcher.find()) {
-			String tags = matcher.group(1).trim().replaceAll("[\\{\\}]", "");
-			String[] split = tags.split("\\s+");
-
-			if (split.length == 1 && split[0].equals(""))
-				return tagList;
-
-			for (String tag : split)
-				tagList.add(tag);
-		}
-
-		return tagList;
 	}
 
 	public static void decryptAndParseFile(OrgFile orgFile, BufferedReader reader, Context context) {
@@ -235,7 +170,6 @@ public class OrgFileParser {
 			this.payload = new StringBuilder();
 			parseHeading(line, numstars);
 		} else { // continuing previous node
-			HashMap<String,Boolean> map = parseTodos(line);
 			OrgProviderUtils.addTodos(parseTodos(line), resolver);
 			parseTimestamps(line);
 			payload.append(line).append("\n");

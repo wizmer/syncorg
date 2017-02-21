@@ -128,8 +128,7 @@ public class OrgNodeViewHolder extends ItemViewHolder {
         String cleanedPayload = node.getCleanedPayload();
         contentView.setText(cleanedPayload);
 
-
-        if(cleanedPayload.equals("")){
+        if(cleanedPayload.trim().equals("")){
             RelativeLayout.LayoutParams layoutParams =
                     (RelativeLayout.LayoutParams)titleView.getLayoutParams();
             layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);

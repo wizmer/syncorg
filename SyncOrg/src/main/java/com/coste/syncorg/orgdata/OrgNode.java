@@ -282,66 +282,6 @@ public class OrgNode {
         }
     }
 
-	public boolean isFilenode(ContentResolver resolver) {
-		try {
-			OrgFile file = new OrgFile(fileId, resolver);
-			if(file.nodeId == this.id)
-				return true;
-		} catch (OrgFileNotFoundException e) {}
-		
-		return false;
-	}
-	
-
-
-	public String getCleanedName() {
-		return this.name;
-	}
-
-	
-	/**
-	 * @return The :ID:, :ORIGINAL_ID: or olp link of node.
-	 */
-	public String getNodeId(ContentResolver resolver) {
-		preparePayload();
-
-		String id = orgNodePayload.getId();				
-		if(id != null && id.equals("") == false)
-			return id;
-		else
-			return getOlpId(resolver);
-	}
-	
-	public String getOlpId(ContentResolver resolver) {
-		StringBuilder result = new StringBuilder();
-		
-		ArrayList<OrgNode> nodesFromRoot;
-		try {
-			nodesFromRoot = OrgProviderUtils.getOrgNodePathFromTopLevel(
-					parentId, resolver);
-		} catch (IllegalStateException e) {
-			return "";
-		}
-		
-		if (nodesFromRoot.size() == 0) {
-			try {
-				return "olp:" + getOrgFile(resolver).name;
-			} catch (OrgFileNotFoundException e) {
-				return "";
-			}
-		}
-			
-		OrgNode topNode = nodesFromRoot.get(0);
-		nodesFromRoot.remove(0);
-		result.append("olp:" + topNode.getFilename(resolver) + ":");
-		
-		for(OrgNode node: nodesFromRoot)
-			result.append(node.getStrippedNameForOlpPathLink() + "/");
-		
-		result.append(getStrippedNameForOlpPathLink());
-		return result.toString();
-	}
-
     public OrgNodeTimeDate getDeadline() {
         return deadline;
     }
@@ -362,18 +302,6 @@ public class OrgNode {
 		return Math.abs(deadline-scheduled);
 	}
 
-    /**
-	 * Olp paths containing certain symbols can't be applied by org-mode. To
-	 * prevent node names from injecting bad symbols, we strip them out here.
-	 */
-
-	private String getStrippedNameForOlpPathLink() {
-		String result = this.name;
-		result = result.replaceAll("\\[[^\\]]*\\]", ""); // Strip out "[*]"
-		return result;
-	}
-	
-	
 	public String getCleanedPayload() {
 		preparePayload();
 		return this.orgNodePayload.getCleanedPayload();
@@ -417,7 +345,7 @@ public class OrgNode {
 	 * @param c: The characted used for the padding
 	 * @return
      */
-	private String getLevelPadding(char c){
+	public String getLevelPadding(char c){
 		String result = "";
 		if(level > 0) for(int i = 0;i<level; i++) result += c;
 		result += " ";
@@ -456,8 +384,7 @@ public class OrgNode {
 		if (payload != null && !TextUtils.isEmpty(payload)){
 			for( String payload_line : payload.split("\\r?\\n")){
 				result.append("\n");
-				result.append(getLevelPadding(' '));
-				result.append(payload_line.trim());
+				result.append(payload_line);
 			}
 		}
 
@@ -500,13 +427,5 @@ public class OrgNode {
 		}
 		OrgFile.updateFile(this, context);
 		return id;
-	}
-
-	public void addAutomaticTimestamp() {
-		Context context = SyncOrgApplication.getContext();
-		boolean addTimestamp = PreferenceManager.getDefaultSharedPreferences(
-				context).getBoolean("captureWithTimestamp", false);
-		if(addTimestamp)
-			setPayload(getPayload() + OrgUtils.getTimestamp());
 	}
 }

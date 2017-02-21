@@ -27,6 +27,7 @@ import com.coste.syncorg.orgdata.OrgContract;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgNode;
 import com.coste.syncorg.orgdata.OrgNodeTimeDate;
+import com.coste.syncorg.util.FileUtils;
 import com.coste.syncorg.util.OrgNodeNotFoundException;
 import com.coste.syncorg.util.TodoDialog;
 
@@ -34,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+
+import static com.coste.syncorg.util.FileUtils.getPaddingLevel;
 
 public class EditNodeFragment extends Fragment {
     public static String NODE_ID = "node_id";
@@ -263,15 +266,27 @@ public class EditNodeFragment extends Fragment {
             }
         }
 
-        ContentResolver resolver = getContext().getContentResolver();
         String payload = "";
+        String padding = "";
+        long paddingLevel;
+        String previousPayload = node.getPayload();
+        if(previousPayload != null && !previousPayload.trim().equals("")){
+            // Use the padding level from the former payload
+            paddingLevel = FileUtils.getMinimumPadding(previousPayload);
+        }else{
+            paddingLevel = node.level+1;
+        }
 
-        payload+=content.getText().toString();
+        for(int i = 0;i<paddingLevel;i++) padding += ' ';
+        for(String line: content.getText().toString().split("\\r?\\n")){
+            payload += padding + line + "\n";
+        }
 
         node.name = title.getText().toString();
+
         node.setPayload(payload);
 
-        if(nodeId <0 ) node.shiftNextSiblingNodes(context);
+        if(nodeId < 0) node.shiftNextSiblingNodes(context);
 
         node.write(getContext());
         OrgFile.updateFile(node, context);
