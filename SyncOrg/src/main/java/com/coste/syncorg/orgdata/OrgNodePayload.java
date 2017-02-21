@@ -1,11 +1,15 @@
 package com.coste.syncorg.orgdata;
 
+import com.coste.syncorg.util.FileUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.coste.syncorg.util.FileUtils.getMinimumPadding;
 
 public class OrgNodePayload {
 	private StringBuilder payload = new StringBuilder();
@@ -73,22 +77,23 @@ public class OrgNodePayload {
 
 	private void trimEachLine() {
 		String cleanPayload = this.cleanPayload.toString();
-
 		String lines[] = cleanPayload.split("\\n");
+		String result = "";
+
 		int N = lines.length;
 		if (N == 0){
 			this.cleanPayload = new StringBuilder("");
 			return;
 		}
 
-		String result = lines[0].trim();
-		for (int i = 1; i < N; ++i) {
-			String trimedLine = lines[i].trim();
-			if (trimedLine.length() > 0) result += "\n" + trimedLine;
+		int minimumPaddingLevel = getMinimumPadding(cleanPayload);
+
+		for (String line: lines){
+			result += line.substring(minimumPaddingLevel) + "\n";
 		}
 		this.cleanPayload = new StringBuilder(result);
 	}
-	
+
 	public String getId() {
 		if(this.id == null)
 			stripProperties();
@@ -137,7 +142,7 @@ public class OrgNodePayload {
 			getTimestamp(type);
 
 		stripProperties();
-		stripFileProperties();
+//		stripFileProperties();
 		trimEachLine();
 	}
 
@@ -213,7 +218,7 @@ public class OrgNodePayload {
 				break;
 
 			fileProperties.add(cleanPayload.substring(start, end + 1) + "\n");
-			cleanPayload.delete(start, end + 1);
+			cleanPayload.delete(start, end);
 		}
 
 		return fileProperties;

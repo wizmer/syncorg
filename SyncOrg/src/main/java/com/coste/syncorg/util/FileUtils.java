@@ -239,4 +239,40 @@ public class FileUtils {
 			return null;
 		}
 	}
+
+	/**
+	 * Return the padding level: the number of blanks at the beggining of the line
+	 * @param str
+	 * @return
+     */
+	static public int getPaddingLevel(String str){
+		int pos = 0;
+		if(str == null) return 0;
+		int len = str.length();
+		if(len == 0) return 0;
+		int padding = 0;
+		while(pos < len && str.charAt(pos++) == ' ') padding++;
+		return padding;
+	}
+
+
+	/**
+	 * Return the minimum indentation of a block of lines
+	 * @param str
+	 * @return
+     */
+	static public int getMinimumPadding(String str){
+		if(str == null || str.trim().equals("")) return 0;
+		int minimumPadding = 9999;
+		for (String line: str.split("\\r?\\n")){
+			if(line.trim().equals("")) continue;
+			int level = FileUtils.getPaddingLevel(line);
+			if(level < minimumPadding){
+				minimumPadding = level;
+			}
+		}
+		return minimumPadding;
+	}
+
 }
+
