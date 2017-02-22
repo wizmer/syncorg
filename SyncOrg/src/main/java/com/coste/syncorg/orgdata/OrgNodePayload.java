@@ -104,17 +104,14 @@ public class OrgNodePayload {
 
     public HashMap getPropertiesPayload()
     {
-
 		HashMap propsHashMap = new HashMap();
 
 		if (this.payload != null) {
-
 			Pattern propsRegex = Pattern.compile(":PROPERTIES:\\s*\n(.*):END:", Pattern.DOTALL);
             Pattern propertyRegex = Pattern.compile("^\\s*:([^:]+):\\s*(.+)$", Pattern.MULTILINE);
             Matcher propsMatcher = propsRegex.matcher(this.payload);
 
 			if (propsMatcher.find()) {
-
 				String properties = propsMatcher.group(1);
                 Matcher propertyMatcher = propertyRegex.matcher(properties);
 
@@ -123,9 +120,7 @@ public class OrgNodePayload {
                     String value = propertyMatcher.group(2);
                     propsHashMap.put(property, value);
                 }
-
 			}
-
 		}
 
         if (!propsHashMap.isEmpty()) {
@@ -133,7 +128,6 @@ public class OrgNodePayload {
         }
 
 		return null;
-
 	}
 
 	private void cleanPayload() {

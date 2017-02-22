@@ -327,8 +327,7 @@
 
 
     <string name="upgrade">Update :\n\n
-        You can now choose the folder used to store org files. If org files are updated externally, SyncOrg will detect the changes.\n
-        Go to: Settings -> Setup wizard to set up the folder\n\n
+        Files in nested folders are now taken into account.
    </string>
     <string name="write_permission_denied_warning_title">Warning: Storage permission denied</string>
     <string name="write_permission_denied_warning_content">The "Storage" permission is mandatory to write notes on disk. When denied, the app can not run correctly.

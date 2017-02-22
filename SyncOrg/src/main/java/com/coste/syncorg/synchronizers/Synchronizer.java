@@ -167,7 +167,7 @@ public abstract class Synchronizer {
      * @return
      */
     private String getRelativeFilePath(String filename){
-        String filesDir = getAbsoluteFilesDir();
+        String filesDir = getAbsoluteFilesDir() + "/";
         if(filename.substring(0, filesDir.length()).equals(filesDir)){
             return filename.substring(filesDir.length());
         }
