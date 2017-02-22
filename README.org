@@ -12,6 +12,7 @@ A new implementation of [[https://github.com/matburt/mobileorg-android][MobileOr
 - Share files button
 
 ** Upcoming features
+- Google Drive synchronization
 - Item management: reordering of items by swiping them
 - Agenda notifications
 
