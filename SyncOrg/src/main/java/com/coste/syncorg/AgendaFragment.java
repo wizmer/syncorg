@@ -42,34 +42,12 @@ import java.util.TreeMap;
  */
 public class AgendaFragment extends Fragment {
 
-    class AgendaItem {
-        public OrgNodeTimeDate.TYPE type;
-        public OrgNode node;
-        public String text;
-        long time;
-        public AgendaItem(OrgNode node, OrgNodeTimeDate.TYPE type, long time){
-            this.node = node;
-            this.type = type;
-            this.time = time;
-
-            OrgNodeTimeDate date = new OrgNodeTimeDate(time);
-
-            if(time < 0 || (node.getRangeInSec() > 86400 && date.isBetween(node.getScheduled(), node.getDeadline()))){
-                text = getActivity().getResources().getString(R.string.all_day);
-            } else {
-                text = date.toString(false);
-            }
-
-        }
-    }
-
     RecyclerViewAdapter adapter;
     RecyclerView recyclerView;
     ArrayList<AgendaItem> nodesList;
-    ArrayList<OrgNodeTimeDate>  daysList;
+    ArrayList<OrgNodeTimeDate> daysList;
     ArrayList<PositionHelper> items;
     private ContentResolver resolver;
-
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -128,8 +106,8 @@ public class AgendaFragment extends Fragment {
             try {
                 OrgNode node = new OrgNode(nodeId, resolver);
 
-                if(!calendarShowDone && !node.todo.equals("")){
-                    if(!OrgProviderUtils.isTodoActive(node.todo, getActivity().getContentResolver()))
+                if (!calendarShowDone && !node.todo.equals("")) {
+                    if (!OrgProviderUtils.isTodoActive(node.todo, getActivity().getContentResolver()))
                         continue;
                 }
 
@@ -143,10 +121,10 @@ public class AgendaFragment extends Fragment {
                     type = OrgNodeTimeDate.TYPE.Scheduled;
                 }
 
-                if(!calendarShowPast && time < cal.getTimeInMillis()/1000L)
+                if (!calendarShowPast && time < cal.getTimeInMillis() / 1000L)
                     continue;
 
-                day = time / (24*3600);
+                day = time / (24 * 3600);
 
                 if (!nodeIdsForEachDay.containsKey(day))
                     nodeIdsForEachDay.put(day, new ArrayList<AgendaItem>());
@@ -164,26 +142,26 @@ public class AgendaFragment extends Fragment {
                 OrgNode node = new OrgNode(nodeId, resolver);
 
                 // Remove done items is setting: calendarShowDone=false
-                if(!calendarShowDone && !node.todo.equals("")){
-                    if(!OrgProviderUtils.isTodoActive(node.todo, getActivity().getContentResolver()))
+                if (!calendarShowDone && !node.todo.equals("")) {
+                    if (!OrgProviderUtils.isTodoActive(node.todo, getActivity().getContentResolver()))
                         continue;
                 }
 
                 boolean scheduledBeforeDeadline = node.getScheduled().getEpochTime() < node.getDeadline().getEpochTime();
 
                 long firstTime = scheduledBeforeDeadline ? node.getScheduled().getEpochTime() : node.getDeadline().getEpochTime();
-                long lastTime  = scheduledBeforeDeadline ? node.getDeadline().getEpochTime()  : node.getScheduled().getEpochTime();
+                long lastTime = scheduledBeforeDeadline ? node.getDeadline().getEpochTime() : node.getScheduled().getEpochTime();
                 long firstDay = firstTime / (24 * 3600);
                 long lastDay = lastTime / (24 * 3600);
 
 
-                if(!calendarShowPast) {
+                if (!calendarShowPast) {
                     // If event is totally finished and calendarShowPast==false, discard event
                     if (firstTime < cal.getTimeInMillis() / 1000L && lastTime < cal.getTimeInMillis() / 1000L)
                         continue;
 
                     // If event is unfinished, change the starting point to now
-                    if (firstTime < cal.getTimeInMillis() / 1000L && lastTime > cal.getTimeInMillis() / 1000L){
+                    if (firstTime < cal.getTimeInMillis() / 1000L && lastTime > cal.getTimeInMillis() / 1000L) {
                         firstTime = cal.getTimeInMillis() / 1000L;
                         firstDay = firstTime / (24 * 3600);
                     }
@@ -192,7 +170,7 @@ public class AgendaFragment extends Fragment {
                 OrgNodeTimeDate.TYPE type;
                 long time;
                 for (long day = firstDay; day <= lastDay; day++) {
-                    if(firstDay == lastDay){
+                    if (firstDay == lastDay) {
                         if (!nodeIdsForEachDay.containsKey(day))
                             nodeIdsForEachDay.put(day, new ArrayList<AgendaItem>());
                         nodeIdsForEachDay.get(day).add(new AgendaItem(node, scheduledBeforeDeadline ? OrgNodeTimeDate.TYPE.Scheduled : OrgNodeTimeDate.TYPE.Deadline, firstTime));
@@ -223,7 +201,7 @@ public class AgendaFragment extends Fragment {
             daysList.add(new OrgNodeTimeDate(day * 3600 * 24));
             items.add(new PositionHelper(dayCursor++, Type.kDate));
             Collections.sort(nodeIdsForEachDay.get(day), new TimeComparator());
-            for (AgendaItem item: nodeIdsForEachDay.get(day)) {
+            for (AgendaItem item : nodeIdsForEachDay.get(day)) {
                 nodesList.add(item);
                 items.add(new PositionHelper(nodeCursor++, Type.kNode));
             }
@@ -232,12 +210,6 @@ public class AgendaFragment extends Fragment {
         adapter = new RecyclerViewAdapter();
     }
 
-    class TimeComparator implements Comparator<AgendaItem> {
-        @Override
-        public int compare(AgendaItem a, AgendaItem b) {
-            return a.time < b.time ? -1 : a.time == b.time ? 0 : 1;
-        }
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -254,13 +226,42 @@ public class AgendaFragment extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
     enum Type {
         kNode,
         kDate
+    }
+
+    class AgendaItem {
+        public OrgNodeTimeDate.TYPE type;
+        public OrgNode node;
+        public String text;
+        long time;
+
+        public AgendaItem(OrgNode node, OrgNodeTimeDate.TYPE type, long time) {
+            this.node = node;
+            this.type = type;
+            this.time = time;
+
+            OrgNodeTimeDate date = new OrgNodeTimeDate(time);
+
+            if (time < 0 || (node.getRangeInSec() > 86400 && date.isBetween(node.getScheduled(), node.getDeadline()))) {
+                text = getActivity().getResources().getString(R.string.all_day);
+            } else {
+                text = date.toString(false);
+            }
+
+        }
+    }
+
+    class TimeComparator implements Comparator<AgendaItem> {
+        @Override
+        public int compare(AgendaItem a, AgendaItem b) {
+            return a.time < b.time ? -1 : a.time == b.time ? 0 : 1;
+        }
     }
 
     class PositionHelper {
@@ -274,7 +275,6 @@ public class AgendaFragment extends Fragment {
     }
 
 
-
     public class RecyclerViewAdapter
             extends RecyclerView.Adapter<ItemViewHolder> {
 
@@ -285,7 +285,7 @@ public class AgendaFragment extends Fragment {
         @Override
         public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view;
-            if(viewType == Type.kDate.ordinal()){
+            if (viewType == Type.kDate.ordinal()) {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.days_view_holder, parent, false);
                 return new DateViewHolder(view);
@@ -300,17 +300,17 @@ public class AgendaFragment extends Fragment {
         public void onBindViewHolder(final ItemViewHolder holder, final int position) {
             int type = getItemViewType(position);
 
-            if(type == Type.kDate.ordinal()) onBindDateHolder((DateViewHolder)holder, position);
-            else onBindOrgItemHolder((OrgItemViewHolder)holder, position);
+            if (type == Type.kDate.ordinal()) onBindDateHolder((DateViewHolder) holder, position);
+            else onBindOrgItemHolder((OrgItemViewHolder) holder, position);
         }
 
-        private void onBindOrgItemHolder(final OrgItemViewHolder holder, int position){
+        private void onBindOrgItemHolder(final OrgItemViewHolder holder, int position) {
             final AgendaItem item = nodesList.get(items.get(position).position);
             final OrgNode node = item.node;
 
             // The day associated with this item
             int dayPosition = position;
-            while(items.get(dayPosition).type != Type.kDate && dayPosition > 0) dayPosition--;
+            while (items.get(dayPosition).type != Type.kDate && dayPosition > 0) dayPosition--;
 
             TextView title = (TextView) holder.itemView.findViewById(R.id.title);
             TextView details = (TextView) holder.itemView.findViewById(R.id.details);
@@ -338,7 +338,7 @@ public class AgendaFragment extends Fragment {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EditNodeFragment.createEditNodeFragment((int)node.id, -1, -1, getContext());
+                    EditNodeFragment.createEditNodeFragment((int) node.id, -1, -1, getContext());
                 }
             });
 
@@ -350,7 +350,7 @@ public class AgendaFragment extends Fragment {
             });
         }
 
-        private void onBindDateHolder(final DateViewHolder holder, int position){
+        private void onBindDateHolder(final DateViewHolder holder, int position) {
             final OrgNodeTimeDate date = daysList.get(items.get(position).position);
 
             TextView title = (TextView) holder.itemView.findViewById(R.id.outline_item_title);
@@ -377,8 +377,8 @@ public class AgendaFragment extends Fragment {
         }
 
         @Override
-        public int getItemViewType(int position){
-           return items.get(position).type.ordinal();
+        public int getItemViewType(int position) {
+            return items.get(position).type.ordinal();
         }
 
         /**

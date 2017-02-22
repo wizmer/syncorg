@@ -1,25 +1,10 @@
 package com.coste.syncorg.synchronizers;
 
-import android.content.Context;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.KeyPair;
-import com.coste.syncorg.R;
-import com.coste.syncorg.util.FileUtils;
-
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
 import org.eclipse.jgit.transport.CredentialItem;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.URIish;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Arrays;
 
 public class CredentialsProviderAllowHost extends CredentialsProvider {
@@ -94,7 +79,9 @@ public class CredentialsProviderAllowHost extends CredentialsProvider {
         return true;
     }
 
-    /** Destroy the saved username and password.. */
+    /**
+     * Destroy the saved username and password..
+     */
     public void clear() {
         username = null;
 

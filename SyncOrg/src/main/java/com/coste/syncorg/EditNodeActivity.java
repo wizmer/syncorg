@@ -16,8 +16,8 @@ import android.view.MenuItem;
  * in a {@link MainActivity}.
  */
 public class EditNodeActivity extends AppCompatActivity {
-    EditNodeFragment fragment;
     public static String EDIT_NODE_FRAGMENT = "edit_node_fragment_tag";
+    EditNodeFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,25 +61,25 @@ public class EditNodeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. Use NavUtils to allow users
-            // to navigate up one level in the application structure. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
-            return true;
+                // This ID represents the Home or Up button. In the case of this
+                // activity, the Up button is shown. Use NavUtils to allow users
+                // to navigate up one level in the application structure. For
+                // more details, see the Navigation pattern on Android Design:
+                //
+                // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+                //
+                NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
+                return true;
 
             case R.id.edit_menu_ok:
 
-                boolean shouldFinish = ((EditNodeFragment)(getSupportFragmentManager().findFragmentByTag(EDIT_NODE_FRAGMENT))).onOKPressed();
-                if(shouldFinish) finish();
+                boolean shouldFinish = ((EditNodeFragment) (getSupportFragmentManager().findFragmentByTag(EDIT_NODE_FRAGMENT))).onOKPressed();
+                if (shouldFinish) finish();
 //                Intent intent = new Intent(this, MainActivity.class);
 //                startActivity(intent);
                 return true;
             case R.id.edit_menu_cancel:
-                ((EditNodeFragment)(getSupportFragmentManager().findFragmentByTag(EDIT_NODE_FRAGMENT))).onCancelPressed();
+                ((EditNodeFragment) (getSupportFragmentManager().findFragmentByTag(EDIT_NODE_FRAGMENT))).onCancelPressed();
                 finish();
 //                intent = new Intent(this, MainActivity.class);
 //                startActivity(intent);

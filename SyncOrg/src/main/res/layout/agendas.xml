@@ -3,6 +3,6 @@
     android:name="com.coste.syncorg.gui.Agenda.AgendasFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:tag="agendas_fragment" >
+    android:tag="agendas_fragment">
 
 </fragment>

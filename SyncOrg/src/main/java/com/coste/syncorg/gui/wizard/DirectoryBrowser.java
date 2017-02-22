@@ -9,46 +9,46 @@ import java.util.ArrayList;
 
 public abstract class DirectoryBrowser<T> {
 
-	protected Context context;
-	
-	protected T currentDirectory;
-	protected ArrayList<T> directoryListing = new ArrayList<T>();
-	protected ArrayList<String> directoryNames = new ArrayList<String>();	
+    protected Context context;
 
-	protected String upOneLevel;
+    protected T currentDirectory;
+    protected ArrayList<T> directoryListing = new ArrayList<T>();
+    protected ArrayList<String> directoryNames = new ArrayList<String>();
 
-	public DirectoryBrowser(Context context) {
-		this.context = context;
-		this.upOneLevel = context.getString(R.string.up_one_level);
-	}
+    protected String upOneLevel;
 
-	public abstract void browseTo(int position);
+    public DirectoryBrowser(Context context) {
+        this.context = context;
+        this.upOneLevel = context.getString(R.string.up_one_level);
+    }
 
-	protected abstract void browseTo(String directory);
+    public abstract void browseTo(int position);
 
-	public abstract boolean isCurrentDirectoryRoot();
-	
-	public ArrayList<String> listFiles() {
-		return directoryNames;
-	}
-	
-	public String getDirectoryName(int position) {
-		return directoryNames.get(position);
-	}
-	
-	protected T getDir(int position) {
-		return directoryListing.get(position);
-	}
-	
-	public String getAbsolutePath(int position) {
-		T directory = directoryListing.get(position);
-		
-		if (directory instanceof String)
-			return (String) directory;
-		
-		if (directory instanceof File)
-			return ((File) directory).getAbsolutePath();
-		
-		return "";
-	}
+    protected abstract void browseTo(String directory);
+
+    public abstract boolean isCurrentDirectoryRoot();
+
+    public ArrayList<String> listFiles() {
+        return directoryNames;
+    }
+
+    public String getDirectoryName(int position) {
+        return directoryNames.get(position);
+    }
+
+    protected T getDir(int position) {
+        return directoryListing.get(position);
+    }
+
+    public String getAbsolutePath(int position) {
+        T directory = directoryListing.get(position);
+
+        if (directory instanceof String)
+            return (String) directory;
+
+        if (directory instanceof File)
+            return ((File) directory).getAbsolutePath();
+
+        return "";
+    }
 }

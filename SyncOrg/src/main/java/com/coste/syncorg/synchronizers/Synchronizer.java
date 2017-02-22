@@ -6,11 +6,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.coste.syncorg.R;
 import com.coste.syncorg.gui.SynchronizerNotification;
 import com.coste.syncorg.gui.SynchronizerNotificationCompat;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgFileParser;
-import com.coste.syncorg.R;
 import com.coste.syncorg.util.OrgUtils;
 
 import java.io.BufferedReader;
@@ -36,16 +36,10 @@ public abstract class Synchronizer {
     public static final String SYNC_PROGRESS_UPDATE = "progress_update";
     public static final String SYNC_SHOW_TOAST = "showToast";
     static private boolean syncRunning = false;
-
-    public static void setSyncEnabled(boolean syncEnabled) {
-        Synchronizer.syncEnabled = syncEnabled;
-    }
-
     private static boolean syncEnabled = true;
     protected Context context;
     private ContentResolver resolver;
     private SynchronizerNotificationCompat notify;
-
     protected Synchronizer(Context context) {
         this.context = context;
         this.resolver = context.getContentResolver();
@@ -56,8 +50,13 @@ public abstract class Synchronizer {
             this.notify = new SynchronizerNotificationCompat(context);
     }
 
+    public static void setSyncEnabled(boolean syncEnabled) {
+        Synchronizer.syncEnabled = syncEnabled;
+    }
+
     /**
      * Return an instance of the synchronizer according to the user preferences
+     *
      * @param context
      * @return
      */
@@ -76,14 +75,15 @@ public abstract class Synchronizer {
 
     /**
      * Instanciate a synchronizer and start a synchronization if not already running
+     *
      * @param context
      */
-    public static void runSynchronize(final Context context){
+    public static void runSynchronize(final Context context) {
         Thread syncThread = new Thread() {
             public void run() {
                 syncRunning = true;
                 Synchronizer syncer = getSynchronizer(context);
-                if(syncer == null) {
+                if (syncer == null) {
                     syncRunning = false;
                     return;
                 }
@@ -91,30 +91,30 @@ public abstract class Synchronizer {
                 try {
                     syncer.execute();
                     syncer.postSynchronize();
-                }catch (Exception e){
+                } catch (Exception e) {
                     syncer.notify.errorNotification(e.getMessage());
-                }finally {
+                } finally {
                     syncRunning = false;
                 }
             }
         };
 
-        if(syncEnabled && !syncRunning){
+        if (syncEnabled && !syncRunning) {
             syncThread.start();
         }
     }
 
 
-
-    public static void addFile(Context context, String filename){
+    public static void addFile(Context context, String filename) {
         Synchronizer syncer = getSynchronizer(context);
-        if(syncer == null) return;
+        if (syncer == null) return;
         syncer._addFile(filename);
     }
 
     /**
      * Return true if the user has to enter its credentials when the app starts
      * eg. SSHSynchonizer by password returns yes
+     *
      * @return
      */
     public boolean isCredentialsRequired() {
@@ -163,12 +163,13 @@ public abstract class Synchronizer {
     /**
      * Return the relative path of the file starting at the root of the synced folder
      * If the file is not in this folder, it will return the absolute path instead
+     *
      * @param filename
      * @return
      */
-    private String getRelativeFilePath(String filename){
+    private String getRelativeFilePath(String filename) {
         String filesDir = getAbsoluteFilesDir() + "/";
-        if(filename.substring(0, filesDir.length()).equals(filesDir)){
+        if (filename.substring(0, filesDir.length()).equals(filesDir)) {
             return filename.substring(filesDir.length());
         }
         return filename;
@@ -220,6 +221,7 @@ public abstract class Synchronizer {
     /**
      * Delete all files from the synchronized repository
      * except repository configuration files
+     *
      * @param context
      */
     public void clearRepository(Context context) {

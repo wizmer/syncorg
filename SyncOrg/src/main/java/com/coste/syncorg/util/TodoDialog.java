@@ -11,10 +11,10 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 
+import com.coste.syncorg.R;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgNode;
 import com.coste.syncorg.orgdata.OrgProviderUtils;
-import com.coste.syncorg.R;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class TodoDialog {
         this.node = _node;
         this.button = _button;
 
-       ArrayList<String> todos = PreferenceUtils.getSelectedTodos();
+        ArrayList<String> todos = PreferenceUtils.getSelectedTodos();
 
         if (todos.size() == 0)
             todos = OrgProviderUtils.getTodos(context.getContentResolver());
@@ -46,10 +46,10 @@ public class TodoDialog {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
                                 String selectedTodo = todoList.get(which);
-                                if(which == 0) selectedTodo = "";
+                                if (which == 0) selectedTodo = "";
                                 node.todo = selectedTodo;
-                                setupTodoButton(context,node,button, false);
-                                if(writeChangeOnTodoChanged){
+                                setupTodoButton(context, node, button, false);
+                                if (writeChangeOnTodoChanged) {
                                     node.write(context);
                                     OrgFile.updateFile(node, context);
                                 }
@@ -61,7 +61,7 @@ public class TodoDialog {
     static public void setupTodoButton(Context context, OrgNode node,
                                        Button button, boolean toggleVisibility) {
         String todoString = node.todo;
-        if(!TextUtils.isEmpty(todoString)) {
+        if (!TextUtils.isEmpty(todoString)) {
             Spannable todoSpan = new SpannableString(todoString + " ");
 
             boolean active = OrgProviderUtils.isTodoActive(todoString, context.getContentResolver());
@@ -71,7 +71,7 @@ public class TodoDialog {
 //            int gray = ContextCompat.getColor(context, R.color.colorGray);
             todoSpan.setSpan(new ForegroundColorSpan(active ? red : green), 0,
                     todoString.length(), 0);
-            if(toggleVisibility) button.setVisibility(View.VISIBLE);
+            if (toggleVisibility) button.setVisibility(View.VISIBLE);
             button.setText(todoSpan);
             button.setTextColor(active ? red : green);
         } else {

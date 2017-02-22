@@ -25,8 +25,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.coste.syncorg.gui.outline.MainAdapter;
 import com.coste.syncorg.gui.SearchActivity;
+import com.coste.syncorg.gui.outline.MainAdapter;
 import com.coste.syncorg.gui.wizard.WizardActivity;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.settings.SettingsActivity;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         node_id = intent.getLongExtra(NODE_ID, -1);
 
-        if (this.node_id == -1){
+        if (this.node_id == -1) {
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
             displayNewUserDialogs();
         }
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                         String filename = input.getText().toString();
                         OrgFile newFile = new OrgFile(filename, filename);
                         File file = new File(newFile.getFilePath());
-                        if(file.exists()){
+                        if (file.exists()) {
                             Toast.makeText(MainActivity.this, R.string.file_exists, Toast.LENGTH_SHORT)
                                     .show();
                             return;
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ((MainAdapter)recyclerView.getAdapter()).refresh();
+        ((MainAdapter) recyclerView.getAdapter()).refresh();
         Synchronizer.runSynchronize(this);
     }
 

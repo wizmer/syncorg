@@ -12,105 +12,105 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class PreferenceUtils {
-	private static final int DEFAULT_FONTSIZE = 14;
+    private static final int DEFAULT_FONTSIZE = 14;
 
 
+    public static HashSet<String> getExcludedTags() {
+        Context context = SyncOrgApplication.getContext();
+        String tags = PreferenceManager.getDefaultSharedPreferences(context).getString(
+                "excludeTagsInheritance", null);
 
-	public static HashSet<String> getExcludedTags() {
-		Context context = SyncOrgApplication.getContext();
-		String tags = PreferenceManager.getDefaultSharedPreferences(context).getString(
-				"excludeTagsInheritance", null);
-		
-		if (tags == null)
-			return null;
-		
-		HashSet<String> tagsSet = new HashSet<String>();
-		for (String tag: tags.split(":")) {
-			if(TextUtils.isEmpty(tag) == false)
-				tagsSet.add(tag);
-		}
-		
-		return tagsSet;
-	}
+        if (tags == null)
+            return null;
 
-	public static int getFontSize() {
-		Context context = SyncOrgApplication.getContext();
-		try {
-			int fontSize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(
-					context).getString("fontSize", "14"));
-			
-			if (fontSize > 2)
-				return fontSize;
-		} catch (NumberFormatException e) {
-		}
-		
-		return DEFAULT_FONTSIZE;
-	}
+        HashSet<String> tagsSet = new HashSet<String>();
+        for (String tag : tags.split(":")) {
+            if (TextUtils.isEmpty(tag) == false)
+                tagsSet.add(tag);
+        }
 
-	public static int getLevelOfRecursion() {
-		Context context = SyncOrgApplication.getContext();
-		return Integer.parseInt(PreferenceManager
-				.getDefaultSharedPreferences(context).getString(
-						"viewRecursionMax", "0"));
-	}
+        return tagsSet;
+    }
 
-	public static String getThemeName() {
-		Context context = SyncOrgApplication.getContext();
-	    SharedPreferences appSettings =
-	            PreferenceManager.getDefaultSharedPreferences(context);
-	    return appSettings.getString("theme", "Dark");
-	}
+    public static int getFontSize() {
+        Context context = SyncOrgApplication.getContext();
+        try {
+            int fontSize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(
+                    context).getString("fontSize", "14"));
 
-	public static boolean useAdvancedCapturing() {
-		Context context = SyncOrgApplication.getContext();
-		return PreferenceManager.getDefaultSharedPreferences(context)
-				.getBoolean("captureAdvanced", true);
-	}
+            if (fontSize > 2)
+                return fontSize;
+        } catch (NumberFormatException e) {
+        }
 
-	public static boolean isSyncConfigured() {
-		Context context = SyncOrgApplication.getContext();
-		String syncSource = PreferenceManager.getDefaultSharedPreferences(context)
-		.getString("syncSource", "");
+        return DEFAULT_FONTSIZE;
+    }
 
-		return !TextUtils.isEmpty(syncSource);
-	}
+    public static int getLevelOfRecursion() {
+        Context context = SyncOrgApplication.getContext();
+        return Integer.parseInt(PreferenceManager
+                .getDefaultSharedPreferences(context).getString(
+                        "viewRecursionMax", "0"));
+    }
 
-	public static boolean isUpgradedVersion() {
-		Context context = SyncOrgApplication.getContext();
-	    SharedPreferences appSettings =
-	        PreferenceManager.getDefaultSharedPreferences(context);
-	    SharedPreferences.Editor editor = appSettings.edit();
-	    int versionCode = appSettings.getInt("appVersion", -1);
-	    try {
-	        PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-	        int newVersion = pInfo.versionCode;
-	        if (versionCode != -1 && versionCode != newVersion) {
-	            editor.putInt("appVersion", newVersion);
-	            editor.commit();
-	            return true;
-	        }
-	    } catch (Exception e) { }
-		return false;
-	}
+    public static String getThemeName() {
+        Context context = SyncOrgApplication.getContext();
+        SharedPreferences appSettings =
+                PreferenceManager.getDefaultSharedPreferences(context);
+        return appSettings.getString("theme", "Dark");
+    }
 
-	public static ArrayList<String> getSelectedTodos() {
-		Context context = SyncOrgApplication.getContext();
-	    SharedPreferences appSettings =
-		        PreferenceManager.getDefaultSharedPreferences(context);
-	    
-	    ArrayList<String> todos = new ArrayList<String>();
-	    
-	    String todoString = appSettings.getString("selectedTodos", "").trim();
-	    if (TextUtils.isEmpty(todoString))
-	    	return todos;
-	    
-	    for (String todo : todoString.split(" ")) {
-	    	if (TextUtils.isEmpty(todo))
-	    		continue;
-	    	else
-	    		todos.add(todo);
-	    }
-	    
-	    return todos;
-	}
+    public static boolean useAdvancedCapturing() {
+        Context context = SyncOrgApplication.getContext();
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean("captureAdvanced", true);
+    }
+
+    public static boolean isSyncConfigured() {
+        Context context = SyncOrgApplication.getContext();
+        String syncSource = PreferenceManager.getDefaultSharedPreferences(context)
+                .getString("syncSource", "");
+
+        return !TextUtils.isEmpty(syncSource);
+    }
+
+    public static boolean isUpgradedVersion() {
+        Context context = SyncOrgApplication.getContext();
+        SharedPreferences appSettings =
+                PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = appSettings.edit();
+        int versionCode = appSettings.getInt("appVersion", -1);
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            int newVersion = pInfo.versionCode;
+            if (versionCode != -1 && versionCode != newVersion) {
+                editor.putInt("appVersion", newVersion);
+                editor.commit();
+                return true;
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public static ArrayList<String> getSelectedTodos() {
+        Context context = SyncOrgApplication.getContext();
+        SharedPreferences appSettings =
+                PreferenceManager.getDefaultSharedPreferences(context);
+
+        ArrayList<String> todos = new ArrayList<String>();
+
+        String todoString = appSettings.getString("selectedTodos", "").trim();
+        if (TextUtils.isEmpty(todoString))
+            return todos;
+
+        for (String todo : todoString.split(" ")) {
+            if (TextUtils.isEmpty(todo))
+                continue;
+            else
+                todos.add(todo);
+        }
+
+        return todos;
+    }
 }

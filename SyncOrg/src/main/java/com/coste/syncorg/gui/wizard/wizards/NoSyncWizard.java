@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,144 +28,142 @@ import java.io.OutputStream;
 
 
 public class NoSyncWizard extends AppCompatActivity {
-	final private int PICKFILE_RESULT_CODE = 1;
-	static public String FOLDER_PATH;
-	String syncFolder = null;
-	TextView orgFolder;
+    static public String FOLDER_PATH;
+    final private int PICKFILE_RESULT_CODE = 1;
+    String syncFolder = null;
+    TextView orgFolder;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.wizard_no_sync);
+    public static void copyDirectoryOneLocationToAnotherLocation(File sourceLocation, File targetLocation)
+            throws IOException {
 
-		Button folder = (Button) findViewById(R.id.select_folder);
-		folder.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(NoSyncWizard.this, FolderPickerActivity.class);
-				startActivityForResult(intent, PICKFILE_RESULT_CODE);
-			}
-		});
+        if (sourceLocation.isDirectory()) {
+            if (!targetLocation.exists()) {
+                targetLocation.mkdir();
+            }
 
-		orgFolder = ((TextView) findViewById(R.id.org_folder));
+            String[] children = sourceLocation.list();
+            for (int i = 0; i < sourceLocation.listFiles().length; i++) {
+                copyDirectoryOneLocationToAnotherLocation(new File(sourceLocation, children[i]),
+                        new File(targetLocation, children[i]));
+            }
+        } else {
+            InputStream in = new FileInputStream(sourceLocation);
+            OutputStream out = new FileOutputStream(targetLocation);
 
-		SharedPreferences appSettings = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		syncFolder = appSettings.getString("syncFolder", "");
-		if(!syncFolder.equals("")) {
-			String details = getResources().getString(R.string.folder) + " " +
-					syncFolder;
-			orgFolder.setText(details);
-		}
-		Button okButton = (Button) findViewById(R.id.ok);
-		okButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				checkPreviousSynchronizer(NoSyncWizard.this);
+            // Copy the bits from instream to outstream
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
+        }
+    }
 
-			}
-		});
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.wizard_no_sync);
 
+        Button folder = (Button) findViewById(R.id.select_folder);
+        folder.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NoSyncWizard.this, FolderPickerActivity.class);
+                startActivityForResult(intent, PICKFILE_RESULT_CODE);
+            }
+        });
 
+        orgFolder = ((TextView) findViewById(R.id.org_folder));
 
-	public static void copyDirectoryOneLocationToAnotherLocation(File sourceLocation, File targetLocation)
-			throws IOException {
+        SharedPreferences appSettings = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        syncFolder = appSettings.getString("syncFolder", "");
+        if (!syncFolder.equals("")) {
+            String details = getResources().getString(R.string.folder) + " " +
+                    syncFolder;
+            orgFolder.setText(details);
+        }
+        Button okButton = (Button) findViewById(R.id.ok);
+        okButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPreviousSynchronizer(NoSyncWizard.this);
 
-		if (sourceLocation.isDirectory()) {
-			if (!targetLocation.exists()) {
-				targetLocation.mkdir();
-			}
+            }
+        });
+    }
 
-			String[] children = sourceLocation.list();
-			for (int i = 0; i < sourceLocation.listFiles().length; i++) {
-				copyDirectoryOneLocationToAnotherLocation(new File(sourceLocation, children[i]),
-						new File(targetLocation, children[i]));
-			}
-		} else {
-			InputStream in = new FileInputStream(sourceLocation);
-			OutputStream out = new FileOutputStream(targetLocation);
+    void checkPreviousSynchronizer(final Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String syncSource = sharedPreferences.getString("syncSource", "null");
 
-			// Copy the bits from instream to outstream
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-			in.close();
-			out.close();
-		}
-	}
+        final String currentSyncFolder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
+        if (syncSource.equals("null") || syncSource.equals("nullSync")) {
+            final File currentSyncFolderFile = new File(currentSyncFolder);
+            File[] currentNodes = currentSyncFolderFile.listFiles();
+            if (currentNodes != null && currentNodes.length > 0) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(NoSyncWizard.this);
+                alert.setCancelable(false);
+                alert.setTitle(R.string.new_file);
+                alert.setMessage(R.string.copy_old_sync_folder);
+                alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        try {
+                            copyDirectoryOneLocationToAnotherLocation(currentSyncFolderFile, new File(syncFolder));
+                            proceed();
+                        } catch (IOException e) {
+                            Toast.makeText(context, "There was a problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
 
-	void checkPreviousSynchronizer(final Context context){
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		String syncSource = sharedPreferences.getString("syncSource", "null");
+                alert.setNegativeButton(R.string.no_start_from_scratch, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        proceed();
+                    }
+                });
 
-		final String currentSyncFolder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
-		if(syncSource.equals("null") || syncSource.equals("nullSync")){
-			final File currentSyncFolderFile = new File(currentSyncFolder);
-			File[] currentNodes = currentSyncFolderFile.listFiles();
-			if(currentNodes != null && currentNodes.length > 0) {
-				AlertDialog.Builder alert = new AlertDialog.Builder(NoSyncWizard.this);
-				alert.setCancelable(false);
-				alert.setTitle(R.string.new_file);
-				alert.setMessage(R.string.copy_old_sync_folder);
-				alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						try {
-							copyDirectoryOneLocationToAnotherLocation(currentSyncFolderFile, new File(syncFolder));
-							proceed();
-						} catch (IOException e) {
-							Toast.makeText(context, "There was a problem: "+e.getMessage(), Toast.LENGTH_LONG).show();
-						}
-					}
-				});
+                alert.show();
+            } else {
+                proceed();
+            }
+        }
+    }
 
-				alert.setNegativeButton(R.string.no_start_from_scratch, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						proceed();
-					}
-				});
+    void proceed() {
+        saveSettings();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 
-				alert.show();
-			}else{
-				proceed();
-			}
-		}
-	}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        switch (requestCode) {
+            case PICKFILE_RESULT_CODE:
+                if (resultCode == RESULT_OK) {
+                    syncFolder = data.getExtras().getString(FolderPickerActivity.EXTRA_RESULT_DIRECTORY);
+                    String details = getResources().getString(R.string.folder) + " " +
+                            syncFolder;
+                    orgFolder.setText(details);
+                }
+                break;
+        }
+    }
 
-	void proceed(){
-		saveSettings();
-		Intent intent = new Intent(this, MainActivity.class);
-		startActivity(intent);
-	}
+    private void loadSettings() {
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		switch(requestCode){
-			case PICKFILE_RESULT_CODE:
-				if(resultCode==RESULT_OK){
-					syncFolder = data.getExtras().getString(FolderPickerActivity.EXTRA_RESULT_DIRECTORY);
-					String details = getResources().getString(R.string.folder) + " " +
-							syncFolder;
-					orgFolder.setText(details);
-				}
-				break;
-		}
-	}
+    }
 
-	private void loadSettings() {
+    public void saveSettings() {
+        SharedPreferences appSettings = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = appSettings.edit();
 
-	}
-
-	public void saveSettings() {
-		SharedPreferences appSettings = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor editor = appSettings.edit();
-
-		editor.putString("syncSource", "nullSync");
-		editor.putString("syncFolder", syncFolder);
-		editor.apply();
-	}
+        editor.putString("syncSource", "nullSync");
+        editor.putString("syncFolder", syncFolder);
+        editor.apply();
+    }
 }

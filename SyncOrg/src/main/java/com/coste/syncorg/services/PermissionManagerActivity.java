@@ -4,9 +4,9 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.coste.syncorg.R;
 
@@ -19,7 +19,7 @@ public class PermissionManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permission_manager);
 
-        requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 MAKE_NULL_SYNC_DIR_PERMISSION);
     }
 

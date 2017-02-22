@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/LinearLayout1"
@@ -13,7 +12,7 @@
         android:minHeight="@dimen/outline_item"
         android:orientation="horizontal"
         android:paddingLeft="5dp"
-        android:paddingRight="5dp" >
+        android:paddingRight="5dp">
 
         <TextView
             android:id="@+id/outline_item_level"
@@ -21,8 +20,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceMedium" >
-        </TextView>
+            android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
 
 
         <Button
@@ -56,8 +54,7 @@
             android:layout_toEndOf="@id/outline_item_level"
             android:layout_toStartOf="@id/outline_item_priority"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceMedium" >
-        </TextView>
+            android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
 
         <TextView
             android:id="@+id/outline_item_content"
@@ -66,8 +63,7 @@
             android:layout_below="@id/outline_item_title"
             android:layout_toEndOf="@id/outline_item_level"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceSmall" >
-        </TextView>
+            android:textAppearance="?android:attr/textAppearanceSmall"></TextView>
     </RelativeLayout>
 
     <LinearLayout
@@ -75,8 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <Button
             android:id="@+id/insert_same_level"
@@ -84,14 +79,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/insert_node"
-            />
+            android:text="@string/insert_node" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@android:color/darker_gray"
-            />
+            android:background="@android:color/darker_gray" />
 
         <Button
             android:id="@+id/insert_neighbourg_level"
@@ -99,8 +92,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/insert_child_node"
-            />
+            android:text="@string/insert_child_node" />
 
         <Button
             android:id="@+id/delete_node"
@@ -108,7 +100,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/delete_node"
-            />
+            android:text="@string/delete_node" />
     </LinearLayout>
 </LinearLayout>

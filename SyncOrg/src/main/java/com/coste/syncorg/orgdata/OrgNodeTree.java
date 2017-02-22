@@ -15,12 +15,12 @@ public class OrgNodeTree {
     public ArrayList<OrgNodeTree> children;
     private Visibility visibility;
 
-    private OrgNodeTree(OrgNode root, ContentResolver resolver, boolean isRecursive){
+    private OrgNodeTree(OrgNode root, ContentResolver resolver, boolean isRecursive) {
         node = root;
         children = new ArrayList<>();
         visibility = Visibility.subtree;
 
-        if(isRecursive && root != null) {
+        if (isRecursive && root != null) {
             for (OrgNode child : root.getChildren(resolver)) {
                 children.add(new OrgNodeTree(child, resolver));
             }
@@ -38,6 +38,7 @@ public class OrgNodeTree {
 
     /**
      * Create a tree and all sub-trees
+     *
      * @param root
      * @param resolver
      */
@@ -47,11 +48,12 @@ public class OrgNodeTree {
 
     /**
      * Create a flat tree from an ArrayList
+     *
      * @param arrayList
      */
-    public OrgNodeTree(ArrayList<OrgNode> arrayList){
-        this((OrgNode)null);
-        for(OrgNode node: arrayList) children.add(new OrgNodeTree(node));
+    public OrgNodeTree(ArrayList<OrgNode> arrayList) {
+        this((OrgNode) null);
+        for (OrgNode node : arrayList) children.add(new OrgNodeTree(node));
     }
 
     static public ArrayList<OrgNode> getFullNodeArray(OrgNodeTree root) {
@@ -95,7 +97,7 @@ public class OrgNodeTree {
 
     }
 
-    public Visibility getVisibility(){
+    public Visibility getVisibility() {
         return visibility;
     }
 
@@ -103,28 +105,28 @@ public class OrgNodeTree {
      * Cycle through the visibility states.
      * Special care for subtree visibility because it propagates to child nodes
      */
-    public void toggleVisibility(){
-        if(visibility==Visibility.folded){
+    public void toggleVisibility() {
+        if (visibility == Visibility.folded) {
             visibility = Visibility.children;
             for (OrgNodeTree child : children) {
                 child.visibility = Visibility.folded;
             }
-        } else if(visibility==Visibility.children){
+        } else if (visibility == Visibility.children) {
             visibility = Visibility.subtree;
-            for(OrgNodeTree child: children) child.cascadeVisibility(Visibility.subtree);
-        } else if(visibility==Visibility.subtree) visibility = Visibility.folded;
+            for (OrgNodeTree child : children) child.cascadeVisibility(Visibility.subtree);
+        } else if (visibility == Visibility.subtree) visibility = Visibility.folded;
     }
 
-    private void cascadeVisibility(Visibility _visibility){
+    private void cascadeVisibility(Visibility _visibility) {
         visibility = _visibility;
-        for(OrgNodeTree child: children) child.cascadeVisibility(_visibility);
+        for (OrgNodeTree child : children) child.cascadeVisibility(_visibility);
     }
 
     /**
      * Generate a mapping between an OrgNode from the tree and its index in the tree
      */
-    public NavigableMap<Long,OrgNodeTree> getVisibleNodesArray(){
-        TreeMap<Long,OrgNodeTree> result = new TreeMap<>();
+    public NavigableMap<Long, OrgNodeTree> getVisibleNodesArray() {
+        TreeMap<Long, OrgNodeTree> result = new TreeMap<>();
         idConstructor = -1;
         fillMap(result, this);
         return result;

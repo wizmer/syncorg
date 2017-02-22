@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-  <PreferenceCategory android:title="SDCard">
-    <EditTextPreference
-        android:name="sdcardIndex"
-        android:title="@string/title_index_file_path"
-        android:key="indexFilePath" />
-  </PreferenceCategory>
+    <PreferenceCategory android:title="SDCard">
+        <EditTextPreference
+            android:name="sdcardIndex"
+            android:key="indexFilePath"
+            android:title="@string/title_index_file_path" />
+    </PreferenceCategory>
 </PreferenceScreen>

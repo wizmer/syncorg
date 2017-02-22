@@ -7,7 +7,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
 import com.jcraft.jsch.Session;
-import com.coste.syncorg.util.FileUtils;
 
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.OpenSshConfig;
@@ -40,6 +39,22 @@ public class SshSessionFactory extends JschConfigSessionFactory {
         }
     }
 
+    public static String generateKeyPair(Context context) {
+        JSch jsch = new JSch();
+
+        KeyPair kpair = null;
+        try {
+            kpair = KeyPair.genKeyPair(jsch, KeyPair.RSA);
+            kpair.writePrivateKey(context.getFilesDir().getAbsoluteFile() + "/" + AuthData.PRIVATE_KEY);
+            kpair.writePublicKey(context.getFilesDir().getAbsoluteFile() + "/" + AuthData.PUBLIC_KEY, "SyncOrgPubKey");
+        } catch (JSchException | IOException e) {
+            Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
+            return "";
+        }
+
+        return AuthData.getPublicKey(context);
+    }
+
     @Override
     protected void configure(OpenSshConfig.Host host, Session session) {
         session.setPort(AuthData.getInstance(context).getPort());
@@ -58,22 +73,6 @@ public class SshSessionFactory extends JschConfigSessionFactory {
 
 
         return defaultJSch;
-    }
-
-    public static String generateKeyPair(Context context) {
-        JSch jsch = new JSch();
-
-        KeyPair kpair = null;
-        try {
-            kpair = KeyPair.genKeyPair(jsch, KeyPair.RSA);
-            kpair.writePrivateKey(context.getFilesDir().getAbsoluteFile() + "/" + AuthData.PRIVATE_KEY);
-            kpair.writePublicKey(context.getFilesDir().getAbsoluteFile() + "/" + AuthData.PUBLIC_KEY, "SyncOrgPubKey");
-        } catch (JSchException | IOException e){
-            Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
-            return "";
-        }
-
-        return AuthData.getPublicKey(context);
     }
 
     enum ConnectionType {

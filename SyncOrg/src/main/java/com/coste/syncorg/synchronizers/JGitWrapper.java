@@ -10,10 +10,10 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.coste.syncorg.MainActivity;
+import com.coste.syncorg.R;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgFileParser;
 import com.coste.syncorg.orgdata.OrgProviderUtils;
-import com.coste.syncorg.R;
 import com.coste.syncorg.synchronizers.SshSessionFactory.ConnectionType;
 import com.coste.syncorg.util.FileUtils;
 import com.coste.syncorg.util.OrgFileNotFoundException;
@@ -66,6 +66,7 @@ public class JGitWrapper {
 
     /**
      * Perform a Git pull in the given folder
+     *
      * @param context
      * @param folder
      * @return
@@ -132,7 +133,7 @@ public class JGitWrapper {
             }
             result.setState(SyncResult.State.kSuccess);
             return result;
-        } catch(WrongRepositoryStateException e){
+        } catch (WrongRepositoryStateException e) {
             e.printStackTrace();
             handleMergeConflict(git, context);
         } catch (IOException
@@ -172,7 +173,6 @@ public class JGitWrapper {
     }
 
 
-
     static public String getUrl(Context context) {
         StringBuilder REMOTE_URL = new StringBuilder();
         AuthData authData = AuthData.getInstance(context);
@@ -195,7 +195,6 @@ public class JGitWrapper {
             return REMOTE_URL.toString();
         }
     }
-
 
 
     /**
@@ -246,7 +245,7 @@ public class JGitWrapper {
         ProgressDialog progress;
         String syncFolder;
 
-        public CloneGitRepoTask(Context context, String syncFolder){
+        public CloneGitRepoTask(Context context, String syncFolder) {
             this.context = context;
             this.syncFolder = syncFolder;
         }
@@ -268,7 +267,7 @@ public class JGitWrapper {
                 cloneCommand.setTransportConfigCallback(new CustomTransportConfigCallback(context));
 
 
-            System.setProperty("user.home", syncFolder );
+            System.setProperty("user.home", syncFolder);
 
             try {
                 cloneCommand
@@ -314,17 +313,16 @@ public class JGitWrapper {
 
             if (exception instanceof InvalidRemoteException) {
                 Toast.makeText(context, "Path does not exist or is not a valid repository", Toast.LENGTH_LONG).show();
-            }else if(exception instanceof UnableToPushException) {
+            } else if (exception instanceof UnableToPushException) {
                 //				git config receive.denyCurrentBranch ignore
                 Toast.makeText(context, "Push test failed. Make sure the repository is bare.", Toast.LENGTH_LONG).show();
-            }else if(exception instanceof TransportException) {
+            } else if (exception instanceof TransportException) {
                 Toast.makeText(context, context.getString(R.string.error_transport_error), Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 Toast.makeText(context, exception.toString(), Toast.LENGTH_LONG).show();
-                ((Exception)exception).printStackTrace();
+                ((Exception) exception).printStackTrace();
             }
         }
-
 
 
         void parseAll() {
@@ -332,10 +330,9 @@ public class JGitWrapper {
             File f = new File(fileDir);
             File file[] = f.listFiles();
             if (file == null) return;
-            for (int i=0; i < file.length; i++)
-            {
+            for (int i = 0; i < file.length; i++) {
                 String filename = file[i].getName();
-                if(filename.equals(".git")) continue;
+                if (filename.equals(".git")) continue;
                 OrgFile orgFile = new OrgFile(filename, filename);
                 FileReader fileReader = null;
                 try {
@@ -434,7 +431,7 @@ public class JGitWrapper {
                 e.printStackTrace();
             } catch (WrongRepositoryStateException e) {
                 e.printStackTrace();
-                handleMergeConflict(git,context);
+                handleMergeConflict(git, context);
             } catch (ConcurrentRefUpdateException e) {
                 e.printStackTrace();
             } catch (NoHeadException e) {
@@ -499,7 +496,7 @@ public class JGitWrapper {
                 e.printStackTrace();
             } catch (WrongRepositoryStateException e) {
                 e.printStackTrace();
-                handleMergeConflict(git,context);
+                handleMergeConflict(git, context);
             } catch (ConcurrentRefUpdateException e) {
                 e.printStackTrace();
             } catch (NoHeadException e) {

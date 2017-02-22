@@ -12,10 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.coste.syncorg.orgdata.OrgContract;
-import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.R;
+import com.coste.syncorg.orgdata.OrgContract;
+import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.synchronizers.JGitWrapper;
 import com.coste.syncorg.synchronizers.Synchronizer;
 import com.coste.syncorg.util.OrgFileNotFoundException;
@@ -38,14 +38,13 @@ public class ConflictResolverActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
 
 
-
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
             nodeId = getIntent().getLongExtra(OrgContract.NODE_ID, -1);
 
-            editText = (EditText)findViewById(R.id.conflict_resolver_text);
+            editText = (EditText) findViewById(R.id.conflict_resolver_text);
             try {
                 OrgFile file = new OrgFile(nodeId, getContentResolver());
                 if (actionBar != null) {
@@ -53,7 +52,7 @@ public class ConflictResolverActivity extends AppCompatActivity {
                 }
 
                 String dir = Synchronizer.getSynchronizer(this).getAbsoluteFilesDir();
-                this.filename = dir+"/"+file.filename;
+                this.filename = dir + "/" + file.filename;
                 editText.setText(OrgUtils.readAll(this.filename));
 
             } catch (OrgFileNotFoundException e) {
@@ -77,7 +76,7 @@ public class ConflictResolverActivity extends AppCompatActivity {
                 NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
                 return true;
             case R.id.edit_menu_ok:
-                if(this.filename!=null && !this.filename.equals("")){
+                if (this.filename != null && !this.filename.equals("")) {
                     OrgUtils.writeToFile(this.filename, editText.getText().toString());
                     new JGitWrapper.MergeTask(this, this.filename).execute();
                     OrgFile f = null;

@@ -114,6 +114,6 @@
         <activity android:name=".directory_chooser.DirectoryChooserActivity" />
         <activity android:name=".directory_chooser.FolderPickerActivity" />
         <activity android:name=".services.PermissionManagerActivity" />
-        <activity android:name="com.coste.google_drive.FolderPicker"/>
+        <activity android:name="com.coste.google_drive.FolderPicker" />
     </application>
 </manifest>

@@ -44,23 +44,15 @@ import java.util.Iterator;
 public class FolderPickerActivity extends AppCompatActivity
         implements AdapterView.OnItemClickListener {
 
-    private static final String TAG = "FolderPickerActivity";
-
     public static final String EXTRA_INITIAL_DIRECTORY =
             "com.nutomic.syncthingandroid.activities.FolderPickerActivity.INITIAL_DIRECTORY";
-
     public static final String EXTRA_RESULT_DIRECTORY =
             "com.nutomic.syncthingandroid.activities.FolderPickerActivity.RESULT_DIRECTORY";
-
-    private ListView mListView;
-
-    private FileAdapter mFilesAdapter;
-
-    private RootsAdapter mRootsAdapter;
-
     final public static int MAKE_NULL_SYNC_DIR_PERMISSION = 0;
-
-
+    private static final String TAG = "FolderPickerActivity";
+    private ListView mListView;
+    private FileAdapter mFilesAdapter;
+    private RootsAdapter mRootsAdapter;
     /**
      * Location of null means that the list of roots is displayed.
      */
@@ -87,14 +79,14 @@ public class FolderPickerActivity extends AppCompatActivity
         mRootsAdapter = new RootsAdapter(this);
         mListView.setAdapter(mFilesAdapter);
 
-        if(Build.VERSION.SDK_INT >= 23){
+        if (Build.VERSION.SDK_INT >= 23) {
             int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MAKE_NULL_SYNC_DIR_PERMISSION);
             }
-        }else{
+        } else {
             populateAndDisplay();
         }
     }
@@ -288,6 +280,39 @@ public class FolderPickerActivity extends AppCompatActivity
         invalidateOptionsMenu();
     }
 
+    /**
+     * Goes up a directory, up to the list of roots if there are multiple roots.
+     * <p>
+     * If we already are in the list of roots, or if we are directly in the only
+     * root folder, we cancel.
+     */
+    @Override
+    public void onBackPressed() {
+        if (!mRootsAdapter.contains(mLocation) && mLocation != null) {
+            displayFolder(mLocation.getParentFile());
+        } else if (mRootsAdapter.contains(mLocation) && mRootsAdapter.getCount() > 1) {
+            displayRoot();
+        } else {
+            setResult(Activity.RESULT_CANCELED);
+            finish();
+        }
+    }
+
+    /**
+     * Displays a list of all available roots, or if there is only one root, the
+     * contents of that folder.
+     */
+    private void displayRoot() {
+        mFilesAdapter.clear();
+        if (mRootsAdapter.getCount() == 1) {
+            displayFolder(mRootsAdapter.getItem(0));
+        } else {
+            mListView.setAdapter(mRootsAdapter);
+            mLocation = null;
+        }
+        invalidateOptions();
+    }
+
     private class FileAdapter extends ArrayAdapter<File> {
 
         public FileAdapter(Context context) {
@@ -332,40 +357,6 @@ public class FolderPickerActivity extends AppCompatActivity
             }
             return false;
         }
-    }
-
-    /**
-     * Goes up a directory, up to the list of roots if there are multiple roots.
-     *
-     * If we already are in the list of roots, or if we are directly in the only
-     * root folder, we cancel.
-     */
-    @Override
-    public void onBackPressed() {
-        if (!mRootsAdapter.contains(mLocation) && mLocation != null) {
-            displayFolder(mLocation.getParentFile());
-        } else if (mRootsAdapter.contains(mLocation) && mRootsAdapter.getCount() > 1) {
-            displayRoot();
-        } else {
-            setResult(Activity.RESULT_CANCELED);
-            finish();
-        }
-    }
-
-
-    /**
-     * Displays a list of all available roots, or if there is only one root, the
-     * contents of that folder.
-     */
-    private void displayRoot() {
-        mFilesAdapter.clear();
-        if (mRootsAdapter.getCount() == 1) {
-            displayFolder(mRootsAdapter.getItem(0));
-        } else {
-            mListView.setAdapter(mRootsAdapter);
-            mLocation = null;
-        }
-        invalidateOptions();
     }
 
 }

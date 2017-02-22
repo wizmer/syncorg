@@ -5,11 +5,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.coste.syncorg.services.PermissionManager;
-import com.coste.syncorg.services.PermissionManagerActivity;
+import com.coste.syncorg.util.OrgUtils;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import com.coste.syncorg.util.OrgUtils;
 
 import org.eclipse.jgit.util.FS;
 
@@ -18,8 +17,8 @@ import java.io.File;
 public class SSHSynchronizer extends Synchronizer {
     private final String LT = "SyncOrg";
     AuthData authData;
-    private Session session;
     String absoluteFileDir;
+    private Session session;
 
     public SSHSynchronizer(Context context) {
         super(context);
@@ -31,10 +30,10 @@ public class SSHSynchronizer extends Synchronizer {
                 context.getFilesDir() + "/" + JGitWrapper.GIT_DIR);
 
 
-        if(PermissionManager.permissionGranted(context) == false) return;
+        if (PermissionManager.permissionGranted(context) == false) return;
 
         File dir = new File(getAbsoluteFilesDir());
-        if(!dir.exists()){
+        if (!dir.exists()) {
             dir.mkdir();
         }
 
@@ -79,8 +78,8 @@ public class SSHSynchronizer extends Synchronizer {
 
     }
 
-    public SyncResult synchronize(){
-        if(PermissionManager.permissionGranted(context) == false) return new SyncResult();
+    public SyncResult synchronize() {
+        if (PermissionManager.permissionGranted(context) == false) return new SyncResult();
 
         if (isCredentialsRequired()) return new SyncResult();
         String folder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();

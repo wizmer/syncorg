@@ -28,16 +28,15 @@ public class ExternalSynchronizer extends Synchronizer {
         syncFolder = preferences.getString("syncFolder", "null");
         File dir = new File(getAbsoluteFilesDir());
 
-        if(PermissionManager.permissionGranted(context) == false) return;
+        if (PermissionManager.permissionGranted(context) == false) return;
 
-        if(!dir.exists()){
+        if (!dir.exists()) {
             createSyncFolder();
         }
     }
 
 
-
-    public void createSyncFolder(){
+    public void createSyncFolder() {
         File dir = new File(getAbsoluteFilesDir());
         dir.mkdir();
     }
@@ -61,14 +60,14 @@ public class ExternalSynchronizer extends Synchronizer {
     @Override
     public SyncResult synchronize() {
         SyncResult result = new SyncResult();
-        if(PermissionManager.permissionGranted(context) == false) return result;
+        if (PermissionManager.permissionGranted(context) == false) return result;
 
         ArrayList<File> files = getFilesRecursively(new File(getAbsoluteFilesDir()));
 
         HashMap<String, Long> times_modified = OrgFile.getLastModifiedTimes(context);
         result.deletedFiles = new TreeSet<>(times_modified.keySet());
 
-        for(File f: files){
+        for (File f : files) {
             result.deletedFiles.remove(f.getAbsolutePath());
             Long timeInDB = times_modified.get(f.getAbsolutePath());
             if (timeInDB == null || f.lastModified() != timeInDB) {
@@ -79,16 +78,16 @@ public class ExternalSynchronizer extends Synchronizer {
         return result;
     }
 
-    ArrayList<File> getFilesRecursively(File dir){
+    ArrayList<File> getFilesRecursively(File dir) {
         ArrayList<File> result = new ArrayList<>();
-        if(dir == null || dir.listFiles() == null) return result;
+        if (dir == null || dir.listFiles() == null) return result;
 
-        for(File f: dir.listFiles()){
+        for (File f : dir.listFiles()) {
             // Skip hidden files
             if (f.getName().startsWith(".")) continue;
-            if(f.isDirectory()){
+            if (f.isDirectory()) {
                 result.addAll(getFilesRecursively(f));
-            }else {
+            } else {
                 result.add(f);
             }
         }
@@ -98,7 +97,7 @@ public class ExternalSynchronizer extends Synchronizer {
 
 
     @Override
-	public void postSynchronize() {
+    public void postSynchronize() {
     }
 
     @Override
@@ -108,6 +107,6 @@ public class ExternalSynchronizer extends Synchronizer {
 
     @Override
     public boolean isConnectable() {
-		return true;
-	}
+        return true;
+    }
 }

@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.coste.syncorg.OrgNodeDetailActivity;
+import com.coste.syncorg.R;
 import com.coste.syncorg.orgdata.OrgContract;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgNode;
 import com.coste.syncorg.orgdata.OrgProviderUtils;
-import com.coste.syncorg.OrgNodeDetailActivity;
-import com.coste.syncorg.R;
 import com.coste.syncorg.util.OrgFileNotFoundException;
 
 import java.util.ArrayList;

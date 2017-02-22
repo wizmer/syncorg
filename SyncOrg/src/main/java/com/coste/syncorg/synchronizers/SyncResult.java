@@ -12,14 +12,14 @@ public class SyncResult {
     Set<String> deletedFiles;
     State state;
 
-    SyncResult(){
+    SyncResult() {
         newFiles = new HashSet<>();
         changedFiles = new HashSet<>();
         deletedFiles = new HashSet<>();
         state = State.kFailed;
     }
 
-    void setState(State state){
+    void setState(State state) {
         this.state = state;
     }
 
