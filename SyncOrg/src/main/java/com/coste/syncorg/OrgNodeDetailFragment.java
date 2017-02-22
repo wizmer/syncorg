@@ -37,7 +37,7 @@ import java.util.NavigableMap;
 
 /**
  * A fragment representing a single OrgNode detail screen.
- * This fragment is either contained in a {@link OrgNodeListActivity}
+ * This fragment is either contained in a {@link MainActivity}
  * in two-pane mode (on tablets) or a {@link OrgNodeDetailActivity}
  * on handsets.
  */
@@ -113,7 +113,7 @@ public class OrgNodeDetailFragment extends Fragment {
 
     }
 
-    private OrgNodeTree getTree(){
+    private OrgNodeTree getTree() {
         // Handling of the TODO file
         if (nodeId == OrgContract.TODO_ID) {
 //                Cursor cursor = resolver.query(OrgContract.OrgData.CONTENT_URI,
@@ -131,7 +131,7 @@ public class OrgNodeDetailFragment extends Fragment {
             Cursor cursor = OrgDatabase.getInstance().getReadableDatabase().rawQuery(todoQuery, null);
 
             OrgNodeTree tree = new OrgNodeTree(OrgProviderUtils.orgDataCursorToArrayList(cursor));
-            if(cursor != null) cursor.close();
+            if (cursor != null) cursor.close();
             return tree;
         } else {
             try {
@@ -205,7 +205,6 @@ public class OrgNodeDetailFragment extends Fragment {
         super.onResume();
         refresh();
     }
-
 
 
     /**
@@ -293,7 +292,7 @@ public class OrgNodeDetailFragment extends Fragment {
 //                int parentId = (int)node.parentId;
 
                 OrgNodeViewHolder item = (OrgNodeViewHolder) viewHolder;
-                EditNodeFragment.createEditNodeFragment((int)item.node.id, -1, -1, getContext());
+                EditNodeFragment.createEditNodeFragment((int) item.node.id, -1, -1, getContext());
             }
 
             @Override
@@ -331,7 +330,7 @@ public class OrgNodeDetailFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final OrgNodeViewHolder item, final int position) {
-            final OrgNodeTree tree = items.get((long)position);
+            final OrgNodeTree tree = items.get((long) position);
 
             boolean isSelected = (tree.node == selectedNode);
             item.setup(tree, isSelected, getContext());
@@ -436,7 +435,7 @@ public class OrgNodeDetailFragment extends Fragment {
             return items.size();
         }
 
-        void setItemModifiersVisibility(View view, int visibility){
+        void setItemModifiersVisibility(View view, int visibility) {
             LinearLayout itemModifiers = (LinearLayout) view.findViewById(R.id.item_modifiers);
             if (itemModifiers != null) {
                 itemModifiers.setVisibility(visibility);

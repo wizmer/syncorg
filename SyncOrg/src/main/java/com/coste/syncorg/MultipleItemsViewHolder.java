@@ -10,20 +10,4 @@ public class MultipleItemsViewHolder extends RecyclerView.ViewHolder {
         super(view);
         this.view = view;
     }
-
-//            @Override
-//            public void onViewRecycled(ItemViewHolder holder) {
-//                holder.itemView.setOnLongClickListener(null);
-//                super.onViewRecycled(holder);
-//            }
-
-
-
-//            @Override
-//            public String toString() {
-//                return super.toString() + " '" + mContentView.getText() + "'";
-//            }
-
-
-
 }

@@ -2,19 +2,13 @@ package com.coste.syncorg.services;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.Toast;
 
 import com.coste.syncorg.R;
-import com.coste.syncorg.synchronizers.NullSynchronizer;
 
 @TargetApi(23)
 public class PermissionManagerActivity extends AppCompatActivity {
@@ -25,7 +19,7 @@ public class PermissionManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permission_manager);
 
-        requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 MAKE_NULL_SYNC_DIR_PERMISSION);
     }
 
@@ -36,7 +30,6 @@ public class PermissionManagerActivity extends AppCompatActivity {
             case MAKE_NULL_SYNC_DIR_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
-                    SyncService.restartAlarm(this);
                     finish();
                 } else {
                     // 1. Instantiate an AlertDialog.Builder with its constructor

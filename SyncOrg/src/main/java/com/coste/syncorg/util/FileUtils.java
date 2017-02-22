@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,223 +19,260 @@ import java.io.OutputStreamWriter;
 
 public class FileUtils {
 
-	public static final String CAPTURE_FILE = "mobileorg.org";
-	public static final String CAPTURE_FILE_ALIAS = "Captures";
-	public static final String INDEX_FILE = "index.org";
-	public static final String CHECKSUM_FILE = "checksums.dat";
-	public static final String AGENDA_FILE = "agendas.org";
+    public static final String CAPTURE_FILE = "mobileorg.org";
+    public static final String CAPTURE_FILE_ALIAS = "Captures";
+    public static final String INDEX_FILE = "index.org";
+    public static final String CHECKSUM_FILE = "checksums.dat";
+    public static final String AGENDA_FILE = "agendas.org";
 
-	private Context context;
-	private String fileName;
+    private Context context;
+    private String fileName;
 
-	public FileUtils(String file, Context context) {
-		this.context = context;
-		this.fileName = file.replace("/", "_");
-	}
+    public FileUtils(String file, Context context) {
+        this.context = context;
+        this.fileName = file.replace("/", "_");
+    }
 
-	public static String read(BufferedReader reader) throws IOException {
-		if (reader == null) {
-			return "";
-		}
+    public static String read(BufferedReader reader) throws IOException {
+        if (reader == null) {
+            return "";
+        }
 
-		StringBuilder fileContents = new StringBuilder();
-		String line;
+        StringBuilder fileContents = new StringBuilder();
+        String line;
 
-		while ((line = reader.readLine()) != null) {
-			fileContents.append(line);
-			fileContents.append("\n");
-		}
+        while ((line = reader.readLine()) != null) {
+            fileContents.append(line);
+            fileContents.append("\n");
+        }
 
-		return fileContents.toString();
-	}
+        return fileContents.toString();
+    }
 
-	public static String read(Context context, String filename){
-		File file = new File(filename);
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			return FileUtils.read(br);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
+    public static String read(Context context, String filename) {
+        File file = new File(filename);
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            return FileUtils.read(br);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
-	public static boolean deleteFile(File file) {
-		if (file != null) {
-			if (file.isDirectory()) {
-				String[] children = file.list();
-				for (int i = 0; i < children.length; i++) {
-					boolean success = deleteFile(new File(file, children[i]));
-					if (!success) {
-						return false;
-					}
-				}
-			}
-			return file.delete();
-		}
-		return false;
-	}
+    public static boolean deleteFile(File file) {
+        if (file != null) {
+            if (file.isDirectory()) {
+                String[] children = file.list();
+                for (int i = 0; i < children.length; i++) {
+                    boolean success = deleteFile(new File(file, children[i]));
+                    if (!success) {
+                        return false;
+                    }
+                }
+            }
+            return file.delete();
+        }
+        return false;
+    }
 
-	public static String stripLastNewLine(String str) {
-		int size = str.length() - 1;
-		while (size >= 0 && str.charAt(size) == '\n') --size;
-		if (size < 0) return "";
-		return str.substring(0, size + 1);
-	}
+    public static String stripLastNewLine(String str) {
+        int size = str.length() - 1;
+        while (size >= 0 && str.charAt(size) == '\n') --size;
+        if (size < 0) return "";
+        return str.substring(0, size + 1);
+    }
 
-	public String read() throws IOException {
-		return read(getReader());
-	}
+    /**
+     * Return the padding level: the number of blanks at the beggining of the line
+     *
+     * @param str
+     * @return
+     */
+    static public int getPaddingLevel(String str) {
+        int pos = 0;
+        if (str == null) return 0;
+        int len = str.length();
+        if (len == 0) return 0;
+        int padding = 0;
+        while (pos < len && str.charAt(pos++) == ' ') padding++;
+        return padding;
+    }
 
-	public void write(String filePath, String content) throws IOException {
-		File file = new File(filePath);
-		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-		writer.write(content);
-		writer.close();
-	}
+    /**
+     * Return the minimum indentation of a block of lines
+     *
+     * @param str
+     * @return
+     */
+    static public int getMinimumPadding(String str) {
+        if (str == null || str.trim().equals("")) return 0;
+        int minimumPadding = 9999;
+        for (String line : str.split("\\r?\\n")) {
+            if (line.trim().equals("")) continue;
+            int level = FileUtils.getPaddingLevel(line);
+            if (level < minimumPadding) {
+                minimumPadding = level;
+            }
+        }
+        return minimumPadding;
+    }
 
-	public BufferedReader getReader() {
-		String storageMode = getStorageMode();
-		String synchMode = getSynchMode();
-		BufferedReader reader = null;
+    public String read() throws IOException {
+        return read(getReader());
+    }
 
-		try {
-			if (storageMode.equals("sdcard") || synchMode.equals("sdcard")) {
-				File root = Environment.getExternalStorageDirectory();
-				File morgDir = new File(root, "mobileorg");
-				File morgFile = new File(morgDir, fileName);
-				if (!morgFile.exists()) {
-					return null;
-				}
-				FileReader freader = new FileReader(morgFile);
-				reader = new BufferedReader(freader);
-			} else if (storageMode.equals("internal") || storageMode.equals("")) {
-				String dirActual = this.fileName;
+    public void write(String filePath, String content) throws IOException {
+        File file = new File(filePath);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+        writer.write(content);
+        writer.close();
+    }
 
-				FileInputStream fs;
-				fs = context.openFileInput(dirActual);
-				reader = new BufferedReader(new InputStreamReader(fs));
-			}
-		} catch (FileNotFoundException e) {
-			return null;
-		}
+    public BufferedReader getReader() {
+        String storageMode = getStorageMode();
+        String synchMode = getSynchMode();
+        BufferedReader reader = null;
 
-		return reader;
-	}
+        try {
+            if (storageMode.equals("sdcard") || synchMode.equals("sdcard")) {
+                File root = Environment.getExternalStorageDirectory();
+                File morgDir = new File(root, "mobileorg");
+                File morgFile = new File(morgDir, fileName);
+                if (!morgFile.exists()) {
+                    return null;
+                }
+                FileReader freader = new FileReader(morgFile);
+                reader = new BufferedReader(freader);
+            } else if (storageMode.equals("internal") || storageMode.equals("")) {
+                String dirActual = this.fileName;
 
-	public BufferedWriter getWriter() throws IOException {
-		return getWriter(false);
-	}
+                FileInputStream fs;
+                fs = context.openFileInput(dirActual);
+                reader = new BufferedReader(new InputStreamReader(fs));
+            }
+        } catch (FileNotFoundException e) {
+            return null;
+        }
 
-	public BufferedWriter getWriter(boolean append) throws IOException {
-		String storageMode = getStorageMode();
-		BufferedWriter writer = null;
+        return reader;
+    }
 
-		if (storageMode.equals("internal") || storageMode.equals("")) {
-			FileOutputStream fs;
-			String normalized = fileName.replace("/", "_");
-			if(append)
-				fs = context.openFileOutput(normalized, Context.MODE_APPEND);
-			else
-				fs = context.openFileOutput(normalized, Context.MODE_PRIVATE);
-			writer = new BufferedWriter(new OutputStreamWriter(fs));
+    public BufferedWriter getWriter() throws IOException {
+        return getWriter(false);
+    }
 
-		} else if (storageMode.equals("sdcard")) {
-			File root = Environment.getExternalStorageDirectory();
-			File morgDir = new File(root, "mobileorg");
-			morgDir.mkdir();
-			if (morgDir.canWrite()) {
-				File orgFileCard = new File(morgDir, fileName);
-				FileWriter orgFWriter = new FileWriter(orgFileCard, append);
-				writer = new BufferedWriter(orgFWriter);
-			}
-		}
+    public BufferedWriter getWriter(boolean append) throws IOException {
+        String storageMode = getStorageMode();
+        BufferedWriter writer = null;
 
-		return writer;
-	}
+        if (storageMode.equals("internal") || storageMode.equals("")) {
+            FileOutputStream fs;
+            String normalized = fileName.replace("/", "_");
+            if (append)
+                fs = context.openFileOutput(normalized, Context.MODE_APPEND);
+            else
+                fs = context.openFileOutput(normalized, Context.MODE_PRIVATE);
+            writer = new BufferedWriter(new OutputStreamWriter(fs));
 
-	public File getFile() {
-		String storageMode = getStorageMode();
-		if (storageMode.equals("internal") || storageMode.equals("")) {
-			return new File(context.getFilesDir(),	fileName);
-		} else if (storageMode.equals("sdcard")) {
-			File root = Environment.getExternalStorageDirectory();
-			File morgDir = new File(root, "mobileorg");
-			File morgFile = new File(morgDir, fileName);
-			if (!morgFile.exists()) {
-				return null;
-			}
-			return morgFile;
-		}
+        } else if (storageMode.equals("sdcard")) {
+            File root = Environment.getExternalStorageDirectory();
+            File morgDir = new File(root, "mobileorg");
+            morgDir.mkdir();
+            if (morgDir.canWrite()) {
+                File orgFileCard = new File(morgDir, fileName);
+                FileWriter orgFWriter = new FileWriter(orgFileCard, append);
+                writer = new BufferedWriter(orgFWriter);
+            }
+        }
 
-		return null;
-	}
+        return writer;
+    }
 
-	/**
-	 * Read everything from the given reader and write to it {@link #fileName}
-	 */
-	public void fetch(BufferedReader reader) throws IOException {
-		BufferedWriter writer = getWriter();
+    public File getFile() {
+        String storageMode = getStorageMode();
+        if (storageMode.equals("internal") || storageMode.equals("")) {
+            return new File(context.getFilesDir(), fileName);
+        } else if (storageMode.equals("sdcard")) {
+            File root = Environment.getExternalStorageDirectory();
+            File morgDir = new File(root, "mobileorg");
+            File morgFile = new File(morgDir, fileName);
+            if (!morgFile.exists()) {
+                return null;
+            }
+            return morgFile;
+        }
 
-		final int BUFFER_SIZE = 23 * 1024;
-		char[] baf = new char[BUFFER_SIZE];
-		int actual = 0;
+        return null;
+    }
 
-		while (actual != -1) {
-			writer.write(baf, 0, actual);
-			actual = reader.read(baf, 0, BUFFER_SIZE);
-		}
-		writer.close();
-	}
+    /**
+     * Read everything from the given reader and write to it {@link #fileName}
+     */
+    public void fetch(BufferedReader reader) throws IOException {
+        BufferedWriter writer = getWriter();
 
-	private String getStorageMode() {
-		return PreferenceManager.getDefaultSharedPreferences(this.context)
-				.getString("storageMode", "");
-	}
+        final int BUFFER_SIZE = 23 * 1024;
+        char[] baf = new char[BUFFER_SIZE];
+        int actual = 0;
 
-	private String getSynchMode() {
-		return PreferenceManager.getDefaultSharedPreferences(this.context)
-				.getString("storageMode", "");
-	}
+        while (actual != -1) {
+            writer.write(baf, 0, actual);
+            actual = reader.read(baf, 0, BUFFER_SIZE);
+        }
+        writer.close();
+    }
 
-	public String getBasePath() {
-		SharedPreferences appSettings = PreferenceManager
-				.getDefaultSharedPreferences(this.context);
-		String orgBasePath = "";
+    private String getStorageMode() {
+        return PreferenceManager.getDefaultSharedPreferences(this.context)
+                .getString("storageMode", "");
+    }
 
-		if (getStorageMode().equals("sdcard")) {
-			String indexFile = appSettings.getString("indexFilePath", "");
-			File fIndexFile = new File(indexFile);
-			orgBasePath = fIndexFile.getParent() + "/";
-		} else {
-			orgBasePath = Environment.getExternalStorageDirectory()
-					.getAbsolutePath() + "/mobileorg/";
-		}
+    private String getSynchMode() {
+        return PreferenceManager.getDefaultSharedPreferences(this.context)
+                .getString("storageMode", "");
+    }
 
-		return orgBasePath;
-	}
+    public String getBasePath() {
+        SharedPreferences appSettings = PreferenceManager
+                .getDefaultSharedPreferences(this.context);
+        String orgBasePath = "";
 
-	// Used by encryption
-	public byte[] getRawFileData() {
-		try {
-			File file = getFile();
-			FileInputStream is = new FileInputStream(file);
-			byte[] buffer = new byte[(int) file.length()];
-			int offset = 0;
-			int numRead = 0;
-			while (offset < buffer.length
-					&& (numRead = is.read(buffer, offset, buffer.length
-					- offset)) >= 0) {
-				offset += numRead;
-			}
-			is.close();
-			if (offset < buffer.length) {
-				throw new IOException("Could not completely read file "
-						+ file.getName());
-			}
-			return buffer;
-		} catch (IOException e) {
-			return null;
-		}
-	}
+        if (getStorageMode().equals("sdcard")) {
+            String indexFile = appSettings.getString("indexFilePath", "");
+            File fIndexFile = new File(indexFile);
+            orgBasePath = fIndexFile.getParent() + "/";
+        } else {
+            orgBasePath = Environment.getExternalStorageDirectory()
+                    .getAbsolutePath() + "/mobileorg/";
+        }
+
+        return orgBasePath;
+    }
+
+    // Used by encryption
+    public byte[] getRawFileData() {
+        try {
+            File file = getFile();
+            FileInputStream is = new FileInputStream(file);
+            byte[] buffer = new byte[(int) file.length()];
+            int offset = 0;
+            int numRead = 0;
+            while (offset < buffer.length
+                    && (numRead = is.read(buffer, offset, buffer.length
+                    - offset)) >= 0) {
+                offset += numRead;
+            }
+            is.close();
+            if (offset < buffer.length) {
+                throw new IOException("Could not completely read file "
+                        + file.getName());
+            }
+            return buffer;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
 }
+

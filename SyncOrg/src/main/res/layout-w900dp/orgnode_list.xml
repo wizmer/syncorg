@@ -9,7 +9,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="com.coste.syncorg.OrgNodeListActivity">
+    tools:context="com.coste.syncorg.MainActivity">
 
     <!--
     This layout is a two-pane layout for the OrgNodes
@@ -26,7 +26,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.coste.syncorg.OrgNodeListActivity"
+        tools:context="com.coste.syncorg.MainActivity"
         tools:listitem="@layout/outline_item" />
 
     <FrameLayout

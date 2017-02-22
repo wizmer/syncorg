@@ -3,7 +3,7 @@
     android:id="@+id/view_fragment_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,20 +21,18 @@
                 android:id="@+id/todo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/todo_state"
-                android:textSize="20sp"
                 android:padding="20dp"
-                />
+                android:text="@string/todo_state"
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/priority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/priority"
-                android:textSize="20sp"
                 android:padding="20dp"
+                android:text="@string/priority"
                 android:textColor="@color/colorYellow"
-                />
+                android:textSize="20sp" />
         </LinearLayout>
 
 
@@ -52,28 +50,25 @@
                     android:id="@+id/scheduled_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/scheduled"
-                    android:textSize="12sp"
                     android:padding="20dp"
-                    />
+                    android:text="@string/scheduled"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/scheduled_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/date"
-                    android:textSize="12sp"
                     android:padding="20dp"
-                    />
+                    android:text="@string/date"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/scheduled_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/time"
-                    android:textSize="12sp"
                     android:padding="20dp"
-                    />
+                    android:text="@string/time"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -85,28 +80,25 @@
                     android:id="@+id/deadline_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/deadline"
-                    android:textSize="12sp"
                     android:padding="20dp"
-                    />
+                    android:text="@string/deadline"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/deadline_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/date"
-                    android:textSize="12sp"
                     android:padding="20dp"
-                    />
+                    android:text="@string/date"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/deadline_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/time"
-                    android:textSize="12sp"
                     android:padding="20dp"
-                    />
+                    android:text="@string/time"
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

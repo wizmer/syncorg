@@ -14,62 +14,62 @@ import java.io.InputStreamReader;
 
 public class SDCardSynchronizer extends Synchronizer {
 
-	private String remoteIndexPath;
-	private String remotePath;
+    private String remoteIndexPath;
+    private String remotePath;
 
     public SDCardSynchronizer(Context context) {
-		super(context);
-		this.remoteIndexPath = PreferenceManager.getDefaultSharedPreferences(
-				context).getString("indexFilePath", "");
-	
-		this.remotePath = new File(remoteIndexPath) + "/";
-	}
+        super(context);
+        this.remoteIndexPath = PreferenceManager.getDefaultSharedPreferences(
+                context).getString("indexFilePath", "");
+
+        this.remotePath = new File(remoteIndexPath) + "/";
+    }
 
 
-	@Override
-	public String getAbsoluteFilesDir() {
-		return null;
-	}
+    @Override
+    public String getAbsoluteFilesDir() {
+        return null;
+    }
 
-	public boolean isConfigured() {
-		return !remoteIndexPath.equals("");
-	}
+    public boolean isConfigured() {
+        return !remoteIndexPath.equals("");
+    }
 
-	public void putRemoteFile(String filename, String contents) throws IOException {
-		String outfilePath = this.remotePath + filename;
-		
-		File file = new File(outfilePath);
-		BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
-		writer.write(contents);
-		writer.close();
-	}
+    public void putRemoteFile(String filename, String contents) throws IOException {
+        String outfilePath = this.remotePath + filename;
 
-	public BufferedReader getRemoteFile(String filename) throws FileNotFoundException {
-		String filePath = this.remotePath + filename;
-		File file = new File(filePath);
-		FileInputStream fileIS = new FileInputStream(file);
-		return new BufferedReader(new InputStreamReader(fileIS));
-	}
+        File file = new File(outfilePath);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
+        writer.write(contents);
+        writer.close();
+    }
 
-	@Override
-	public SyncResult synchronize() {
+    public BufferedReader getRemoteFile(String filename) throws FileNotFoundException {
+        String filePath = this.remotePath + filename;
+        File file = new File(filePath);
+        FileInputStream fileIS = new FileInputStream(file);
+        return new BufferedReader(new InputStreamReader(fileIS));
+    }
 
-		return null;
-	}
+    @Override
+    public SyncResult synchronize() {
 
-
-	@Override
-	public void postSynchronize() {
-	}
-
-	@Override
-	public void addFile(String filename) {
-
-	}
+        return null;
+    }
 
 
-	@Override
-	public boolean isConnectable() {
-		return true;
-	}
+    @Override
+    public void postSynchronize() {
+    }
+
+    @Override
+    public void _addFile(String filename) {
+
+    }
+
+
+    @Override
+    public boolean isConnectable() {
+        return true;
+    }
 }

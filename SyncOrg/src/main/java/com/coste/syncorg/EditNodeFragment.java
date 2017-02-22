@@ -27,6 +27,7 @@ import com.coste.syncorg.orgdata.OrgContract;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgNode;
 import com.coste.syncorg.orgdata.OrgNodeTimeDate;
+import com.coste.syncorg.util.FileUtils;
 import com.coste.syncorg.util.OrgNodeNotFoundException;
 import com.coste.syncorg.util.TodoDialog;
 
@@ -46,6 +47,29 @@ public class EditNodeFragment extends Fragment {
     Context context;
     private int position = 0;
     private Button todo, priority;
+
+    static private void setupTimeStampButtons() {
+        String scheduleText = node.getScheduled().getDate();
+        String deadlineText = node.getDeadline().getDate();
+        if (scheduleText.length() > 0) schedule_date.setText(scheduleText);
+        if (deadlineText.length() > 0) deadline_date.setText(deadlineText);
+
+        String scheduleTimeText = node.getScheduled().getStartTime();
+        String deadlineTimeText = node.getDeadline().getStartTime();
+        if (scheduleTimeText.length() > 0) schedule_time.setText(scheduleTimeText);
+        if (deadlineTimeText.length() > 0) deadline_time.setText(deadlineTimeText);
+    }
+
+    static public void createEditNodeFragment(int id, int parentId, int siblingPosition, Context context) {
+        Bundle args = new Bundle();
+        args.putLong(OrgContract.NODE_ID, id);
+        args.putLong(OrgContract.PARENT_ID, parentId);
+        args.putInt(OrgContract.OrgData.POSITION, siblingPosition);
+
+        Intent intent = new Intent(context, EditNodeActivity.class);
+        intent.putExtras(args);
+        context.startActivity(intent);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,7 +114,7 @@ public class EditNodeFragment extends Fragment {
          * Save user changes (scheduled and time values) if a configuration change occured
          * (like screen rotation or call)
          */
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             node.getScheduled().year = (int) savedInstanceState.getLong("year_schedule");
             node.getScheduled().monthOfYear = (int) savedInstanceState.getLong("month_schedule");
             node.getScheduled().dayOfMonth = (int) savedInstanceState.getLong("day_schedule");
@@ -189,31 +213,7 @@ public class EditNodeFragment extends Fragment {
         return rootView;
     }
 
-    static private void setupTimeStampButtons() {
-        String scheduleText = node.getScheduled().getDate();
-        String deadlineText = node.getDeadline().getDate();
-        if (scheduleText.length() > 0) schedule_date.setText(scheduleText);
-        if (deadlineText.length() > 0) deadline_date.setText(deadlineText);
-
-        String scheduleTimeText = node.getScheduled().getStartTime();
-        String deadlineTimeText = node.getDeadline().getStartTime();
-        if (scheduleTimeText.length() > 0) schedule_time.setText(scheduleTimeText);
-        if (deadlineTimeText.length() > 0) deadline_time.setText(deadlineTimeText);
-    }
-
-    static public void createEditNodeFragment(int id, int parentId, int siblingPosition, Context context) {
-        Bundle args = new Bundle();
-        args.putLong(OrgContract.NODE_ID, id);
-        args.putLong(OrgContract.PARENT_ID, parentId);
-        args.putInt(OrgContract.OrgData.POSITION, siblingPosition);
-
-        Intent intent = new Intent(context, EditNodeActivity.class);
-        intent.putExtras(args);
-        context.startActivity(intent);
-    }
-
-
-    private void createNewNode(ContentResolver resolver){
+    private void createNewNode(ContentResolver resolver) {
         // Creating new node
         node = new OrgNode();
         node.parentId = parentId;
@@ -251,27 +251,40 @@ public class EditNodeFragment extends Fragment {
      * Triggers the update mechanism
      * First the new node is written to the DB
      * Then the file is written to disk
+     *
      * @return : whether or not, the fragment must finish
      */
-    public boolean onOKPressed(){
+    public boolean onOKPressed() {
         List<OrgNodeTimeDate> timedates = Arrays.asList(node.getDeadline(), node.getScheduled());
-        for(OrgNodeTimeDate timedate: timedates){
-            if(     (timedate.startMinute >= 0 || timedate.startTimeOfDay >= 0) &&
-                    (timedate.dayOfMonth < 0 || timedate.monthOfYear < 0 || timedate.year < 0)){
-                Toast.makeText(context,R.string.pick_a_date,Toast.LENGTH_LONG).show();
+        for (OrgNodeTimeDate timedate : timedates) {
+            if ((timedate.startMinute >= 0 || timedate.startTimeOfDay >= 0) &&
+                    (timedate.dayOfMonth < 0 || timedate.monthOfYear < 0 || timedate.year < 0)) {
+                Toast.makeText(context, R.string.pick_a_date, Toast.LENGTH_LONG).show();
                 return false;
             }
         }
 
-        ContentResolver resolver = getContext().getContentResolver();
         String payload = "";
+        String padding = "";
+        long paddingLevel;
+        String previousPayload = node.getPayload();
+        if (previousPayload != null && !previousPayload.trim().equals("")) {
+            // Use the padding level from the former payload
+            paddingLevel = FileUtils.getMinimumPadding(previousPayload);
+        } else {
+            paddingLevel = node.level + 1;
+        }
 
-        payload+=content.getText().toString();
+        for (int i = 0; i < paddingLevel; i++) padding += ' ';
+        for (String line : content.getText().toString().split("\\r?\\n")) {
+            payload += padding + line + "\n";
+        }
 
         node.name = title.getText().toString();
+
         node.setPayload(payload);
 
-        if(nodeId <0 ) node.shiftNextSiblingNodes(context);
+        if (nodeId < 0) node.shiftNextSiblingNodes(context);
 
         node.write(getContext());
         OrgFile.updateFile(node, context);
@@ -281,15 +294,15 @@ public class EditNodeFragment extends Fragment {
     /**
      * Called by EditNodeActivity when the Cancel button from the menu bar is pressed
      */
-    public void onCancelPressed(){
+    public void onCancelPressed() {
     }
 
-    private void setupDateDialog(){
+    private void setupDateDialog() {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
-    private void setupTimeDialog(){
+    private void setupTimeDialog() {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
     }
@@ -348,7 +361,7 @@ public class EditNodeFragment extends Fragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            if(timeDate.year > -1 && timeDate.monthOfYear > -1 && timeDate.dayOfMonth > -1){
+            if (timeDate.year > -1 && timeDate.monthOfYear > -1 && timeDate.dayOfMonth > -1) {
                 year = timeDate.year;
                 month = timeDate.monthOfYear;
                 day = timeDate.dayOfMonth;

@@ -72,7 +72,7 @@ public class OrgNodeViewHolder extends ItemViewHolder {
 
     public void applyLevelIndentation(long level, SpannableStringBuilder item) {
         String indentString = "";
-        for(int i = 0; i < level; i++)
+        for (int i = 0; i < level; i++)
             indentString += "   ";
 
         this.levelView.setText(indentString);
@@ -80,8 +80,8 @@ public class OrgNodeViewHolder extends ItemViewHolder {
 
     public void setupTitle(String name, SpannableStringBuilder titleSpan) {
         titleView.setGravity(Gravity.LEFT);
-        titleView.setTextSize(Style.titleFontSize[Math.min((int)getLevel()-1, Style.nTitleColors-1)]);
-        if(getLevel()==1) titleView.setTypeface(null, Typeface.BOLD);
+        titleView.setTextSize(Style.titleFontSize[Math.min((int) getLevel() - 1, Style.nTitleColors - 1)]);
+        if (getLevel() == 1) titleView.setTypeface(null, Typeface.BOLD);
         else titleView.setTypeface(null, Typeface.NORMAL);
 
         if (name.startsWith("COMMENT"))
@@ -96,7 +96,7 @@ public class OrgNodeViewHolder extends ItemViewHolder {
 
     private void formatLinks(SpannableStringBuilder titleSpan) {
         Matcher matcher = urlPattern.matcher(titleSpan);
-        while(matcher.find()) {
+        while (matcher.find()) {
             titleSpan.delete(matcher.start(), matcher.end());
             titleSpan.insert(matcher.start(), matcher.group(1));
 
@@ -115,12 +115,12 @@ public class OrgNodeViewHolder extends ItemViewHolder {
         setupPriority(node.priority);
         TodoDialog.setupTodoButton(context, node, todoButton, true);
 
-        if(root.getVisibility()== OrgNodeTree.Visibility.folded)
+        if (root.getVisibility() == OrgNodeTree.Visibility.folded)
             setupChildrenIndicator(node, titleSpan, context);
 
 //                titleSpan.setSpan(new StyleSpan(Typeface.NORMAL), 0, titleSpan.length(), 0);
         titleView.setText(titleSpan);
-        int colorId = (int) Math.min(getLevel()-1,Style.nTitleColors-1);
+        int colorId = (int) Math.min(getLevel() - 1, Style.nTitleColors - 1);
         titleView.setTextColor(Style.titleColor[colorId]);
         mView.setSelected(isSelected);
         if (isSelected) itemModifiers.setVisibility(View.VISIBLE);
@@ -128,27 +128,26 @@ public class OrgNodeViewHolder extends ItemViewHolder {
         String cleanedPayload = node.getCleanedPayload();
         contentView.setText(cleanedPayload);
 
-
-        if(cleanedPayload.equals("")){
+        if (cleanedPayload.trim().equals("")) {
             RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams)titleView.getLayoutParams();
+                    (RelativeLayout.LayoutParams) titleView.getLayoutParams();
             layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
             titleView.setLayoutParams(layoutParams);
 
             layoutParams =
-                    (RelativeLayout.LayoutParams)todoButton.getLayoutParams();
+                    (RelativeLayout.LayoutParams) todoButton.getLayoutParams();
             layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
             todoButton.setLayoutParams(layoutParams);
 
             contentView.setVisibility(View.GONE);
         } else {
             RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams)titleView.getLayoutParams();
+                    (RelativeLayout.LayoutParams) titleView.getLayoutParams();
             layoutParams.removeRule(RelativeLayout.CENTER_VERTICAL);
             titleView.setLayoutParams(layoutParams);
 
             layoutParams =
-                    (RelativeLayout.LayoutParams)todoButton.getLayoutParams();
+                    (RelativeLayout.LayoutParams) todoButton.getLayoutParams();
             layoutParams.removeRule(RelativeLayout.CENTER_VERTICAL);
             todoButton.setLayoutParams(layoutParams);
 
@@ -165,8 +164,8 @@ public class OrgNodeViewHolder extends ItemViewHolder {
         }
     }
 
-    private long getLevel(){
-        if(node != null) return node.level;
+    private long getLevel() {
+        if (node != null) return node.level;
         return -1;
     }
 }

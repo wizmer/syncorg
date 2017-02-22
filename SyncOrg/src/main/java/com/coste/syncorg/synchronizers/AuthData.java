@@ -11,6 +11,8 @@ import com.coste.syncorg.util.OrgUtils;
  * Created by bcoste on 17/06/16.
  */
 public class AuthData {
+    static public String PRIVATE_KEY = "dsa";
+    static public String PUBLIC_KEY = PRIVATE_KEY + ".pub";
     static AuthData mAuthData = null;
     private SharedPreferences appSettings;
 
@@ -22,6 +24,18 @@ public class AuthData {
     public static AuthData getInstance(Context context) {
         if (mAuthData == null) mAuthData = new AuthData(context);
         return mAuthData;
+    }
+
+    public static String getPrivateKeyPath(Context context) {
+        return context.getFilesDir().getAbsoluteFile() + "/" + PRIVATE_KEY;
+    }
+
+    public static String getPublicKeyPath(Context context) {
+        return context.getFilesDir().getAbsoluteFile() + "/" + PUBLIC_KEY;
+    }
+
+    public static String getPublicKey(Context context) {
+        return FileUtils.read(context, getPublicKeyPath(context));
     }
 
     public boolean usePassword() {
@@ -46,21 +60,6 @@ public class AuthData {
 
     public String getPassword() {
         return OrgUtils.rStrip(appSettings.getString("scpPass", ""));
-    }
-
-    static public String PRIVATE_KEY = "dsa";
-    static public String PUBLIC_KEY = PRIVATE_KEY + ".pub";
-
-    public static String getPrivateKeyPath(Context context){
-        return context.getFilesDir().getAbsoluteFile() + "/" + PRIVATE_KEY;
-    }
-
-    public static String getPublicKeyPath(Context context){
-        return context.getFilesDir().getAbsoluteFile() + "/" + PUBLIC_KEY;
-    }
-
-    public static String getPublicKey(Context context){
-        return FileUtils.read(context, getPublicKeyPath(context));
     }
 
 

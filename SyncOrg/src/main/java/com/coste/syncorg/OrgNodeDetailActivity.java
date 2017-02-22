@@ -17,7 +17,7 @@ import com.coste.syncorg.util.OrgNodeNotFoundException;
  * An activity representing a single OrgNode detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link OrgNodeListActivity}.
+ * in a {@link MainActivity}.
  */
 public class OrgNodeDetailActivity extends AppCompatActivity {
 
@@ -54,7 +54,7 @@ public class OrgNodeDetailActivity extends AppCompatActivity {
             arguments.putLong(OrgContract.POSITION, getIntent().getLongExtra(OrgContract.POSITION, -1));
             Fragment fragment;
 
-            if(nodeId == OrgContract.AGENDA_ID) fragment = new AgendaFragment();
+            if (nodeId == OrgContract.AGENDA_ID) fragment = new AgendaFragment();
             else fragment = new OrgNodeDetailFragment();
 
             fragment.setArguments(arguments);
@@ -62,9 +62,10 @@ public class OrgNodeDetailActivity extends AppCompatActivity {
                     .replace(R.id.orgnode_detail_container, fragment, "detail_fragment")
                     .commit();
 
-            if(actionBar != null) {
-                if(nodeId == OrgContract.TODO_ID) actionBar.setTitle(getResources().getString(R.string.menu_todos));
-                else if (nodeId == OrgContract.AGENDA_ID){
+            if (actionBar != null) {
+                if (nodeId == OrgContract.TODO_ID)
+                    actionBar.setTitle(getResources().getString(R.string.menu_todos));
+                else if (nodeId == OrgContract.AGENDA_ID) {
                     actionBar.setTitle(getResources().getString(R.string.menu_agenda));
                 } else {
                     try {
@@ -79,11 +80,10 @@ public class OrgNodeDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         // Writing changes currently done in the fragment EditNodeFragment if any
         EditNodeFragment fragment = (EditNodeFragment) getSupportFragmentManager().findFragmentByTag("edit_node_fragment");
-        if(fragment != null){
+        if (fragment != null) {
             fragment.onOKPressed();
         }
 
@@ -111,7 +111,7 @@ public class OrgNodeDetailActivity extends AppCompatActivity {
                 //
                 // http://developer.android.com/design/patterns/navigation.html#up-vs-back
                 //
-                NavUtils.navigateUpTo(this, new Intent(this, OrgNodeListActivity.class));
+                NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
                 return true;
 
 //            case R.id.delete_node_button:
@@ -123,8 +123,6 @@ public class OrgNodeDetailActivity extends AppCompatActivity {
 //        return super.onOptionsItemSelected(item);
         return false;
     }
-
-
 
 
 }

@@ -4,31 +4,30 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/node_recycler_view"
-        android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/empty_recycler_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
         android:layout_gravity="center"
-        android:textSize="18sp"
-        android:text="@string/no_node"/>
+        android:text="@string/no_node"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/empty_recycler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="12sp"
         android:padding="20dp"
-        android:text="@string/insert_node"/>
+        android:text="@string/insert_node"
+        android:textSize="12sp" />
 
 </LinearLayout>

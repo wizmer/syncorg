@@ -59,7 +59,6 @@
     <string name="prompt_cert_changed">The WebDAV Certificate has changed, below are the details.  If you are okay with this click \'Accept\' otherwise click \'Deny\'.  If you accept the new certificate you will need to re-issue your Synchronize command</string>
 
     <!-- synchronization -->
-    <string name="sync_not_configured">Sync not configured</string>
     <string name="sync_successful">Synchronization Successful</string>
     <string name="sync_error_occured">Error occurred during sync:</string>
     <string name="sync_synchronizing_changes">Synchronizing changes</string>
@@ -143,6 +142,7 @@
     <string name="wizard_sdcard">my SD card</string>
     <string name="wizard_ssh">an SSH server</string>
     <string name="wizard_null">External/No sync (default)</string>
+    <string name="wizard_google_drive">Google Drive</string>
     <string name="log_in_to_dropbox">Log in to Dropbox</string>
     <string name="log_in_to_ubuntuone">Log in to Ubuntu One</string>
     <string name="log_in_to_webdav">Log in to your WebDAV server</string>
@@ -287,7 +287,7 @@
     <string name="summary_agenda_title">Enables use of custom agenda titles. Needs resync of agenda file to take effect</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="copy_old_sync_folder">You are creating a new org note folder. Do you want to copy the content of your previous note folder ?"</string>
+    <string name="copy_old_sync_folder">You are creating a new org note folder. Do you want to copy your current notes in this folder ?</string>
     <string name="no_start_from_scratch">No, start from scratch"</string>
     <!-- directory chooser -->
 
@@ -327,8 +327,7 @@
 
 
     <string name="upgrade">Update :\n\n
-        You can now choose the folder used to store org files. If org files are updated externally, SyncOrg will detect the changes.\n
-        Go to: Settings -> Setup wizard to set up the folder\n\n
+        Files in nested folders are now taken into account.
    </string>
     <string name="write_permission_denied_warning_title">Warning: Storage permission denied</string>
     <string name="write_permission_denied_warning_content">The "Storage" permission is mandatory to write notes on disk. When denied, the app can not run correctly.

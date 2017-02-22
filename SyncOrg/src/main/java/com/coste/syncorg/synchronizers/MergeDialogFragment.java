@@ -14,7 +14,7 @@ import com.coste.syncorg.R;
 public class MergeDialogFragment extends DialogFragment {
 
 
-    public MergeDialogFragment(){
+    public MergeDialogFragment() {
     }
 
     @Override

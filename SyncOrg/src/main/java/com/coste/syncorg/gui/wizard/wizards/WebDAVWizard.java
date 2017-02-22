@@ -10,27 +10,26 @@ import com.coste.syncorg.R;
 
 public class WebDAVWizard extends AppCompatActivity {
 
-	private EditText webdavUser;
-	private EditText webdavPass;
-	private EditText webdavUrl;
+    private EditText webdavUser;
+    private EditText webdavPass;
+    private EditText webdavUrl;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.wizard_webdav);
-		
-		webdavUser = (EditText) findViewById(R.id.wizard_webdav_username);
-		webdavPass = (EditText) findViewById(R.id.wizard_webdav_password);
-		webdavUrl = (EditText) findViewById(R.id.wizard_webdav_url);
-		Button webdavLoginButton = (Button) findViewById(R.id.wizard_webdav_login_button);
-		webdavLoginButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.wizard_webdav);
+
+        webdavUser = (EditText) findViewById(R.id.wizard_webdav_username);
+        webdavPass = (EditText) findViewById(R.id.wizard_webdav_password);
+        webdavUrl = (EditText) findViewById(R.id.wizard_webdav_url);
+        Button webdavLoginButton = (Button) findViewById(R.id.wizard_webdav_login_button);
+        webdavLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 //				loginWebdav();
-			}
-		});
-	}
-	
+            }
+        });
+    }
 
 
 //	public void loginWebdav() {

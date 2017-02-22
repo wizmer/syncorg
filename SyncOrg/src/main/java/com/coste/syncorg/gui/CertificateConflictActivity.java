@@ -42,7 +42,7 @@ public class CertificateConflictActivity extends Activity {
         this.deny_button.setOnClickListener(denyListener);
 
         SharedPreferences appSettings =
-            PreferenceManager.getDefaultSharedPreferences(this);
+                PreferenceManager.getDefaultSharedPreferences(this);
         String webCertHash = Integer.toString(appSettings.getInt("webCertHash", 0));
         String conflictHash = Integer.toString(appSettings.getInt("webConflictHash", 0));
         String conflictDetails = appSettings.getString("webConflictHashDesc", "");
@@ -52,7 +52,7 @@ public class CertificateConflictActivity extends Activity {
 
     private void accept() {
         SharedPreferences appSettings =
-            PreferenceManager.getDefaultSharedPreferences(this);
+                PreferenceManager.getDefaultSharedPreferences(this);
         Editor edit = appSettings.edit();
         edit.putInt("webCertHash", appSettings.getInt("webConflictHash", 0));
         edit.putString("webCertDesscr", appSettings.getString("webConflictHashDesc", ""));

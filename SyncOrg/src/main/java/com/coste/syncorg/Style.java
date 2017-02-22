@@ -8,8 +8,8 @@ public class Style {
     public static int nTitleColors = 3;
     public static int[] titleColor;
     public static int[] titleFontSize;
-    
-    Style(Context context){
+
+    Style(Context context) {
         gray = ContextCompat.getColor(context, R.color.colorGray);
         red = ContextCompat.getColor(context, R.color.colorRed);
         green = ContextCompat.getColor(context, R.color.colorGreen);

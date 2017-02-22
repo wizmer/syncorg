@@ -18,8 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,15 +25,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.coste.syncorg.gui.outline.OutlineAdapter;
 import com.coste.syncorg.gui.SearchActivity;
+import com.coste.syncorg.gui.outline.MainAdapter;
 import com.coste.syncorg.gui.wizard.WizardActivity;
 import com.coste.syncorg.orgdata.OrgFile;
-import com.coste.syncorg.services.SyncService;
 import com.coste.syncorg.settings.SettingsActivity;
-import com.coste.syncorg.synchronizers.AuthData;
 import com.coste.syncorg.synchronizers.Synchronizer;
-import com.coste.syncorg.util.OrgUtils;
 import com.coste.syncorg.util.PreferenceUtils;
 
 import java.io.File;
@@ -49,7 +44,7 @@ import java.io.File;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class OrgNodeListActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     public final static String NODE_ID = "node_id";
     public final static String SYNC_FAILED = "com.coste.syncorg.SYNC_FAILED";
@@ -67,7 +62,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_orgnode_list);
+        setContentView(R.layout.main_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,7 +71,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         node_id = intent.getLongExtra(NODE_ID, -1);
 
-        if (this.node_id == -1){
+        if (this.node_id == -1) {
             PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
             displayNewUserDialogs();
         }
@@ -90,7 +85,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
             // activity should be in two-pane mode.
-            ((OutlineAdapter) recyclerView.getAdapter()).setHasTwoPanes(true);
+            ((MainAdapter) recyclerView.getAdapter()).setHasTwoPanes(true);
         }
 
         new Style(this);
@@ -103,29 +98,29 @@ public class OrgNodeListActivity extends AppCompatActivity {
         if (fab != null) fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(OrgNodeListActivity.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
                 alert.setTitle(R.string.new_file);
                 alert.setMessage(getResources().getString(R.string.filename) + ":");
 
                 // Set an EditText view to get user input
-                final EditText input = new EditText(OrgNodeListActivity.this);
+                final EditText input = new EditText(MainActivity.this);
                 alert.setView(input);
 
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String filename = input.getText().toString();
                         OrgFile newFile = new OrgFile(filename, filename);
-                        File file = new File(newFile.getFilePath(OrgNodeListActivity.this));
-                        if(file.exists()){
-                            Toast.makeText(OrgNodeListActivity.this, R.string.file_exists, Toast.LENGTH_SHORT)
+                        File file = new File(newFile.getFilePath());
+                        if (file.exists()) {
+                            Toast.makeText(MainActivity.this, R.string.file_exists, Toast.LENGTH_SHORT)
                                     .show();
                             return;
                         }
-                        newFile.addFile(OrgNodeListActivity.this);
-                        ((OutlineAdapter) recyclerView.getAdapter()).refresh();
-                        Synchronizer.getInstance().addFile(filename);
-                        connect();
+                        newFile.addFile(MainActivity.this);
+                        ((MainAdapter) recyclerView.getAdapter()).refresh();
+                        Synchronizer.addFile(MainActivity.this, filename);
+                        Synchronizer.runSynchronize(MainActivity.this);
                     }
                 });
 
@@ -139,7 +134,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
             }
         });
 
-        connect();
+        Synchronizer.runSynchronize(this);
     }
 
 
@@ -172,7 +167,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
 
             case R.id.menu_sync:
                 passwordPrompt = true;
-                connect();
+                Synchronizer.runSynchronize(this);
                 return true;
 
             case R.id.menu_settings:
@@ -196,10 +191,6 @@ public class OrgNodeListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void runSynchronize() {
-        startService(new Intent(this, SyncService.class));
-    }
-
     public void runShowSettings(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
@@ -214,7 +205,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new OutlineAdapter(this));
+        recyclerView.setAdapter(new MainAdapter(this));
     }
 
     private void showUpgradePopup() {
@@ -248,8 +239,8 @@ public class OrgNodeListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ((OutlineAdapter)recyclerView.getAdapter()).refresh();
-        runSynchronize();
+        ((MainAdapter) recyclerView.getAdapter()).refresh();
+        Synchronizer.runSynchronize(this);
     }
 
     @Override
@@ -274,44 +265,44 @@ public class OrgNodeListActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    /**
-     * Run the synchronization if credentials are stored or prompt for credentials
-     * if it has not yet been prompt
-     */
-    private void connect() {
-        Synchronizer syncer = Synchronizer.getInstance();
-        if (syncer != null && syncer.isCredentialsRequired() && passwordPrompt) {
-            final AlertDialog.Builder alert = new AlertDialog.Builder(OrgNodeListActivity.this);
-            final AuthData authData = AuthData.getInstance(OrgNodeListActivity.this);
-            alert.setTitle(R.string.prompt_enter_password);
-
-            // Set an EditText view to get user input
-            final EditText input = new EditText(OrgNodeListActivity.this);
-
-            input.setInputType(InputType.TYPE_CLASS_TEXT);
-            alert.setView(input);
-            input.setText(authData.getPassword());
-
-            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    passwordPrompt = false;
-                    runSynchronize();
-                    dialog.dismiss();
-                }
-            });
-
-            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    passwordPrompt = false;
-                    dialog.dismiss();
-                }
-            });
-
-            alert.show();
-        } else {
-            runSynchronize();
-        }
-    }
+//    /**
+//     * Run the synchronization if credentials are stored or prompt for credentials
+//     * if it has not yet been prompt
+//     */
+//    private void connect() {
+//        Synchronizer syncer = Synchronizer.getInstance();
+//        if (syncer != null && syncer.isCredentialsRequired() && passwordPrompt) {
+//            final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+//            final AuthData authData = AuthData.getInstance(MainActivity.this);
+//            alert.setTitle(R.string.prompt_enter_password);
+//
+//            // Set an EditText view to get user input
+//            final EditText input = new EditText(MainActivity.this);
+//
+//            input.setInputType(InputType.TYPE_CLASS_TEXT);
+//            alert.setView(input);
+//            input.setText(authData.getPassword());
+//
+//            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int whichButton) {
+//                    passwordPrompt = false;
+//                    runSynchronize();
+//                    dialog.dismiss();
+//                }
+//            });
+//
+//            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int whichButton) {
+//                    passwordPrompt = false;
+//                    dialog.dismiss();
+//                }
+//            });
+//
+//            alert.show();
+//        } else {
+//            runSynchronize();
+//        }
+//    }
 
     private class SynchServiceReceiver extends BroadcastReceiver {
         @Override
@@ -324,7 +315,7 @@ public class OrgNodeListActivity extends AppCompatActivity {
                 if (synchronizerMenuItem != null)
                     synchronizerMenuItem.setVisible(false);
             } else if (syncDone) {
-                ((OutlineAdapter) recyclerView.getAdapter()).refresh();
+                ((MainAdapter) recyclerView.getAdapter()).refresh();
                 if (synchronizerMenuItem != null) synchronizerMenuItem.setVisible(true);
 
             } else if (progress >= 0 && progress <= 100) {

@@ -9,13 +9,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.coste.syncorg.MainActivity;
+import com.coste.syncorg.R;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgFileParser;
 import com.coste.syncorg.orgdata.OrgProviderUtils;
-import com.coste.syncorg.OrgNodeListActivity;
-import com.coste.syncorg.R;
-import com.coste.syncorg.orgdata.SyncOrgApplication;
-import com.coste.syncorg.services.SyncService;
 import com.coste.syncorg.synchronizers.SshSessionFactory.ConnectionType;
 import com.coste.syncorg.util.FileUtils;
 import com.coste.syncorg.util.OrgFileNotFoundException;
@@ -55,7 +53,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 
 public class JGitWrapper {
@@ -67,31 +64,15 @@ public class JGitWrapper {
         new AddTask(context).execute(filename);
     }
 
-    public static String read(String filename, Context context) {
-        Synchronizer.setInstance(new SSHSynchronizer(context));
-        File f = new File(Synchronizer.getInstance().getAbsoluteFilesDir());
-        File file[] = f.listFiles();
-        if (file == null) return "no file";
-        if(filename.equals(".git")) return ".git";
-        OrgFile orgFile = new OrgFile(filename, filename);
-        FileReader fileReader = null;
-        try {
-            fileReader = new FileReader(Synchronizer.getInstance().getAbsoluteFilesDir() + "/" + filename);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            return FileUtils.read(bufferedReader);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return "looser";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "looser";
-        }
-    }
-
-    public static SyncResult pull(final Context context) {
-        File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+    /**
+     * Perform a Git pull in the given folder
+     *
+     * @param context
+     * @param folder
+     * @return
+     */
+    static SyncResult pull(final Context context, String folder) {
+        File repoDir = new File(folder + "/.git");
         SyncResult result = new SyncResult();
         AuthData authData = AuthData.getInstance(context);
         Git git = null;
@@ -152,7 +133,7 @@ public class JGitWrapper {
             }
             result.setState(SyncResult.State.kSuccess);
             return result;
-        } catch(WrongRepositoryStateException e){
+        } catch (WrongRepositoryStateException e) {
             e.printStackTrace();
             handleMergeConflict(git, context);
         } catch (IOException
@@ -192,7 +173,6 @@ public class JGitWrapper {
     }
 
 
-
     static public String getUrl(Context context) {
         StringBuilder REMOTE_URL = new StringBuilder();
         AuthData authData = AuthData.getInstance(context);
@@ -215,7 +195,6 @@ public class JGitWrapper {
             return REMOTE_URL.toString();
         }
     }
-
 
 
     /**
@@ -248,7 +227,7 @@ public class JGitWrapper {
 
         @Override
         protected org.eclipse.jgit.api.Status doInBackground(Void... voids) {
-            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
             Git git = null;
 
             try {
@@ -266,7 +245,7 @@ public class JGitWrapper {
         ProgressDialog progress;
         String syncFolder;
 
-        public CloneGitRepoTask(Context context, String syncFolder){
+        public CloneGitRepoTask(Context context, String syncFolder) {
             this.context = context;
             this.syncFolder = syncFolder;
         }
@@ -288,7 +267,7 @@ public class JGitWrapper {
                 cloneCommand.setTransportConfigCallback(new CustomTransportConfigCallback(context));
 
 
-            System.setProperty("user.home", syncFolder );
+            System.setProperty("user.home", syncFolder);
 
             try {
                 cloneCommand
@@ -327,42 +306,38 @@ public class JGitWrapper {
                 Toast.makeText(context, "Synchronization successful !", Toast.LENGTH_LONG).show();
                 ((Activity) context).finish();
 
-                SyncService.restartAlarm(context);
-                Intent intent = new Intent(context, OrgNodeListActivity.class);
+                Intent intent = new Intent(context, MainActivity.class);
                 context.startActivity(intent);
                 return;
             }
 
             if (exception instanceof InvalidRemoteException) {
                 Toast.makeText(context, "Path does not exist or is not a valid repository", Toast.LENGTH_LONG).show();
-            }else if(exception instanceof UnableToPushException) {
+            } else if (exception instanceof UnableToPushException) {
                 //				git config receive.denyCurrentBranch ignore
                 Toast.makeText(context, "Push test failed. Make sure the repository is bare.", Toast.LENGTH_LONG).show();
-            }else if(exception instanceof TransportException) {
+            } else if (exception instanceof TransportException) {
                 Toast.makeText(context, context.getString(R.string.error_transport_error), Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 Toast.makeText(context, exception.toString(), Toast.LENGTH_LONG).show();
-                ((Exception)exception).printStackTrace();
+                ((Exception) exception).printStackTrace();
             }
         }
 
 
-
         void parseAll() {
-            Synchronizer.setInstance(new SSHSynchronizer(context));
-            File f = new File(Synchronizer.getInstance().getAbsoluteFilesDir());
+            String fileDir = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
+            File f = new File(fileDir);
             File file[] = f.listFiles();
             if (file == null) return;
-            for (int i=0; i < file.length; i++)
-            {
+            for (int i = 0; i < file.length; i++) {
                 String filename = file[i].getName();
-                if(filename.equals(".git")) continue;
+                if (filename.equals(".git")) continue;
                 OrgFile orgFile = new OrgFile(filename, filename);
                 FileReader fileReader = null;
                 try {
-                    fileReader = new FileReader(Synchronizer.getInstance().getAbsoluteFilesDir() + "/" + filename);
+                    fileReader = new FileReader(fileDir + "/" + filename);
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
-
 
                     OrgFileParser.parseFile(orgFile, bufferedReader, context);
 
@@ -384,7 +359,7 @@ public class JGitWrapper {
         }
 
         protected Void doInBackground(String... params) {
-            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
 
             try {
                 Git git = Git.open(repoDir);
@@ -421,7 +396,7 @@ public class JGitWrapper {
 
         protected Void doInBackground(String... params) {
 
-            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
 
             Git git = null;
             try {
@@ -456,7 +431,7 @@ public class JGitWrapper {
                 e.printStackTrace();
             } catch (WrongRepositoryStateException e) {
                 e.printStackTrace();
-                handleMergeConflict(git,context);
+                handleMergeConflict(git, context);
             } catch (ConcurrentRefUpdateException e) {
                 e.printStackTrace();
             } catch (NoHeadException e) {
@@ -483,7 +458,7 @@ public class JGitWrapper {
 
         protected Void doInBackground(String... params) {
 
-            File repoDir = new File(Synchronizer.getInstance().getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
             Git git = null;
             try {
                 git = Git.open(repoDir);
@@ -521,7 +496,7 @@ public class JGitWrapper {
                 e.printStackTrace();
             } catch (WrongRepositoryStateException e) {
                 e.printStackTrace();
-                handleMergeConflict(git,context);
+                handleMergeConflict(git, context);
             } catch (ConcurrentRefUpdateException e) {
                 e.printStackTrace();
             } catch (NoHeadException e) {

@@ -44,7 +44,7 @@ public class OrgProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, Tables.FILES + "/*", FILES_ID);
         uriMatcher.addURI(AUTHORITY, Tables.FILES + "/*/filename", FILES_FILENAME);
 
-        uriMatcher.addURI(AUTHORITY, Tables.TAGS , TAGS);
+        uriMatcher.addURI(AUTHORITY, Tables.TAGS, TAGS);
         uriMatcher.addURI(AUTHORITY, Tables.TODOS, TODOS);
         uriMatcher.addURI(AUTHORITY, Tables.PRIORITIES, PRIORITIES);
 
@@ -148,7 +148,7 @@ public class OrgProvider extends ContentProvider {
             case TIMESTAMPS:
                 return builder.table(Tables.TIMESTAMPS);
             case TIMESTAMPS_ID:
-                return builder.table(Tables.TIMESTAMPS).where(Timestamps.NODE_ID+"=?", Timestamps.getId(uri));
+                return builder.table(Tables.TIMESTAMPS).where(Timestamps.NODE_ID + "=?", Timestamps.getId(uri));
             case SEARCH:
                 final String search = Search.getSearchTerm(uri);
                 return builder.table(Tables.ORGDATA).where("name LIKE %?%", search);

@@ -8,17 +8,16 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.coste.syncorg.R;
 import com.coste.syncorg.orgdata.OrgDatabase;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgFileParser;
-import com.coste.syncorg.R;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 
-public class FileDecryptionActivity extends Activity
-{
+public class FileDecryptionActivity extends Activity {
     private static final String mApgPackageName = "org.thialfihar.android.apg";
     private static final int mMinRequiredVersion = 16;
     private static final String DECRYPT_AND_RETURN = "org.thialfihar.android.apg.intent.DECRYPT_AND_RETURN";
@@ -29,68 +28,68 @@ public class FileDecryptionActivity extends Activity
     private String filename;
     private String name;
     private String checksum;
-    
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		if(isAvailable() == false)
-			return;
-		
-		Intent intent = getIntent();
-		
-		this.filename = intent.getStringExtra("filename");
-		this.name = intent.getStringExtra("filenameAlias");
-		this.checksum = intent.getStringExtra("checksum");
-		byte[] data = intent.getByteArrayExtra("data");
-		
-		if (data == null)
-			return;
-		
-		Intent APGintent = new Intent(DECRYPT_AND_RETURN);
-		APGintent.setType("text/plain");
-		APGintent.putExtra(FileDecryptionActivity.EXTRA_DATA, data);
 
-		try {
-			startActivityForResult(APGintent, DECRYPT_MESSAGE);
-		} catch (ActivityNotFoundException e) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (isAvailable() == false)
+            return;
+
+        Intent intent = getIntent();
+
+        this.filename = intent.getStringExtra("filename");
+        this.name = intent.getStringExtra("filenameAlias");
+        this.checksum = intent.getStringExtra("checksum");
+        byte[] data = intent.getByteArrayExtra("data");
+
+        if (data == null)
+            return;
+
+        Intent APGintent = new Intent(DECRYPT_AND_RETURN);
+        APGintent.setType("text/plain");
+        APGintent.putExtra(FileDecryptionActivity.EXTRA_DATA, data);
+
+        try {
+            startActivityForResult(APGintent, DECRYPT_MESSAGE);
+        } catch (ActivityNotFoundException e) {
 //			Log.e("SyncOrg", "Error: " + e.getMessage() + " while launching APG intent");
-		}
-	}
-    
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		switch (requestCode) {
-		case FileDecryptionActivity.DECRYPT_MESSAGE:
-			if (resultCode != RESULT_OK || intent == null)
-				return;
+        }
+    }
 
-			String decryptedData = intent
-					.getStringExtra(FileDecryptionActivity.EXTRA_DECRYPTED_MESSAGE);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new ByteArrayInputStream(decryptedData.getBytes())));
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch (requestCode) {
+            case FileDecryptionActivity.DECRYPT_MESSAGE:
+                if (resultCode != RESULT_OK || intent == null)
+                    return;
 
-			OrgDatabase db = OrgDatabase.getInstance();
-			OrgFileParser.getInstance().parse(new OrgFile(filename, name), reader, this);
-			break;
-		}
-		finish();
-	}
-    
-	private boolean isAvailable() {
-		try {
-			PackageInfo pi = getPackageManager().getPackageInfo(
-					mApgPackageName, 0);
-			if (pi.versionCode >= mMinRequiredVersion) {
-				return true;
-			} else {
-				Toast.makeText(this, R.string.error_apg_version_not_supported,
-						Toast.LENGTH_SHORT).show();
-			}
-		} catch (NameNotFoundException e) {
-			Toast.makeText(this, R.string.error_apg_not_found, Toast.LENGTH_SHORT)
-					.show();
-		}
-		return false;
-	}
+                String decryptedData = intent
+                        .getStringExtra(FileDecryptionActivity.EXTRA_DECRYPTED_MESSAGE);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        new ByteArrayInputStream(decryptedData.getBytes())));
+
+                OrgDatabase db = OrgDatabase.getInstance();
+                OrgFileParser.getInstance().parse(new OrgFile(filename, name), reader, this);
+                break;
+        }
+        finish();
+    }
+
+    private boolean isAvailable() {
+        try {
+            PackageInfo pi = getPackageManager().getPackageInfo(
+                    mApgPackageName, 0);
+            if (pi.versionCode >= mMinRequiredVersion) {
+                return true;
+            } else {
+                Toast.makeText(this, R.string.error_apg_version_not_supported,
+                        Toast.LENGTH_SHORT).show();
+            }
+        } catch (NameNotFoundException e) {
+            Toast.makeText(this, R.string.error_apg_not_found, Toast.LENGTH_SHORT)
+                    .show();
+        }
+        return false;
+    }
 }

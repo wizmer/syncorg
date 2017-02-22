@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-  <PreferenceCategory android:title="WebDAV">
-    <EditTextPreference
-        android:name="URL"
-        android:dialogMessage="@string/summary_web_url"
-        android:title="@string/url"
-        android:key="webUrl"
-		android:inputType="textUri" />
-    <EditTextPreference
-        android:name="Username"
-        android:title="@string/username"
-        android:key="webUser" />
-    <EditTextPreference
-        android:name="Password"
-        android:password="true"
-        android:title="@string/password"
-        android:key="webPass"
-		android:inputType="textPassword" />
-  </PreferenceCategory>
+    <PreferenceCategory android:title="WebDAV">
+        <EditTextPreference
+            android:name="URL"
+            android:dialogMessage="@string/summary_web_url"
+            android:inputType="textUri"
+            android:key="webUrl"
+            android:title="@string/url" />
+        <EditTextPreference
+            android:name="Username"
+            android:key="webUser"
+            android:title="@string/username" />
+        <EditTextPreference
+            android:name="Password"
+            android:inputType="textPassword"
+            android:key="webPass"
+            android:password="true"
+            android:title="@string/password" />
+    </PreferenceCategory>
 </PreferenceScreen>

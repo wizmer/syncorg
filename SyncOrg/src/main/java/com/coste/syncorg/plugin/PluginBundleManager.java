@@ -17,8 +17,7 @@ import android.text.TextUtils;
 /**
  * Class for managing the {@link com.twofortyfouram.locale.Intent#EXTRA_BUNDLE} for this plug-in.
  */
-public final class PluginBundleManager
-{
+public final class PluginBundleManager {
     /**
      * Type: {@code String}
      * <p>
@@ -50,26 +49,22 @@ public final class PluginBundleManager
      * Method to verify the content of the bundle are correct.
      * <p>
      * This method will not mutate {@code bundle}.
-     * 
+     *
      * @param bundle bundle to verify. May be null, which will always return false.
      * @return true if the Bundle is valid, false if the bundle is invalid.
      */
-    public static boolean isBundleValid(final Bundle bundle)
-    {
-        if (null == bundle)
-        {
+    public static boolean isBundleValid(final Bundle bundle) {
+        if (null == bundle) {
             return false;
         }
 
         /*
          * Make sure the expected extras exist
          */
-        if (!bundle.containsKey(BUNDLE_EXTRA_STRING_MESSAGE))
-        {
+        if (!bundle.containsKey(BUNDLE_EXTRA_STRING_MESSAGE)) {
             return false;
         }
-        if (!bundle.containsKey(BUNDLE_EXTRA_INT_VERSION_CODE))
-        {
+        if (!bundle.containsKey(BUNDLE_EXTRA_INT_VERSION_CODE)) {
             return false;
         }
 
@@ -78,24 +73,21 @@ public final class PluginBundleManager
          * error message is more useful. (E.g. the caller will see what extras are missing, rather than just a message that there
          * is the wrong number).
          */
-        if (2 != bundle.keySet().size())
-        {
+        if (2 != bundle.keySet().size()) {
             return false;
         }
 
         /*
          * Make sure the extra isn't null or empty
          */
-        if (TextUtils.isEmpty(bundle.getString(BUNDLE_EXTRA_STRING_MESSAGE)))
-        {
+        if (TextUtils.isEmpty(bundle.getString(BUNDLE_EXTRA_STRING_MESSAGE))) {
             return false;
         }
         
         /*
          * Make sure the extra is the correct type
          */
-        if (bundle.getInt(BUNDLE_EXTRA_INT_VERSION_CODE, 0) != bundle.getInt(BUNDLE_EXTRA_INT_VERSION_CODE, 1))
-        {
+        if (bundle.getInt(BUNDLE_EXTRA_INT_VERSION_CODE, 0) != bundle.getInt(BUNDLE_EXTRA_INT_VERSION_CODE, 1)) {
             return false;
         }
 

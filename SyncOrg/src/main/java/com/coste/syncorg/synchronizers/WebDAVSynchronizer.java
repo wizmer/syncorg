@@ -8,8 +8,8 @@ import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 
-import com.coste.syncorg.gui.CertificateConflictActivity;
 import com.coste.syncorg.R;
+import com.coste.syncorg.gui.CertificateConflictActivity;
 import com.coste.syncorg.util.FileUtils;
 import com.coste.syncorg.util.OrgUtils;
 
@@ -36,25 +36,26 @@ import javax.net.ssl.X509TrustManager;
 
 public class WebDAVSynchronizer extends Synchronizer {
 
-	private String remoteIndexPath;
-	private String remotePath;
+    private String remoteIndexPath;
+    private String remotePath;
     private String username;
     private String password;
-	
-	private Resources r;
-	public WebDAVSynchronizer(Context context) {
+
+    private Resources r;
+
+    public WebDAVSynchronizer(Context context) {
         super(context);
-		this.r = context.getResources();
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(context);
+        this.r = context.getResources();
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
 
-		this.remoteIndexPath = sharedPreferences.getString("webUrl", "");
-		this.remotePath = getRootUrl();
+        this.remoteIndexPath = sharedPreferences.getString("webUrl", "");
+        this.remotePath = getRootUrl();
 
-		this.username = sharedPreferences.getString("webUser", "");
-		this.password = sharedPreferences.getString("webPass", "");
+        this.username = sharedPreferences.getString("webUser", "");
+        this.password = sharedPreferences.getString("webPass", "");
         this.handleTrustRelationship(context);
-	}
+    }
 
     public String testConnection(String url, String user, String pass) {
         this.remoteIndexPath = url;
@@ -81,15 +82,12 @@ public class WebDAVSynchronizer extends Synchronizer {
                 }
 
                 return null;
-            }
-            catch (FileNotFoundException e) {
+            } catch (FileNotFoundException e) {
+                throw e;
+            } catch (Exception e) {
                 throw e;
             }
-            catch (Exception e) {
-                throw e;
-            }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "Test Exception: " + e.getMessage();
         }
     }
@@ -101,8 +99,8 @@ public class WebDAVSynchronizer extends Synchronizer {
 
     @Override
     public boolean isConfigured() {
-		if (this.remoteIndexPath.equals(""))
-			return false;
+        if (this.remoteIndexPath.equals(""))
+            return false;
 
         return true;
     }
@@ -113,13 +111,13 @@ public class WebDAVSynchronizer extends Synchronizer {
         this.context.startActivity(i);
     }
 
-	public void putRemoteFile(String filename, String contents) throws IOException {
-		String urlActual = this.getRootUrl() + filename;
-		putUrlFile(urlActual, contents);
-	}
+    public void putRemoteFile(String filename, String contents) throws IOException {
+        String urlActual = this.getRootUrl() + filename;
+        putUrlFile(urlActual, contents);
+    }
 
     public BufferedReader getRemoteFile(String filename) throws IOException, CertificateException {
-		String orgUrl = this.remotePath + filename;
+        String orgUrl = this.remotePath + filename;
         InputStream mainFile = null;
         try {
             mainFile = this.getUrlStream(orgUrl);
@@ -129,16 +127,14 @@ public class WebDAVSynchronizer extends Synchronizer {
             }
 
             return new BufferedReader(new InputStreamReader(mainFile));
-        }
-        catch (CertificateException e) {
+        } catch (CertificateException e) {
+            handleChangedCertificate();
+            throw e;
+        } catch (SSLHandshakeException e) {
             handleChangedCertificate();
             throw e;
         }
-        catch (SSLHandshakeException e) {
-            handleChangedCertificate();
-            throw e;
-        }
-	}
+    }
 
     @Override
     public SyncResult synchronize() {
@@ -149,27 +145,28 @@ public class WebDAVSynchronizer extends Synchronizer {
     /* See: http://stackoverflow.com/questions/1217141/self-signed-ssl-acceptance-android */
     private void handleTrustRelationship(Context c) {
         try {
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier(){
-                    public boolean verify(String hostname, SSLSession session) {
-                        return true;
-                    }});
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            });
             SSLContext context = SSLContext.getInstance("TLS");
             context.init(null, new X509TrustManager[]{new IntelligentX509TrustManager(c)}, new SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(
-                                                          context.getSocketFactory());
+                    context.getSocketFactory());
         } catch (Exception e) { // should never happen
             e.printStackTrace();
         }
     }
 
-	private HttpURLConnection createConnection(String url) {
+    private HttpURLConnection createConnection(String url) {
         URL newUrl = null;
-		try {
+        try {
             newUrl = new URL(url);
-		} catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-			return null;
-		}
+            return null;
+        }
 
         HttpURLConnection con = null;
         try {
@@ -181,25 +178,25 @@ public class WebDAVSynchronizer extends Synchronizer {
         con.setConnectTimeout(60000);
         con.addRequestProperty("Expect", "100-continue");
         con.addRequestProperty("Authorization",
-                               "Basic "+Base64.encodeToString((this.username + ":" + this.password).getBytes(),
-                                                      Base64.NO_WRAP));
+                "Basic " + Base64.encodeToString((this.username + ":" + this.password).getBytes(),
+                        Base64.NO_WRAP));
         return con;
-	}
+    }
 
-	private InputStream getUrlStream(String url) throws IOException, CertificateException {
+    private InputStream getUrlStream(String url) throws IOException, CertificateException {
         HttpURLConnection con = this.createConnection(url);
         con.setRequestMethod("GET");
         con.setDoInput(true);
         con.connect();
-		if (con.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-			throw new FileNotFoundException(r.getString(
-					R.string.error_url_fetch_detail, url,
-					"Invalid username or password"));
-		}
-		if (con.getResponseCode()== HttpURLConnection.HTTP_NOT_FOUND) {
+        if (con.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             throw new FileNotFoundException(r.getString(
-                            R.string.error_url_fetch_detail, url,
-                            "File not found: " + url));
+                    R.string.error_url_fetch_detail, url,
+                    "Invalid username or password"));
+        }
+        if (con.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
+            throw new FileNotFoundException(r.getString(
+                    R.string.error_url_fetch_detail, url,
+                    "File not found: " + url));
         }
         if (con.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN) {
             throw new FileNotFoundException(r.getString(
@@ -207,70 +204,70 @@ public class WebDAVSynchronizer extends Synchronizer {
                     "Server reported 'Forbidden'"));
         }
 
-		if (con.getResponseCode() < HttpURLConnection.HTTP_OK || con.getResponseCode() > 299) {
-			throw new IOException(r.getString(R.string.error_url_fetch_detail,
-                                              url, con.getResponseMessage()));
-		}
-		return con.getInputStream();
-	}
+        if (con.getResponseCode() < HttpURLConnection.HTTP_OK || con.getResponseCode() > 299) {
+            throw new IOException(r.getString(R.string.error_url_fetch_detail,
+                    url, con.getResponseMessage()));
+        }
+        return con.getInputStream();
+    }
 
-	private void putUrlFile(String url, String content) throws IOException {
-		try {
+    private void putUrlFile(String url, String content) throws IOException {
+        try {
             HttpURLConnection con = this.createConnection(url);
             con.setRequestMethod("PUT");
             con.setDoOutput(true);
             OutputStreamWriter out = new OutputStreamWriter(
-                                              con.getOutputStream());
+                    con.getOutputStream());
             out.write(content);
             out.flush();
             out.close();
             con.getInputStream();
             if (con.getResponseCode() < HttpURLConnection.HTTP_OK || con.getResponseCode() > 299) {
                 throw new IOException(r.getString(R.string.error_url_fetch_detail,
-                                                  url, con.getResponseMessage()));
+                        url, con.getResponseMessage()));
             }
         } catch (UnsupportedEncodingException e) {
-			throw new IOException(r.getString(
-					R.string.error_unsupported_encoding, FileUtils.CAPTURE_FILE));
-		}
-	}
+            throw new IOException(r.getString(
+                    R.string.error_unsupported_encoding, FileUtils.CAPTURE_FILE));
+        }
+    }
 
-	private String getRootUrl() {
-		URL manageUrl;
-		try {
-			manageUrl = new URL(this.remoteIndexPath);
-		} catch (MalformedURLException e) {
-			return "";
-		}
+    private String getRootUrl() {
+        URL manageUrl;
+        try {
+            manageUrl = new URL(this.remoteIndexPath);
+        } catch (MalformedURLException e) {
+            return "";
+        }
 
-		String urlPath = manageUrl.getPath();
-		String[] pathElements = urlPath.split("/");
-		String directoryActual = "/";
+        String urlPath = manageUrl.getPath();
+        String[] pathElements = urlPath.split("/");
+        String directoryActual = "/";
 
-		if (pathElements.length > 1) {
-			for (int i = 0; i < pathElements.length - 1; i++) {
-				if (pathElements[i].length() > 0) {
-					directoryActual += pathElements[i] + "/";
-				}
-			}
-		}
-		return manageUrl.getProtocol() + "://" + manageUrl.getAuthority()
-				+ directoryActual;
-	}
+        if (pathElements.length > 1) {
+            for (int i = 0; i < pathElements.length - 1; i++) {
+                if (pathElements[i].length() > 0) {
+                    directoryActual += pathElements[i] + "/";
+                }
+            }
+        }
+        return manageUrl.getProtocol() + "://" + manageUrl.getAuthority()
+                + directoryActual;
+    }
 
-	@Override
+    @Override
     public void postSynchronize() {
     }
 
     @Override
-    public void addFile(String filename) {
+    public void _addFile(String filename) {
 
     }
 
     @Override
     public boolean isConnectable() {
-		return OrgUtils.isNetworkOnline(context);
-	}
+        return OrgUtils.isNetworkOnline(context);
+    }
 
     class IntelligentX509TrustManager implements X509TrustManager {
         Context c;

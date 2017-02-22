@@ -13,15 +13,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -34,7 +29,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.coste.syncorg.R;
 
@@ -88,6 +82,10 @@ public class DirectoryChooserFragment extends DialogFragment {
         return new DirectoryChooserFragment();
     }
 
+    private static void debug(final String message, final Object... args) {
+        Log.d(TAG, String.format(message, args));
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull final Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -117,7 +115,7 @@ public class DirectoryChooserFragment extends DialogFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
 
         assert getActivity() != null;
         final View view = inflater.inflate(R.layout.directory_chooser, container, false);
@@ -151,7 +149,7 @@ public class DirectoryChooserFragment extends DialogFragment {
 
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
-                    final int position, final long id) {
+                                    final int position, final long id) {
                 debug("Selected index: %d", position);
                 if (mFilesInDir != null && position >= 0
                         && position < mFilesInDir.length) {
@@ -190,7 +188,7 @@ public class DirectoryChooserFragment extends DialogFragment {
                 android.R.layout.simple_list_item_1, mFilenames);
         mListDirectories.setAdapter(mListDirectoriesAdapter);
         File initialDir;
-        initialDir = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DOWNLOADS);    // Do something for lollipop and above versions
+        initialDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);    // Do something for lollipop and above versions
 
 
         mSelectedDir = initialDir;
@@ -223,7 +221,6 @@ public class DirectoryChooserFragment extends DialogFragment {
         }
     }
 
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -235,14 +232,6 @@ public class DirectoryChooserFragment extends DialogFragment {
         super.onPause();
         if (mFileObserver != null) {
             mFileObserver.stopWatching();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mFileObserver != null) {
-            mFileObserver.startWatching();
         }
     }
 //
@@ -270,6 +259,14 @@ public class DirectoryChooserFragment extends DialogFragment {
 //
 //        return super.onOptionsItemSelected(item);
 //    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mFileObserver != null) {
+            mFileObserver.startWatching();
+        }
+    }
 
     /**
      * Shows a confirmation dialog that asks the user if he wants to create a
@@ -329,11 +326,7 @@ public class DirectoryChooserFragment extends DialogFragment {
             }
         });
 
-        editText.setVisibility(View.VISIBLE );
-    }
-
-    private static void debug(final String message, final Object... args) {
-        Log.d(TAG, String.format(message, args));
+        editText.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -471,7 +464,6 @@ public class DirectoryChooserFragment extends DialogFragment {
         return (file != null && file.isDirectory() && file.canRead() &&
                 (file.canWrite()));
     }
-
 
 
     /**
