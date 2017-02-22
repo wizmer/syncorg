@@ -86,9 +86,8 @@ public class FolderPickerActivity extends AppCompatActivity
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MAKE_NULL_SYNC_DIR_PERMISSION);
             }
-        } else {
-            populateAndDisplay();
         }
+        populateAndDisplay();
     }
 
     private void populateAndDisplay() {
