@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string-array name="storageModes">
+        <item>内部</item>
+        <item>sdカード</item>
+    </string-array>
+    <string-array name="storageModesVals">
+        <item>internal</item>
+        <item>sdcard</item>
+    </string-array>
+    <string-array name="fileSources">
+        <item>WebDAV</item>
+        <item>Dropbox</item>
+        <item>Ubuntu One</item>
+        <item>SDカード</item>
+        <item>SSH/SCP</item>
+        <item>キャプチャのみ</item>
+    </string-array>
+    <string-array name="fileSourcesVals">
+        <item>webdav</item>
+        <item>dropbox</item>
+        <item>ubuntu</item>
+        <item>sdcard</item>
+        <item>scp</item>
+        <item>null</item>
+    </string-array>
+    <string-array name="syncIntervals">
+        <item>5 分</item>
+        <item>10 分</item>
+        <item>15 分</item>
+        <item>30 分</item>
+        <item>45 分</item>
+        <item>1 時間</item>
+        <item>3 時間</item>
+        <item>6 時間</item>
+        <item>12 時間</item>
+    </string-array>
+    <string-array name="syncIntervalsVals">
+        <item>300000</item>
+        <item>600000</item>
+        <item>900000</item>
+        <item>1800000</item>
+        <item>2700000</item>
+        <item>3600000</item>
+        <item>10800000</item>
+        <item>21600000</item>
+        <item>43200000</item>
+    </string-array>
+    <string-array name="viewRecursionLevelsVals">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string-array name="viewRecursionLevels">
+        <item>現在のノードのみ</item>
+        <item>ノードとそのすべての子</item>
+        <item>ノード、その子、またその子</item>
+        <item>3 レベルの再帰</item>
+        <item>4 レベルの再帰</item>
+    </string-array>
+    <string-array name="themes">
+        <item>ライト</item>
+        <item>ダーク</item>
+        <item>モノクローム</item>
+    </string-array>
+    <string-array name="agendaQueryTypes">
+        <item>すべてのエントリー</item>
+        <item>アジェンダ</item>
+    </string-array>
+    <string-array name="agendaSpanValues">
+        <item>日</item>
+        <item>週</item>
+        <item>月</item>
+        <item>年</item>
+        <item>カスタム</item>
+    </string-array>
+
+</resources>

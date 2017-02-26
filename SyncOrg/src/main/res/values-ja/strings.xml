@@ -1,0 +1,336 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">SyncOrgActivity</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+    <string name="ok">OK</string>
+    <string name="empty_main">SyncOrg へようこそ</string>
+    <string name="downloading">ダウンロード中</string>
+    <string name="view_as_document">ドキュメントとして表示</string>
+    <string name="title">タイトル</string>
+    <string name="search_results_for">検索結果</string>
+    <string name="no_result">結果なし</string>
+    <string name="body">ここをクリックして本文をセット</string>
+    <string name="tags">タグ</string>
+    <string name="priority">優先度</string>
+    <string name="todo_state">Todo 状態</string>
+    <string name="scheduled">スケジュール済</string>
+    <string name="deadline">期限</string>
+    <string name="no_state">状態なし</string>
+    <string name="back">戻る</string>
+    <string name="cancel">キャンセル</string>
+    <string name="save">保存</string>
+    <string name="search_hint">検索</string>
+    <string name="warning">警告!</string>
+    <string name="accept">同意</string>
+    <string name="deny">同意しない</string>
+    <string name="set_title_here">ここにタイトルをセット</string>
+    <string name="set_content_here">ここの内容をセット</string>
+    <string name="insert_node">ノードを挿入</string>
+    <string name="insert_child_node">子ノードを挿入</string>
+    <string name="new_file">新しいファイルを作成</string>
+    <string name="parent_folder">親フォルダー</string>
+    <string name="specify_parent_folder">親フォルダーを指定してください</string>
+    <string name="file">ファイル</string>
+    <string name="files">ファイル</string>
+    <string name="delete_node">ノードを削除</string>
+    <string name="filename">ファイル名</string>
+    <string name="details">詳細</string>
+    <string name="no_node">このファイルにノードはありません:</string>
+    <string name="no_todo">ラッキーですね !\n\nTODO リストは空です !</string>
+    <string name="conflict">競合</string>
+    <string name="date">日付</string>
+    <string name="time">時間</string>
+    <string name="auth_type">認証タイプ:</string>
+    <string name="file_exists">このファイルはすでに存在します !</string>
+    <string name="all_day">終日</string>
+    <string name="share_files">ファイルを共有</string>
+    <string name="folder">フォルダー: </string>
+
+    <!-- toasts -->
+    <string name="unselectable_item">このアイテムを選択できません</string>
+
+    <!-- prompts -->
+    <string name="prompt_enter_password">パスワードを入力</string>
+    <string name="prompt_delete_file">このファイルを削除してもよろしいですか?</string>
+    <string name="prompt_delete_files">この # ファイルを削除してもよろしいですか?</string>
+    <string name="prompt_node_delete">このノードを削除してもよろしいですか?</string>
+    <string name="prompt_node_archive">このノードをアーカイブしてもよろしいですか?</string>
+    <string name="prompt_node_edit">変更を破棄してもよろしいですか?</string>
+    <string name="prompt_cert_changed">WebDAV 証明書は変更されました。以下は詳細です。 OK であれば \'同意\' そうでなければ \'同意しない\' をクリックしてください。 新しい証明書に同意した場合、同期コマンドを再発行する必要があります</string>
+
+    <!-- synchronization -->
+    <string name="sync_successful">同期に成功しました</string>
+    <string name="sync_error_occured">同期中にエラーが発生しました:</string>
+    <string name="sync_synchronizing_changes">変更の同期中</string>
+    <string name="sync_error_server_certificate">サーバー証明書でエラー:</string>
+    <string name="sync_wait">同期中。しばらくお待ちください…</string>
+    <string name="sync_failed">同期に失敗しました</string>
+    <string name="sync_plugin">SyncOrg 同期</string>
+    <string name="sync_plugin_info">このプラグインで Locale または Tasker から SyncOrg 同期を起動することができます。 OK であれば \'同意\' そうでなければ \'同意しない\' をクリックしてください</string>
+    <string name="sync_plugin_message">同期</string>
+    <string name="sync_git_file_added">追加したファイル : </string>
+    <string name="sync_git_merge_files">競合\nファイルをマージ : </string>
+
+    <!-- error strings -->
+    <string name="error_sqlio">データベースからの読み取り中にエラーが発生しました。ドライブが破損していませんか、SDCard がマウントされていますか?</string>
+    <string name="error_generic_database">処理できないデータベースエラー: %s</string>
+    <string name="error_file_not_found">ファイル %s が見つかりません</string>
+    <string name="error_file_permissions">ファイル %s でアクセス許可エラー</string>
+    <string name="error_file_read">ファイル %s の読み取り中にエラーが発生しました</string>
+    <string name="error_file_write">ファイル %s の書き込み中にエラーが発生しました</string>
+    <string name="error_invalid_url">URL に不正な文字が含まれています: %s</string>
+    <string name="error_synchronizer_type_unknown">不明な同期方法 %s"</string>
+    <string name="error_local_storage_method_unknown">ローカルの格納方法 %s が不明</string>
+    <string name="error_unsupported_encoding">ファイル %s でサポートされていないエンコードが検出されました</string>
+    <string name="error_url_fetch">URL %s の取得時にエラーが発生しました</string>
+    <string name="error_url_fetch_detail">URL %1$s の取得中にエラーが発生しました: %2$s</string>
+    <string name="error_url_put_detail">URL %1$s のアップロード中にエラーが発生しました: %2$s</string>
+    <string name="error_opening_database">データベースの作成中にエラーが発生しました。 プリファレンスメニューでストレージ設定をチェックし、ストレージカードが使用可能であることをチェックしてください</string>
+    <string name="error_url_put">URL %s の PUT 中にエラーが発生しました</string>
+    <string name="error_setting_no_calendar">カレンダーがありません</string>
+    <string name="error_dropbox_fetch">Dropbox パス %1$s の読み取り中に問題がありました: %2$s</string>
+    <string name="error_loading_node">ノードの読み取り中にエラー</string>
+    <string name="error_bad_url">URL %s の形式が正しくありません</string>
+    <string name="error_dialog_title">エラー</string>
+    <string name="error_apg_not_found">APG が見つかりません</string>
+    <string name="error_apg_version_not_supported">APG バージョンがサポートされていません</string>
+    <string name="error_transport_error">Git エラー。 これは、通常、リポジトリに問題があった場合に発生します。 パスは正しいですか? サーバーに git はインストールされていますか?</string>
+
+    <!-- menu strings -->
+    <string name="menu_outline">アウトライン</string>
+    <string name="menu_agenda">アジェンダ</string>
+    <string name="menu_todos">ToDo</string>
+    <string name="menu_capture">キャプチャ</string>
+    <string name="menu_capture_simple">シンプル キャプチャ</string>
+    <string name="menu_settings">設定</string>
+    <string name="menu_sync">同期</string>
+    <string name="menu_edit">編集</string>
+    <string name="menu_search">検索</string>
+    <string name="menu_help">ヘルプ</string>
+    <string name="menu_cancel">キャンセル</string>
+    <string name="menu_addtag">タグを追加</string>
+    <string name="menu_adddeadline">期限を追加</string>
+    <string name="menu_addscheduled">予定を追加</string>
+    <string name="menu_timestamp">タイムスタンプを追加</string>
+    <string name="menu_view">表示</string>
+    <string name="menu_delete">削除</string>
+    <string name="menu_delete_file">ファイルを削除</string>
+    <string name="menu_advanced">詳細</string>
+    <string name="menu_recover">回復</string>
+    <string name="menu_clockin">クロックイン</string>
+    <string name="menu_archive">アーカイブ</string>
+    <string name="menu_archive_tosibling">sibling にアーカイブ</string>
+
+    <!-- setup wizard strings -->
+    <string name="up_one_level">1 つ上のレベルへ</string>
+    <string name="please_wait">お待ちください…</string>
+    <string name="signing_in">サインイン中</string>
+    <string name="pick_folder">同期元のフォルダーを選択:</string>
+    <string name="email">メール</string>
+    <string name="username">ユーザー名</string>
+    <string name="password">パスワード</string>
+    <string name="host">ホスト</string>
+    <string name="port">ポート</string>
+    <string name="path">パス</string>
+    <string name="login">ログイン</string>
+    <string name="login_webdav">ログインをチェック</string>
+    <string name="login_ssh">SSH ログインをチェック</string>
+    <string name="i_want_to_sync_using">次を使用して同期します:</string>
+    <string name="wizard_webdav">WebDAV サーバー</string>
+    <string name="wizard_dropbox">Dropbox アカウント</string>
+    <string name="wizard_ubuntuone">UbuntuOne アカウント</string>
+    <string name="wizard_sdcard">SD カード</string>
+    <string name="wizard_ssh">SSH サーバー</string>
+    <string name="wizard_null">外部/同期しない (デフォルト)</string>
+    <string name="wizard_google_drive">Google ドライブ</string>
+    <string name="log_in_to_dropbox">Dropbox にログイン</string>
+    <string name="log_in_to_ubuntuone">Ubuntu One にログイン</string>
+    <string name="log_in_to_webdav">自分の WebDAV サーバーにログイン</string>
+    <string name="log_in_to_ssh">自分の SSH サーバーにログイン</string>
+    <string name="title_no_sync">外部または同期なし</string>
+    <string name="ssh_inform_choose_pub_file">SSH 秘密鍵</string>
+    <string name="ssh_choose_file_button">自分の *秘密* 鍵ファイルを選択</string>
+    <string name="null_sync_description">同期なしモード</string>
+    <string name="dropbox_login_info">これによりログインフォームにリダイレクトします。 ログインした後、この画面に戻り、続行します。</string>
+    <string name="url">URL</string>
+    <string name="wizard_dropbox_email_hint">user@host.com</string>
+    <string name="wizard_ubuntu_email_hint">user@host.com</string>
+    <string name="generate_dsa_keys">DSA 鍵を生成</string>
+    <string name="pubkey_copied">公開鍵をクリップボードにコピーしました !</string>
+    <string name="pick_a_date">時間を選択する場合、日付も選択する必要があります。</string>
+    <string name="choose_folder">Org ファイル ディレクトリー:</string>
+
+    <!-- preference strings -->
+    <string name="preferences">プリファレンス</string>
+    <string name="preference_actions">アクション</string>
+    <string name="preference_edit">編集</string>
+    <string name="preference_interface">インターフェイス</string>
+    <string name="preference_general">全般</string>
+    <string name="preference_advanced">詳細</string>
+    <string name="preference_autosync">バックグラウンド同期</string>
+    <string name="preference_autosync_summary">自動的にバックグラウンドで SyncOrg データベースを同期します</string>
+    <string name="preference_autosync_interval">バックグラウンド同期間隔</string>
+    <string name="preference_autosync_interval_summary">バックグラウンド同期サービスを実行する頻度</string>
+    <string name="preference_view_wrap_lines">行の折り返し</string>
+    <string name="preference_view_wrap_lines_summary">ノードを表示するときにカスタムの行の折り返しを使用します</string>
+    <string name="preference_default_todo_summary">ファイルをキャプチャするときのデフォルトの ToDo</string>
+    <string name="preference_default_todo">デフォルト ToDo</string>
+    <string name="preference_clear_db_summary">ストレージデータベースをクリーンアップします</string>
+    <string name="preference_clear_db">データベースをクリア</string>
+    <string name="preferences_widget_summary">ウィジェットのプリファレンス</string>
+    <string name="preference_widget_title">ウィジェット プリファレンス</string>
+    <string name="preference_other">その他</string>
+    <string name="preference_version">バージョン</string>
+    <string name="preference_storage_mode">ストレージモード</string>
+    <string name="preference_storage_summary">org ファイルを格納する場所</string>
+    <string name="preference_storage">ストレージ</string>
+    <string name="preference_recursion_level">表示する子ノード</string>
+    <string name="preference_recursion_level_summary">表示する子ノードのレベル数</string>
+    <string name="preference_view">表示</string>
+    <string name="preference_synchronization">同期</string>
+    <string name="preference_sync_source_summary">Org ファイルの同期元の場所</string>
+    <string name="preference_sync_source">同期モード</string>
+    <string name="preference_dropbox_login">ログイン</string>
+    <string name="preference_dropbox_login_summary">ログインして OAuth トークンを取得します</string>
+    <string name="preference_dropbox_path">パス</string>
+    <string name="preference_dropbox_path_summary">index.org ファイルへの Dropbox パス</string>
+    <string name="preference_ubuntuone_login">ログイン</string>
+    <string name="preference_ubuntuone_path">パス</string>
+    <string name="preference_ubuntuone_login_summary">ログインして OAuth トークンを取得します</string>
+    <string name="preference_ubuntuone_path_summary">index.org ファイルへの UbuntuOne パス</string>
+    <string name="preference_fontsize_summary">アウトラインで使用するフォントサイズ。</string>
+    <string name="preference_fontsize">フォントサイズ</string>
+    <string name="preference_clear_db_dialog_title">DB をクリアしますか?</string>
+    <string name="preference_clear_db_dialog_message">DB をクリアしてもよろしいですか?
+    すべての同期されていないファイルは失われます。</string>
+    <string name="preference_exclude_tags">タグの継承を除外</string>
+    <string name="preference_exclude_tags_summary">タグを \":\" で区切って、継承から除外します。</string>
+    <string name="preference_combine_block_agenda_summary">区切り記号でブロックアジェンダを 1 つのノードにまとめます。 アジェンダファイルの再同期が必要です</string>
+    <string name="preference_calendar">カレンダー</string>
+    <string name="preference_calendar_display">ディスプレイ</string>
+    <string name="preference_calendar_clear">電話のカレンダーをクリア</string>
+    <string name="preference_calendar_clear_summary">SyncOrg によって挿入された、電話のカレンダーのすべてのエントリーをクリアします</string>
+    <string name="preference_enable_calendar">カレンダーを有効にする</string>
+    <string name="preference_enable_calendar_summary">ファイルのメインリストにカレンダーファイルを表示します</string>
+    <string name="preference_calendar_name">カレンダー名</string>
+    <string name="preference_calendar_name_summary">SyncOrg が使用するカレンダーを選択</string>
+    <string name="preference_clear_calendar_promt_title">電話のカレンダーをクリア</string>
+    <string name="preference_clear_calendar_promt_message">電話のカレンダーをクリアしてもよろしいですか?</string>
+    <string name="preference_calendar_reminder_summary">予定アイテムのリマインダーをカレンダーに追加します</string>
+    <string name="preference_calendar_reminder">リマインダー</string>
+    <string name="preference_calendar_reminder_interval_summary">リマインダーがトリガーされる間隔を設定します</string>
+    <string name="preference_calendar_reminder_interval">リマインダー間隔</string>
+    <string name="preference_calendar_show_habits_summary">カレンダーに習慣を表示します</string>
+    <string name="preference_calendar_show_habits">習慣を表示</string>
+    <string name="preference_calendar_show_done_summary">完了した TODO キーワードを含むアイテムをカレンダーに表示します</string>
+    <string name="preference_calendar_show_done">完了イベントを表示</string>
+    <string name="preference_calendar_show_past_summary">過去のアイテムをカレンダーに表示します</string>
+    <string name="preference_calendar_show_past">過去のイベントを表示</string>
+    <string name="preference_theme">テーマ</string>
+    <string name="preference_capture_advanced">高度なキャプチャ</string>
+    <string name="preference_capture_advanced_summary">任意の見出しの下でファイルをキャプチャできる高度なキャプチャメカニズム。</string>
+    <string name="preference_setup_wizard">セットアップウィザード</string>
+    <string name="preference_view_apply_formatting_summary">表示時に、orgmode の強調、太字、下線、および取り消し線の書式を適用します。</string>
+    <string name="preference_view_apply_formatting">表示の書式を適用</string>
+
+    <string name="preference_properties_drawer">プロパティドロワー</string>
+    <string name="preference_view_node_properties_enabled_summary">ノードのプロパティードロワーの内容を表示します。</string>
+    <string name="preference_view_node_properties_enabled">ノードのプロパティを表示</string>
+    <string name="preference_properties_drawer_fields_summary">表示を特定のフィールドに制限します。 フィールドのリストをスペースで区切ります。 制限しない場合は空のままにします。</string>
+    <string name="preference_properties_drawer_fields">フィールド</string>
+    <string name="preference_properties_drawer_files_summary">表示を特定のファイルに制限します。 ファイル名のリストを \';\' で区切ります。 制限しない場合は空のままにします。</string>
+    <string name="preference_properties_drawer_files">ファイル</string>
+
+    <string name="preference_sync_wifi_only">Wifi 接続時のみ同期</string>
+    <string name="preference_sync_wifi_only_summary">ワイヤレスがオンのときにのみ同期を試みます</string>
+    <string name="preference_view_on_click">クリックで表示</string>
+    <string name="preference_view_on_click_summary">編集からアウトラインエントリーの表示までのデフォルトアクションを変更します</string>
+
+    <string name="preference_capture_with_timestamp">キャプチャにタイムスタンプ</string>
+    <string name="preference_capture_with_timestamp_summary">キャプチャしたノードにタイムスタンプが追加されます</string>
+    <string name="preference_selected_todos">クイック ToDo キーワード</string>
+    <string name="preference_selected_todos_summary">クイック選択のために、アウトラインで使用できる TODO キーワードを選択します。 スペースで区切ります。</string>
+
+    <!-- preference keys -->
+    <string name="key_properties_drawer_include_fields">propertiesDrawerIncludeFields</string>
+    <string name="key_properties_drawer_include_files">propertiesDrawerIncludeFiles</string>
+    <string name="key_autoSyncInterval">autoSyncInterval</string>
+    <string name="key_viewRecursionMax">viewRecursionMax</string>
+    <string name="key_defaultTodo">defaultTodo</string>
+    <string name="key_calendarName">calendarName</string>
+    <string name="key_calendarReminderInterval">calendarReminderInterval</string>
+    <string name="key_theme">theme</string>
+    <string name="key_fontSize">fontSize</string>
+    <string name="key_syncSource">syncSource</string>
+    <string name="key_syncWifiOnly">syncWifiOnly</string>
+    <string name="key_quick_todos">quickTodos</string>
+    <string name="key_version">version</string>
+
+    <!-- preference synchronizers (obsolete?) -->
+    <string name="edit_date_start">開始</string>
+    <string name="edit_date_end">終了</string>
+    <string name="edit_date_date">日付</string>
+    <string name="edit_create_new_entry">新しいエントリーを作成</string>
+    <string name="edit_create_new_entry_body">作成するファイルの名前を入力</string>
+    <string name="storage_location">ストレージの場所</string>
+    <string name="storage_card">ストレージカード</string>
+    <string name="internal">内部</string>
+    <string name="example_webURL">http://example.com/index.org</string>
+    <string name="configure_synchronizer_settings">同期設定</string>
+    <string name="title_scp_host">ホスト</string>
+    <string name="title_scp_port">ポート</string>
+    <string name="title_scp_path">パス</string>
+    <string name="summary_scp_path">サーバーの index.org へのフルパス</string>
+    <string name="title_index_file_path">index.org へのフルローカルパス</string>
+    <string name="summary_web_url">自分の index.org へのフル URL パス</string>
+    <string name="title_agenda_title">アジェンダタイトルを使用する</string>
+    <string name="summary_agenda_title">カスタムアジェンダタイトルの使用を有効にします。 アジェンダファイルの再同期が必要です</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="action_settings">設定</string>
+    <string name="copy_old_sync_folder">新しい org メモフォルダーを作成しています。 このフォルダーに現在のメモをコピーしますか ?</string>
+    <string name="no_start_from_scratch">いいえ、一から作成します"</string>
+    <!-- directory chooser -->
+
+    <string name="cancel_label">キャンセル</string>
+    <string name="confirm_label">確認</string>
+    <string name="selected_folder_label">選択したフォルダー:</string>
+    <string name="create_folder_label">フォルダーを作成</string>
+    <string name="create_folder_msg">名前 "%1$s" の新しいフォルダーを作成しますか?</string>
+    <string name="create_folder_success">新しいフォルダーを作成しました</string>
+    <string name="create_folder_error_no_write_access">このフォルダーに書き込みできませんでした</string>
+    <string name="create_folder_error_already_exists">フォルダーはすでに存在します</string>
+    <string name="create_folder_error">フォルダーを作成できませんでした</string>
+    <string name="up_label">上</string>
+    <string name="directory_empty">ディレクトリーは空です</string>
+    <string name="create_folder_failed">フォルダーの作成に失敗しました</string>
+    <string name="select_folder">フォルダーを選択</string>
+    <string name="create_fs_folder">新しいフォルダーを作成</string>
+
+
+    <!-- others -->
+
+
+    <string name="wizard_ssh_help">例:\n\n
+
+        _ ユーザー johndoe が /home/johndoe/my_notes/ をプライベートサーバー 123.456.789.123 から同期したい:\n\n
+        ユーザ―名: johndoe\n
+        パ　ス: /home/johndoe/my_notes\n
+        ホスト: 123.456.789.123\n
+        ポート: 22 (または空にできます)\n\n\n
+
+        _ ユーザー johndoe が GitHub プロジェクト johndoe/my_notes.git と同期したい:\n\n
+        ユーザー名: git\n
+        パ　ス: johndoe/my_notes.git\n
+        ホスト: github.com\n
+        ポート: 22 (または空にできます)\n
+    </string>
+
+
+    <string name="upgrade">アップデート :\n\n
+        ネストされたフォルダーのファイルが考慮されるようになりました。
+   </string>
+    <string name="write_permission_denied_warning_title">警告: ストレージのアクセス許可が拒否されました</string>
+    <string name="write_permission_denied_warning_content">ディスクにメモを書き込むには "ストレージ" アクセス許可が必須です。 拒否された場合、アプリは正しく実行されません。
+        以下で有効にしてください: Android 設定 -> アプリ -> SyncOrg -> アクセス許可。</string>
+
+</resources>
