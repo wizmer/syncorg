@@ -13,6 +13,8 @@ import com.jcraft.jsch.Session;
 import org.eclipse.jgit.util.FS;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SSHSynchronizer extends Synchronizer {
     private final String LT = "SyncOrg";
@@ -78,12 +80,29 @@ public class SSHSynchronizer extends Synchronizer {
 
     }
 
+    private HashSet<String> makeAbsolute(String folder, Set<String> relativePaths) {
+        HashSet<String> result = new HashSet<>();
+        for (String filePath : relativePaths) {
+            result.add(folder + "/" + filePath);
+        }
+        return result;
+    }
+
+    private SyncResult withAbsolutePaths(String folder, SyncResult relativePathsResult) {
+        SyncResult result = new SyncResult();
+        result.newFiles = makeAbsolute(folder, relativePathsResult.newFiles);
+        result.changedFiles = makeAbsolute(folder, relativePathsResult.changedFiles);
+        result.deletedFiles = makeAbsolute(folder, relativePathsResult.deletedFiles);
+        result.setState(relativePathsResult.state);
+        return result;
+    }
+
     public SyncResult synchronize() {
         if (PermissionManager.permissionGranted(context) == false) return new SyncResult();
 
         if (isCredentialsRequired()) return new SyncResult();
         String folder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
-        SyncResult pullResult = JGitWrapper.pull(context, folder);
+        SyncResult pullResult = withAbsolutePaths(folder, JGitWrapper.pull(context, folder));
 
         new JGitWrapper.PushTask(context).execute();
         return pullResult;
