@@ -194,7 +194,7 @@ public class OrgNodeTimeDate {
             matchEnd = propm.end();
             try {
                 year = Integer.parseInt(propm.group(2));
-                monthOfYear = Integer.parseInt(propm.group(3));
+                monthOfYear = Integer.parseInt(propm.group(3)) - 1; //java date months are off by one
                 dayOfMonth = Integer.parseInt(propm.group(4));
 
                 if (propm.group(6) != null && propm.group(7) != null) {
