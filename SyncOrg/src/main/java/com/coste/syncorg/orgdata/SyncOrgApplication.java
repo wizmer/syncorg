@@ -1,11 +1,11 @@
 package com.coste.syncorg.orgdata;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-public class SyncOrgApplication extends Application {
+public class SyncOrgApplication extends MultiDexApplication {
 
     private static SyncOrgApplication instance;
     SharedPreferences sharedPreferences;
