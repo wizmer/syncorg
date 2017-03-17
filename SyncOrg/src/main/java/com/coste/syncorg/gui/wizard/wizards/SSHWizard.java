@@ -24,6 +24,8 @@ import com.coste.syncorg.R;
 import com.coste.syncorg.directory_chooser.FolderPickerActivity;
 import com.coste.syncorg.synchronizers.JGitWrapper;
 
+import static com.coste.syncorg.synchronizers.Synchronizer.SSH;
+
 public class SSHWizard extends AppCompatActivity {
     final private int PICKFILE_RESULT_CODE = 1;
     Switch auth_selector;
@@ -166,7 +168,7 @@ public class SSHWizard extends AppCompatActivity {
 
         SharedPreferences.Editor editor = appSettings.edit();
 
-        editor.putString("syncSource", "scp");
+        editor.putString("syncSource", SSH);
 
         editor.putString("scpPath", pathActual);
         editor.putString("scpUser", userActual);

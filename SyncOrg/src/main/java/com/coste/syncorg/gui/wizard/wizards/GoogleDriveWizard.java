@@ -9,48 +9,70 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.coste.google_drive.FolderPicker;
+import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.R;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.DriveId;
+import com.google.android.gms.drive.OpenFileActivityBuilder;
+
+import static com.coste.syncorg.synchronizers.GoogleDriveSynchronizer.DRIVE_ID;
+import static com.coste.syncorg.synchronizers.Synchronizer.GOOGLE_DRIVE;
 
 
 public class GoogleDriveWizard extends AppCompatActivity {
     final private int PICKFILE_RESULT_CODE = 1;
     String syncFolder = null;
     TextView orgFolder;
+    String driveId;
+    Button folderButton;
+    Button okButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wizard_no_sync);
+        setContentView(R.layout.wizard_google_drive);
 
-        Button folder = (Button) findViewById(R.id.select_folder);
-        folder.setOnClickListener(new OnClickListener() {
+        loadSettings();
+
+        folderButton = (Button) findViewById(R.id.select_google_drive_folder);
+        okButton = (Button) findViewById(R.id.ok);
+
+        folderButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(GoogleDriveWizard.this, FolderPicker.class);
                 startActivityForResult(intent, PICKFILE_RESULT_CODE);
+//                driveId.asDriveFolder().createFolder()
+//                        listChildren(getGoogleApiClient()).setResultCallback(childrenRetrievedCallback);
             }
         });
-//
-//		orgFolder = ((TextView) findViewById(R.id.org_folder));
-//
-//		SharedPreferences appSettings = PreferenceManager
-//				.getDefaultSharedPreferences(this);
-//		syncFolder = appSettings.getString("syncFolder", "");
-//		if(!syncFolder.equals("")) {
-//			String details = getResources().getString(R.string.folder) + " " +
-//					syncFolder;
-//			orgFolder.setText(details);
-//		}
-//		Button okButton = (Button) findViewById(R.id.ok);
-//		okButton.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				checkPreviousSynchronizer(NoSyncWizard.this);
-//
-//			}
-//		});
+        if(driveId.equals("")){
+            folderButton.setText(driveId);
+        }else{
+            folderButton.setText(R.string.no_folder_selected);
+        }
+
+
+        okButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveSettings();
+                startActivity(new Intent(GoogleDriveWizard.this, MainActivity.class));
+            }
+        });
+        refresh();
+    }
+
+    /**
+     * Refresh button labels
+     */
+    private void refresh(){
+        okButton.setClickable(driveId!=null);
+        folderButton.setText(driveId);
     }
 
     @Override
@@ -58,21 +80,26 @@ public class GoogleDriveWizard extends AppCompatActivity {
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
                 if (resultCode == RESULT_OK) {
-//					DriveId driveId = (DriveId) data.getParcelableExtra(
-//							OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-//					Toast.makeText(this, "drive : " + driveId, Toast.LENGTH_LONG).show();
+                    DriveId driveId = data.getParcelableExtra(
+							OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
 
+                    if(driveId!=null){
+                        this.driveId = driveId.encodeToString();
+                    }
                 }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
                 break;
         }
+        refresh();
     }
 
 
     private void loadSettings() {
-
+        SharedPreferences appSettings = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        driveId = appSettings.getString(DRIVE_ID, "");
     }
 
     public void saveSettings() {
@@ -80,8 +107,8 @@ public class GoogleDriveWizard extends AppCompatActivity {
                 .getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = appSettings.edit();
 
-        editor.putString("syncSource", "nullSync");
-        editor.putString("syncFolder", syncFolder);
+        editor.putString("syncSource", GOOGLE_DRIVE);
+        editor.putString(DRIVE_ID, driveId);
         editor.apply();
     }
 }

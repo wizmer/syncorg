@@ -52,15 +52,15 @@ public class SDCardSynchronizer extends Synchronizer {
     }
 
     @Override
-    public SyncResult synchronize() {
-
+    public SyncResult doInBackground(Void...voids) {
         return null;
     }
 
-
     @Override
-    public void postSynchronize() {
+    public void onPostExecute(SyncResult result) {
+        super.onPostExecute(result);
     }
+
 
     @Override
     public void _addFile(String filename) {
@@ -69,7 +69,7 @@ public class SDCardSynchronizer extends Synchronizer {
 
 
     @Override
-    public boolean isConnectable() {
+    public boolean throwIfNotConnectable() {
         return true;
     }
 }

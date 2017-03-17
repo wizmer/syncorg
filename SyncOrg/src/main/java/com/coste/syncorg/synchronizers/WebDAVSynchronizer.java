@@ -137,9 +137,14 @@ public class WebDAVSynchronizer extends Synchronizer {
     }
 
     @Override
-    public SyncResult synchronize() {
-
+    public SyncResult doInBackground(Void... voids) {
         return null;
+    }
+
+
+    @Override
+    public void onPostExecute(SyncResult result) {
+        super.onPostExecute(result);
     }
 
     /* See: http://stackoverflow.com/questions/1217141/self-signed-ssl-acceptance-android */
@@ -255,9 +260,6 @@ public class WebDAVSynchronizer extends Synchronizer {
                 + directoryActual;
     }
 
-    @Override
-    public void postSynchronize() {
-    }
 
     @Override
     public void _addFile(String filename) {
@@ -265,7 +267,7 @@ public class WebDAVSynchronizer extends Synchronizer {
     }
 
     @Override
-    public boolean isConnectable() {
+    public boolean throwIfNotConnectable() {
         return OrgUtils.isNetworkOnline(context);
     }
 

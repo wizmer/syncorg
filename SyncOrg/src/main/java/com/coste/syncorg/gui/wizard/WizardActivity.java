@@ -16,6 +16,12 @@ import com.coste.syncorg.gui.wizard.wizards.SDCardWizard;
 import com.coste.syncorg.gui.wizard.wizards.SSHWizard;
 import com.coste.syncorg.gui.wizard.wizards.WebDAVWizard;
 
+import static com.coste.syncorg.synchronizers.Synchronizer.EXTERNAL;
+import static com.coste.syncorg.synchronizers.Synchronizer.GOOGLE_DRIVE;
+import static com.coste.syncorg.synchronizers.Synchronizer.SD_CARD;
+import static com.coste.syncorg.synchronizers.Synchronizer.SSH;
+import static com.coste.syncorg.synchronizers.Synchronizer.WEBDAV;
+
 public class WizardActivity extends AppCompatActivity {
 
     @Override
@@ -27,7 +33,7 @@ public class WizardActivity extends AppCompatActivity {
 
         SharedPreferences srcPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
-        String syncSource = srcPrefs.getString("syncSource", "nullSync");
+        String syncSource = srcPrefs.getString("syncSource", EXTERNAL);
         int id = getResources().getIdentifier(syncSource, "id", getPackageName());
         RadioButton radioButton = (RadioButton) findViewById(id);
         if (radioButton != null) radioButton.setChecked(true);
@@ -46,18 +52,17 @@ public class WizardActivity extends AppCompatActivity {
                 editor.putString("syncSource", syncName);
                 editor.apply();
 
-                final int request_code = -1;
                 switch (syncName) {
-                    case "webdav":
+                    case WEBDAV:
                         startActivity(new Intent(WizardActivity.this, WebDAVWizard.class));
                         break;
-                    case "google_drive":
+                    case GOOGLE_DRIVE:
                         startActivity(new Intent(WizardActivity.this, GoogleDriveWizard.class));
                         break;
-                    case "sdcard":
+                    case SD_CARD:
                         startActivity(new Intent(WizardActivity.this, SDCardWizard.class));
                         break;
-                    case "scp":
+                    case SSH:
                         startActivity(new Intent(WizardActivity.this, SSHWizard.class));
                         break;
                     default:

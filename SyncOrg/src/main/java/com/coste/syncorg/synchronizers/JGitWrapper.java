@@ -371,6 +371,7 @@ public class JGitWrapper {
 //                git.commit()
 //                        .setMessage(addMsg + params[0])
 //                        .call();
+                push(context);
 
             } catch (GitAPIException e) {
                 e.printStackTrace();
@@ -379,33 +380,20 @@ public class JGitWrapper {
             }
             return null;
         }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            new PushTask(context).execute();
-        }
     }
 
-    static public class PushTask extends AsyncTask<String, Void, Void> {
-        Context context;
+    public static void push(Context context) {
 
-        public PushTask(Context context) {
-            this.context = context;
-        }
+        File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
 
-        protected Void doInBackground(String... params) {
+        Git git = null;
+        try {
+            git = Git.open(repoDir);
 
-            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
-
-            Git git = null;
-            try {
-                git = Git.open(repoDir);
-
-                if (git.status().call().isClean()) {
-                    return null;
-                }
-                // Stage all changed files, omitting new files, and commit with one command
+            if (git.status().call().isClean()) {
+                return;
+            }
+            // Stage all changed files, omitting new files, and commit with one command
 
 //                org.eclipse.jgit.api.Status status = git.status().call();
 //                System.out.println("Added: " + status.getAdded());
@@ -416,36 +404,35 @@ public class JGitWrapper {
 //                System.out.println("Removed: " + status.getRemoved());
 //                System.out.println("Untracked: " + status.getUntracked());
 
-                git.commit()
-                        .setAll(true)
-                        .setMessage("Commit changes to all files")
-                        .call();
+            git.commit()
+                    .setAll(true)
+                    .setMessage("Commit changes to all files")
+                    .call();
 
-                AuthData authData = AuthData.getInstance(context);
-                git.push()
-                        .setCredentialsProvider(new CredentialsProviderAllowHost(authData.getUser(), authData.getPassword()))
-                        .setTransportConfigCallback(new CustomTransportConfigCallback(context))
-                        .call();
-                System.out.println("Committed all changes to repository at ");
-            } catch (IOException | UnmergedPathsException e) {
-                e.printStackTrace();
-            } catch (WrongRepositoryStateException e) {
-                e.printStackTrace();
-                handleMergeConflict(git, context);
-            } catch (ConcurrentRefUpdateException e) {
-                e.printStackTrace();
-            } catch (NoHeadException e) {
-                e.printStackTrace();
-            } catch (NoMessageException e) {
-                e.printStackTrace();
-            } catch (GitAPIException e) {
-                e.printStackTrace();
-            } catch (JGitInternalException e) {
-                e.printStackTrace();
-            }
-            return null;
+            AuthData authData = AuthData.getInstance(context);
+            git.push()
+                    .setCredentialsProvider(new CredentialsProviderAllowHost(authData.getUser(), authData.getPassword()))
+                    .setTransportConfigCallback(new CustomTransportConfigCallback(context))
+                    .call();
+            System.out.println("Committed all changes to repository at ");
+        } catch (IOException | UnmergedPathsException e) {
+            e.printStackTrace();
+        } catch (WrongRepositoryStateException e) {
+            e.printStackTrace();
+            handleMergeConflict(git, context);
+        } catch (ConcurrentRefUpdateException e) {
+            e.printStackTrace();
+        } catch (NoHeadException e) {
+            e.printStackTrace();
+        } catch (NoMessageException e) {
+            e.printStackTrace();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        } catch (JGitInternalException e) {
+            e.printStackTrace();
         }
     }
+
 
     static public class MergeTask extends AsyncTask<String, Void, Void> {
         Context context;

@@ -50,15 +50,8 @@ public class ExternalSynchronizer extends Synchronizer {
         return true;
     }
 
-    public void putRemoteFile(String filename, String contents) {
-    }
-
-    public BufferedReader getRemoteFile(String filename) {
-        return null;
-    }
-
     @Override
-    public SyncResult synchronize() {
+    public SyncResult doInBackground(Void... voids) {
         SyncResult result = new SyncResult();
         if (PermissionManager.permissionGranted(context) == false) return result;
 
@@ -97,16 +90,18 @@ public class ExternalSynchronizer extends Synchronizer {
 
 
     @Override
-    public void postSynchronize() {
-    }
-
-    @Override
     public void _addFile(String filename) {
 
     }
 
     @Override
-    public boolean isConnectable() {
+    public boolean throwIfNotConnectable() {
         return true;
     }
+
+    @Override
+    public void onPostExecute(SyncResult result) {
+        super.onPostExecute(result);
+    }
+
 }

@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static com.coste.syncorg.synchronizers.Synchronizer.EXTERNAL;
+
 
 public class NoSyncWizard extends AppCompatActivity {
     static public String FOLDER_PATH;
@@ -99,8 +101,8 @@ public class NoSyncWizard extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String syncSource = sharedPreferences.getString("syncSource", "null");
 
-        final String currentSyncFolder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
-        if (syncSource.equals("null") || syncSource.equals("nullSync")) {
+        if (syncSource.equals("null") || syncSource.equals(EXTERNAL)) {
+            final String currentSyncFolder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
             final File currentSyncFolderFile = new File(currentSyncFolder);
             File[] currentNodes = currentSyncFolderFile.listFiles();
             if (currentNodes != null && currentNodes.length > 0) {
@@ -162,7 +164,7 @@ public class NoSyncWizard extends AppCompatActivity {
                 .getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = appSettings.edit();
 
-        editor.putString("syncSource", "nullSync");
+        editor.putString("syncSource", EXTERNAL);
         editor.putString("syncFolder", syncFolder);
         editor.apply();
     }

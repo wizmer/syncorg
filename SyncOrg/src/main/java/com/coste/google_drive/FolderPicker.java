@@ -56,7 +56,7 @@ public class FolderPicker extends Base {
         switch (requestCode) {
             case REQUEST_CODE_OPENER:
                 if (resultCode == RESULT_OK) {
-                    DriveId driveId = (DriveId) data.getParcelableExtra(
+                    DriveId driveId = data.getParcelableExtra(
                             OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
                     Intent intent = getIntent();
                     intent.putExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID, driveId);

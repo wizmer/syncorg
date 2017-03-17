@@ -3,6 +3,7 @@ package com.coste.syncorg.synchronizers;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
@@ -29,12 +30,20 @@ import java.util.HashSet;
  * {@link #putRemoteFile(String, String)} and {@link #getRemoteFile(String)} are
  * needed.
  */
-public abstract class Synchronizer {
+public abstract class Synchronizer extends AsyncTask<Void, Void, SyncResult> {
     public static final String SYNC_UPDATE = "com.coste.syncorg.Synchronizer.action.SYNC_UPDATE";
     public static final String SYNC_DONE = "sync_done";
     public static final String SYNC_START = "sync_start";
     public static final String SYNC_PROGRESS_UPDATE = "progress_update";
     public static final String SYNC_SHOW_TOAST = "showToast";
+
+    // Synchronizer types
+    final public static String GOOGLE_DRIVE = "google_drive";
+    final public static String SD_CARD = "sdcard";
+    final public static String SSH = "scp";
+    final public static String EXTERNAL = "nullSync";
+    final public static String WEBDAV = "webdav";
+
     static private boolean syncRunning = false;
     private static boolean syncEnabled = true;
     protected Context context;
@@ -65,10 +74,12 @@ public abstract class Synchronizer {
 
         String syncSource = preferences.getString("syncSource", "");
 
-        if (syncSource.equals("sdcard"))
+        if (syncSource.equals(SD_CARD))
             return new SDCardSynchronizer(context);
-        else if (syncSource.equals("scp"))
+        else if (syncSource.equals(SSH))
             return new SSHSynchronizer(context);
+        else if (syncSource.equals(GOOGLE_DRIVE))
+            return new GoogleDriveSynchronizer(context);
         else
             return new ExternalSynchronizer(context);
     }
@@ -79,31 +90,28 @@ public abstract class Synchronizer {
      * @param context
      */
     public static void runSynchronize(final Context context) {
-        Thread syncThread = new Thread() {
-            public void run() {
-                syncRunning = true;
-                Synchronizer syncer = getSynchronizer(context);
-                if (syncer == null) {
-                    syncRunning = false;
-                    return;
-                }
+        if (!syncEnabled || syncRunning) return;
 
-                try {
-                    syncer.execute();
-                    syncer.postSynchronize();
-                } catch (Exception e) {
-                    syncer.notify.errorNotification(e.getMessage());
-                } finally {
-                    syncRunning = false;
-                }
-            }
-        };
+        syncRunning = true;
+        Synchronizer syncer = getSynchronizer(context);
+        if (syncer == null) {
+            syncRunning = false;
+            return;
+        }
 
-        if (syncEnabled && !syncRunning) {
-            syncThread.start();
+        if (!syncer.isConfigured()) {
+            syncer.notify.errorNotification("Sync not configured");
+            return;
+        }
+
+        try {
+            syncer.throwIfNotConnectable();
+            syncer.execute();
+        } catch (Exception e) {
+            syncer.notify.errorNotification(e.getMessage());
+            syncRunning = false;
         }
     }
-
 
     public static void addFile(Context context, String filename) {
         Synchronizer syncer = getSynchronizer(context);
@@ -125,19 +133,14 @@ public abstract class Synchronizer {
     /**
      * @return List of files that where changed.
      */
-    private void execute() {
-        if (!isConfigured()) {
-            notify.errorNotification("Sync not configured");
+    @Override
+    protected void onPostExecute(SyncResult pulledFiles) {
+        if(pulledFiles==null){
+            syncRunning = false;
             return;
         }
 
         try {
-            announceStartSync();
-
-            isConnectable();
-
-            SyncResult pulledFiles = synchronize();
-
             for (String filename : pulledFiles.deletedFiles) {
                 OrgFile orgFile = new OrgFile(filename, resolver);
                 orgFile.removeFile(context, true);
@@ -157,6 +160,8 @@ public abstract class Synchronizer {
         } catch (Exception e) {
             showErrorNotification(e);
             e.printStackTrace();
+        } finally {
+            syncRunning = false;
         }
     }
 
@@ -231,26 +236,18 @@ public abstract class Synchronizer {
         }
     }
 
-
     /**
      * Called before running the synchronizer to ensure that it's configuration
      * is in a valid state.
      */
-    abstract boolean isConfigured();
+    boolean isConfigured(){
+        return true;
+    };
 
     /**
      * Called before running the synchronizer to ensure it can connect.
      */
-    abstract public boolean isConnectable() throws Exception;
-
-
-    abstract SyncResult synchronize();
-
-
-    /**
-     * Use this to disconnect from any services and cleanup.
-     */
-    public abstract void postSynchronize();
+    abstract public boolean throwIfNotConnectable() throws Exception;
 
     /**
      * Synchronize a new file

@@ -18,9 +18,17 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
     private int notifyRef = 1;
     private Context context;
 
+
     public SynchronizerNotification(Context context) {
         super(context);
         this.context = context;
+    }
+
+    public NotificationManager getNotificationManager(Context context){
+        if(this.notificationManager!=null) return this.notificationManager;
+        this.notificationManager = (NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        return this.notificationManager;
     }
 
     /**
@@ -29,7 +37,6 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
      */
     @Override
     public void errorNotification(String errorMsg) {
-        this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notifyIntent = new Intent(context, MainActivity.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -46,15 +53,13 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
         notification = builder.getNotification();
         notification.flags = Notification.FLAG_AUTO_CANCEL;
 
-        notificationManager.notify(notifyRef, notification);
+        getNotificationManager(context).notify(notifyRef, notification);
     }
 
 
     @Override
     @SuppressWarnings("deprecation")
     public void setupNotification() {
-        this.notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notifyIntent = new Intent(context, MainActivity.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -70,7 +75,7 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
         builder.setProgress(100, 0, true);
         notification = builder.getNotification();
 
-        notificationManager.notify(notifyRef, notification);
+        getNotificationManager(context).notify(notifyRef, notification);
     }
 
     @Override
@@ -79,7 +84,7 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
             return;
 
         if (message != null) {
-            notificationManager.notify(notifyRef, notification);
+            getNotificationManager(context).notify(notifyRef, notification);
         }
     }
 
@@ -99,12 +104,12 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
 //		notification.contentView.setProgressBar(android.R.id.progress, 100,
 //				progress, false);
 
-        notificationManager.notify(notifyRef, notification);
+        getNotificationManager(context).notify(notifyRef, notification);
     }
 
     @Override
     public void finalizeNotification() {
-        notificationManager.cancel(notifyRef);
+        getNotificationManager(context).cancel(notifyRef);
     }
 
 }

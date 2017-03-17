@@ -78,14 +78,15 @@ public class SSHSynchronizer extends Synchronizer {
 
     }
 
-    public SyncResult synchronize() {
+    @Override
+    public SyncResult doInBackground(Void... voids) {
         if (PermissionManager.permissionGranted(context) == false) return new SyncResult();
 
         if (isCredentialsRequired()) return new SyncResult();
         String folder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
         SyncResult pullResult = JGitWrapper.pull(context, folder);
 
-        new JGitWrapper.PushTask(context).execute();
+        JGitWrapper.push(context);
         return pullResult;
     }
 
@@ -99,9 +100,10 @@ public class SSHSynchronizer extends Synchronizer {
     }
 
     @Override
-    public void postSynchronize() {
+    public void onPostExecute(SyncResult result) {
         if (this.session != null)
             this.session.disconnect();
+        super.onPostExecute(result);
     }
 
     @Override
@@ -110,7 +112,7 @@ public class SSHSynchronizer extends Synchronizer {
     }
 
     @Override
-    public boolean isConnectable() throws Exception {
+    public boolean throwIfNotConnectable() throws Exception {
         if (!OrgUtils.isNetworkOnline(context)) return false;
 
         this.connect();
