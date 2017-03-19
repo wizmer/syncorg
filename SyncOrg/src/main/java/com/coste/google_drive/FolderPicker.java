@@ -43,6 +43,7 @@ public class FolderPicker extends Base {
                 .newOpenFileActivityBuilder()
                 .setMimeType(new String[]{DriveFolder.MIME_TYPE})
                 .build(getGoogleApiClient());
+
         try {
             startIntentSenderForResult(
                     intentSender, REQUEST_CODE_OPENER, null, 0, 0, 0);
