@@ -4,14 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/select"
-        android:title="@string/select_folder"
+        android:id="@+id/parent_folder"
+        android:icon="@drawable/ic_up_arrow"
+        android:title="@string/parent_folder"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/create_folder"
-        android:icon="@drawable/ic_add_folder_24dp_white"
-        android:title="@string/create_fs_folder"
+        android:id="@+id/select"
+        android:icon="@drawable/ic_check_black_24dp"
+        android:title="@string/select_folder"
         app:showAsAction="ifRoom" />
-
 </menu>

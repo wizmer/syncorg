@@ -23,7 +23,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_provider_paths" />
         </provider>
-
         <provider
             android:name=".orgdata.OrgProvider"
             android:authorities="com.coste.syncorg.orgdata.OrgProvider"
@@ -37,9 +36,6 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.coste.syncorg.SYNC_FAILED" />
             </intent-filter>
         </activity>
         <activity
@@ -109,11 +105,23 @@
         <activity android:name=".gui.wizard.wizards.SDCardWizard" />
         <activity android:name=".gui.wizard.wizards.GoogleDriveWizard" />
         <activity android:name=".gui.wizard.wizards.SSHWizard" />
-        <activity android:name=".gui.wizard.wizards.NoSyncWizard" />
+        <activity android:name=".gui.wizard.wizards.ExternalSyncWizard" />
         <activity android:name=".gui.wizard.wizards.WebDAVWizard" />
         <activity android:name=".directory_chooser.DirectoryChooserActivity" />
         <activity android:name=".directory_chooser.FolderPickerActivity" />
         <activity android:name=".services.PermissionManagerActivity" />
         <activity android:name="com.coste.google_drive.FolderPicker" />
+        <activity
+            android:name=".ErrorReportActivity"
+            android:label="@string/title_activity_error_report">
+            <intent-filter>
+                <action android:name="com.coste.syncorg.SYNC_FAILED" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".gui.MainActivity2"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+
 </manifest>

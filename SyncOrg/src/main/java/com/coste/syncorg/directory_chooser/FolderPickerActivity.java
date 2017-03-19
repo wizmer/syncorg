@@ -14,9 +14,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ActionBarContextView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +57,7 @@ public class FolderPickerActivity extends AppCompatActivity
     private ListView mListView;
     private FileAdapter mFilesAdapter;
     private RootsAdapter mRootsAdapter;
+    Toolbar toolbar;
     /**
      * Location of null means that the list of roots is displayed.
      */
@@ -63,15 +68,37 @@ public class FolderPickerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_folder_picker);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Show the Up button in the action bar.
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
-
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText et = new EditText(FolderPickerActivity.this);
+                AlertDialog dialog = new AlertDialog.Builder(FolderPickerActivity.this)
+                        .setTitle(R.string.create_folder_label)
+                        .setView(et)
+                        .setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        createFolder(et.getText().toString());
+                                    }
+                                }
+                        )
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create();
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialog) {
+                        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+                                .showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                });
+                dialog.show();
+            }
+        });
         mListView = (ListView) findViewById(android.R.id.list);
         mListView.setOnItemClickListener(this);
         mListView.setEmptyView(findViewById(android.R.id.empty));
@@ -148,33 +175,22 @@ public class FolderPickerActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Custom ellipsize to be used for the absolutie path
+     * @return
+     */
+    private String ellispize(String path){
+        if(path==null) return "";
+        if(path.length() > 20){
+            return "..."+path.substring(path.length()-20);
+        }
+        return path;
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.create_folder:
-                final EditText et = new EditText(this);
-
-                AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setTitle(R.string.create_folder_label)
-                        .setView(et)
-                        .setPositiveButton(android.R.string.ok,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        createFolder(et.getText().toString());
-                                    }
-                                }
-                        )
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .create();
-                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialog) {
-                        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
-                                .showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
-                    }
-                });
-                dialog.show();
+            case R.id.parent_folder:
+                onBackPressed();
                 return true;
             case R.id.select:
                 Intent intent = new Intent()
@@ -239,6 +255,7 @@ public class FolderPickerActivity extends AppCompatActivity
      * Refreshes the ListView to show the contents of the folder in {@code }mLocation.peek()}.
      */
     private void displayFolder(File folder) {
+        toolbar.setSubtitle(ellispize(folder.getAbsolutePath()));
         mLocation = folder;
         mFilesAdapter.clear();
         File[] contents = mLocation.listFiles();

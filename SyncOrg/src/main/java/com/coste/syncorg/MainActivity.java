@@ -31,7 +31,7 @@ import com.coste.syncorg.gui.wizard.WizardActivity;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.settings.SettingsActivity;
 import com.coste.syncorg.synchronizers.Synchronizer;
-import com.coste.syncorg.util.PreferenceUtils;
+import com.coste.syncorg.util.Preferences;
 
 import java.io.File;
 
@@ -47,7 +47,6 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity {
 
     public final static String NODE_ID = "node_id";
-    public final static String SYNC_FAILED = "com.coste.syncorg.SYNC_FAILED";
     static boolean passwordPrompt = true;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -223,10 +222,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void displayNewUserDialogs() {
-        if (!PreferenceUtils.isSyncConfigured())
+        if (!Preferences.isSyncConfigured())
             runShowWizard(null);
 
-        if (PreferenceUtils.isUpgradedVersion())
+        if (Preferences.isUpgradedVersion())
             showUpgradePopup();
     }
 
@@ -241,28 +240,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         ((MainAdapter) recyclerView.getAdapter()).refresh();
         Synchronizer.runSynchronize(this);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        if (intent.getAction().equals(SYNC_FAILED)) {
-            Bundle extrasBundle = intent.getExtras();
-            String errorMsg = extrasBundle.getString("ERROR_MESSAGE");
-            showSyncFailPopup(errorMsg);
-        }
-    }
-
-    private void showSyncFailPopup(String errorMsg) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(errorMsg);
-        builder.setCancelable(false);
-        builder.setPositiveButton(R.string.ok,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
     }
 
 //    /**

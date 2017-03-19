@@ -62,9 +62,6 @@ public class FolderPicker extends Base {
                     intent.putExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID, driveId);
                     setResult(RESULT_OK, intent);
                     finish();
-
-                    Log.v("drive", "Children : " + driveId.asDriveFolder().listChildren(getGoogleApiClient()));
-
                 }
                 finish();
                 break;

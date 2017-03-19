@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+import static com.coste.syncorg.settings.SettingsActivity.DRIVE_ID;
+
 /**
  * A synchronizer that keeps track of the synchronization state of a standard folder
  * This is done by keeping track of the timestamp of last modification for each file in the folder.
@@ -37,8 +39,6 @@ public class GoogleDriveSynchronizer extends Synchronizer implements
         GoogleApiClient.OnConnectionFailedListener {
     DriveFolder rootFolder;
     GoogleApiClient mGoogleApiClient;
-
-    final static public String DRIVE_ID = "driveId";
 
     public GoogleDriveSynchronizer(Context context) {
         super(context);

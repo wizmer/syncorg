@@ -67,8 +67,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:password="true"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textSize="20dp" />
 
         <TextView
@@ -107,7 +106,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="textUri"
-            android:singleLine="true"
             android:textSize="20dp" />
 
         <TextView
@@ -121,7 +119,7 @@
             android:id="@+id/wizard_ssh_host"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:inputType="text"
             android:textSize="20dp" />
 
         <TextView
@@ -152,8 +150,7 @@
             android:id="@+id/parent_folder"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:defaultValue="22"
-            android:maxLines="1"
+            android:ellipsize="none"
             android:textSize="20dp" />
 
 

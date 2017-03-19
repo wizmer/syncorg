@@ -26,10 +26,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import static com.coste.syncorg.settings.SettingsActivity.KEY_SYNC_SOURCE;
 import static com.coste.syncorg.synchronizers.Synchronizer.EXTERNAL;
 
 
-public class NoSyncWizard extends AppCompatActivity {
+public class ExternalSyncWizard extends AppCompatActivity {
     static public String FOLDER_PATH;
     final private int PICKFILE_RESULT_CODE = 1;
     String syncFolder = null;
@@ -72,7 +73,7 @@ public class NoSyncWizard extends AppCompatActivity {
         folder.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NoSyncWizard.this, FolderPickerActivity.class);
+                Intent intent = new Intent(ExternalSyncWizard.this, FolderPickerActivity.class);
                 startActivityForResult(intent, PICKFILE_RESULT_CODE);
             }
         });
@@ -91,7 +92,7 @@ public class NoSyncWizard extends AppCompatActivity {
         okButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkPreviousSynchronizer(NoSyncWizard.this);
+                checkPreviousSynchronizer(ExternalSyncWizard.this);
 
             }
         });
@@ -99,14 +100,14 @@ public class NoSyncWizard extends AppCompatActivity {
 
     void checkPreviousSynchronizer(final Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String syncSource = sharedPreferences.getString("syncSource", "null");
+        String syncSource = sharedPreferences.getString(KEY_SYNC_SOURCE, "null");
 
         if (syncSource.equals("null") || syncSource.equals(EXTERNAL)) {
             final String currentSyncFolder = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
             final File currentSyncFolderFile = new File(currentSyncFolder);
             File[] currentNodes = currentSyncFolderFile.listFiles();
             if (currentNodes != null && currentNodes.length > 0) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(NoSyncWizard.this);
+                AlertDialog.Builder alert = new AlertDialog.Builder(ExternalSyncWizard.this);
                 alert.setCancelable(false);
                 alert.setTitle(R.string.new_file);
                 alert.setMessage(R.string.copy_old_sync_folder);
@@ -142,7 +143,6 @@ public class NoSyncWizard extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
                 if (resultCode == RESULT_OK) {
@@ -164,7 +164,7 @@ public class NoSyncWizard extends AppCompatActivity {
                 .getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = appSettings.edit();
 
-        editor.putString("syncSource", EXTERNAL);
+        editor.putString(KEY_SYNC_SOURCE, EXTERNAL);
         editor.putString("syncFolder", syncFolder);
         editor.apply();
     }

@@ -62,7 +62,7 @@ public class WebDAVWizard extends AppCompatActivity {
 //				.getDefaultSharedPreferences(context);
 //		SharedPreferences.Editor editor = appSettings.edit();
 //
-//		editor.putString("syncSource", "webdav");
+//		editor.putString(KEY_SYNC_SOURCE, "webdav");
 //
 //		editor.putString("webUrl", webdavUrl.getText().toString());
 //		editor.putString("webPass", webdavPass.getText().toString());

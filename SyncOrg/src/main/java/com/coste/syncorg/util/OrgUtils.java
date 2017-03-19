@@ -158,7 +158,7 @@ public class OrgUtils {
     }
 
 //    public static void setTheme(Activity activity) {
-//    	String themeName = PreferenceUtils.getThemeName();
+//    	String themeName = Preferences.getThemeName();
 
 //    	if(themeName.equals("Dark"))
 //    		activity.setTheme(R.style.Theme_SyncOrg_Dark);

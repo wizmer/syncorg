@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string-array name="storageModes">
-        <item>internal</item>
-        <item>sdcard</item>
-    </string-array>
-    <string-array name="storageModesVals">
-        <item>internal</item>
-        <item>sdcard</item>
-    </string-array>
     <string-array name="fileSources">
         <item>WebDAV</item>
         <item>Dropbox</item>
@@ -59,22 +51,6 @@
         <item>Node, its children and their children</item>
         <item>3 levels of recursion</item>
         <item>4 levels of recursion</item>
-    </string-array>
-    <string-array name="themes">
-        <item>Light</item>
-        <item>Dark</item>
-        <item>Monochrome</item>
-    </string-array>
-    <string-array name="agendaQueryTypes">
-        <item>All entries</item>
-        <item>Agenda</item>
-    </string-array>
-    <string-array name="agendaSpanValues">
-        <item>Day</item>
-        <item>Week</item>
-        <item>Month</item>
-        <item>Year</item>
-        <item>Custom</item>
     </string-array>
 
 </resources>

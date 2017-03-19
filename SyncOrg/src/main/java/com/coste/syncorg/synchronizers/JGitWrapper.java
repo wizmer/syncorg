@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.R;
+import com.coste.syncorg.gui.SynchronizerNotification;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgFileParser;
 import com.coste.syncorg.orgdata.OrgProviderUtils;
@@ -53,6 +54,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+
+import static com.coste.syncorg.synchronizers.Synchronizer.getSynchronizer;
 
 
 public class JGitWrapper {
@@ -227,7 +230,7 @@ public class JGitWrapper {
 
         @Override
         protected org.eclipse.jgit.api.Status doInBackground(Void... voids) {
-            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
             Git git = null;
 
             try {
@@ -277,7 +280,7 @@ public class JGitWrapper {
                         .setTransportConfigCallback(new CustomTransportConfigCallback(context))
                         .setBare(false)
                         .call();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 return e;
             }
@@ -319,14 +322,15 @@ public class JGitWrapper {
             } else if (exception instanceof TransportException) {
                 Toast.makeText(context, context.getString(R.string.error_transport_error), Toast.LENGTH_LONG).show();
             } else {
+                ((Throwable) exception).printStackTrace();
                 Toast.makeText(context, exception.toString(), Toast.LENGTH_LONG).show();
-                ((Exception) exception).printStackTrace();
+                new SynchronizerNotification(context).errorNotification(exception.toString());
             }
         }
 
 
         void parseAll() {
-            String fileDir = Synchronizer.getSynchronizer(context).getAbsoluteFilesDir();
+            String fileDir = getSynchronizer(context).getAbsoluteFilesDir();
             File f = new File(fileDir);
             File file[] = f.listFiles();
             if (file == null) return;
@@ -359,7 +363,7 @@ public class JGitWrapper {
         }
 
         protected Void doInBackground(String... params) {
-            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
 
             try {
                 Git git = Git.open(repoDir);
@@ -384,7 +388,7 @@ public class JGitWrapper {
 
     public static void push(Context context) {
 
-        File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
+        File repoDir = new File(getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
 
         Git git = null;
         try {
@@ -445,7 +449,7 @@ public class JGitWrapper {
 
         protected Void doInBackground(String... params) {
 
-            File repoDir = new File(Synchronizer.getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
+            File repoDir = new File(getSynchronizer(context).getAbsoluteFilesDir() + "/.git");
             Git git = null;
             try {
                 git = Git.open(repoDir);

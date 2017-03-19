@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.coste.syncorg.gui.FileDecryptionActivity;
 import com.coste.syncorg.util.FileUtils;
-import com.coste.syncorg.util.PreferenceUtils;
+import com.coste.syncorg.util.Preferences;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -134,7 +134,7 @@ public class OrgFileParser {
     }
 
     public void parse(OrgFile orgFile, BufferedReader breader, Context context) {
-        this.excludedTags = PreferenceUtils.getExcludedTags();
+        this.excludedTags = Preferences.getExcludedTags();
 
         parse(orgFile, breader);
     }

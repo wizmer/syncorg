@@ -9,7 +9,6 @@ import android.text.TextUtils;
 
 import com.coste.syncorg.R;
 import com.coste.syncorg.gui.SynchronizerNotification;
-import com.coste.syncorg.gui.SynchronizerNotificationCompat;
 import com.coste.syncorg.orgdata.OrgFile;
 import com.coste.syncorg.orgdata.OrgFileParser;
 import com.coste.syncorg.util.OrgUtils;
@@ -19,6 +18,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.security.cert.CertificateException;
 import java.util.HashSet;
+
+import static com.coste.syncorg.settings.SettingsActivity.KEY_SYNC_SOURCE;
 
 /**
  * The base class of all the synchronizers.
@@ -48,15 +49,13 @@ public abstract class Synchronizer extends AsyncTask<Void, Void, SyncResult> {
     private static boolean syncEnabled = true;
     protected Context context;
     private ContentResolver resolver;
-    private SynchronizerNotificationCompat notify;
+    private SynchronizerNotification notify;
+
     protected Synchronizer(Context context) {
         this.context = context;
         this.resolver = context.getContentResolver();
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB)
-            this.notify = new SynchronizerNotification(context);
-        else
-            this.notify = new SynchronizerNotificationCompat(context);
+        this.notify = new SynchronizerNotification(context);
     }
 
     public static void setSyncEnabled(boolean syncEnabled) {
@@ -72,7 +71,7 @@ public abstract class Synchronizer extends AsyncTask<Void, Void, SyncResult> {
     public static Synchronizer getSynchronizer(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        String syncSource = preferences.getString("syncSource", "");
+        String syncSource = preferences.getString(KEY_SYNC_SOURCE, "");
 
         if (syncSource.equals(SD_CARD))
             return new SDCardSynchronizer(context);
@@ -107,7 +106,7 @@ public abstract class Synchronizer extends AsyncTask<Void, Void, SyncResult> {
         try {
             syncer.throwIfNotConnectable();
             syncer.execute();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             syncer.notify.errorNotification(e.getMessage());
             syncRunning = false;
         }

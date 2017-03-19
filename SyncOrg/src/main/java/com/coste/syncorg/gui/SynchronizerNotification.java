@@ -12,7 +12,7 @@ import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.R;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class SynchronizerNotification extends SynchronizerNotificationCompat {
+public class SynchronizerNotification {
     private NotificationManager notificationManager;
     private Notification notification;
     private int notifyRef = 1;
@@ -20,7 +20,6 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
 
 
     public SynchronizerNotification(Context context) {
-        super(context);
         this.context = context;
     }
 
@@ -35,7 +34,6 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
      * Set the notification to be displayed in case of error.
      * Also prepare the intent to send if the user clicks on the notification"
      */
-    @Override
     public void errorNotification(String errorMsg) {
         Intent notifyIntent = new Intent(context, MainActivity.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -44,7 +42,6 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
         notifyIntent.setAction("com.coste.syncorg.SYNC_FAILED");
 
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notifyIntent, 0);
-
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentIntent(contentIntent);
         builder.setSmallIcon(R.drawable.icon);
@@ -56,9 +53,6 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
         getNotificationManager(context).notify(notifyRef, notification);
     }
 
-
-    @Override
-    @SuppressWarnings("deprecation")
     public void setupNotification() {
         Intent notifyIntent = new Intent(context, MainActivity.class);
         notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -78,7 +72,6 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
         getNotificationManager(context).notify(notifyRef, notification);
     }
 
-    @Override
     public void updateNotification(String message) {
         if (notification == null)
             return;
@@ -88,12 +81,10 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
         }
     }
 
-    @Override
     public void updateNotification(int progress) {
         updateNotification(progress, null);
     }
 
-    @Override
     public void updateNotification(int progress, String message) {
         if (notification == null)
             return;
@@ -107,7 +98,6 @@ public class SynchronizerNotification extends SynchronizerNotificationCompat {
         getNotificationManager(context).notify(notifyRef, notification);
     }
 
-    @Override
     public void finalizeNotification() {
         getNotificationManager(context).cancel(notifyRef);
     }

@@ -20,6 +20,11 @@ import com.coste.syncorg.settings.synchronizers.WebDAVSettingsActivity;
 
 import java.util.HashMap;
 
+import static com.coste.syncorg.settings.SettingsActivity.KEY_SYNC_SOURCE;
+import static com.coste.syncorg.synchronizers.Synchronizer.SD_CARD;
+import static com.coste.syncorg.synchronizers.Synchronizer.SSH;
+import static com.coste.syncorg.synchronizers.Synchronizer.WEBDAV;
+
 public class SynchronizerPreferences extends Preference {
     public static HashMap<String, Intent> syncIntents = new HashMap<String, Intent>();
     private TextView mDetails;
@@ -43,7 +48,7 @@ public class SynchronizerPreferences extends Preference {
 
     @Override
     protected View onCreateView(ViewGroup parent) {
-
+        super.onCreateView(parent);
         LinearLayout layout = new LinearLayout(getContext());
         LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -65,7 +70,7 @@ public class SynchronizerPreferences extends Preference {
         this.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference arg0) {
                 SharedPreferences appSettings = PreferenceManager.getDefaultSharedPreferences(getContext());
-                String synchroMode = appSettings.getString("syncSource", "");
+                String synchroMode = appSettings.getString(KEY_SYNC_SOURCE, "");
                 if (syncIntents.containsKey(synchroMode)) {
                     mParentActivity.startActivityForResult(syncIntents.get(synchroMode), SettingsActivity.SYNCHRONIZER_PREFERENCES);
                 } else {
@@ -81,9 +86,9 @@ public class SynchronizerPreferences extends Preference {
     }
 
     private String getSyncPreferenceString(SharedPreferences sharedPreferences) {
-        String syncSource = sharedPreferences.getString(SettingsActivity.KEY_SYNC_SOURCE, "");
+        String syncSource = sharedPreferences.getString(KEY_SYNC_SOURCE, "");
         // Summarize based on KEY_SYNC_SOURCE
-        if (syncSource.equals("scp")) {
+        if (syncSource.equals(SSH)) {
             String s = "";
             if (sharedPreferences.getString(ScpSettingsActivity.KEY_SCP_USER, null) != null) {
                 s = sharedPreferences.getString(ScpSettingsActivity.KEY_SCP_USER, null)
@@ -99,18 +104,12 @@ public class SynchronizerPreferences extends Preference {
                 s += sharedPreferences.getString(ScpSettingsActivity.KEY_SCP_PATH, null);
             }
             return s;
-        } else if (syncSource.equals("sdcard")) {
+        } else if (syncSource.equals(SD_CARD)) {
             String value = sharedPreferences.getString(SDCardSettingsActivity.KEY_INDEX_FILE_PATH, "");
             return value;
-        } else if (syncSource.equals("ubuntu")) {
-            return sharedPreferences.getString(UbuntuOneSettingsActivity.KEY_UBUNTUONE_PATH, "");
-        } else if (syncSource.equals("webdav")) {
+        } else if (syncSource.equals(WEBDAV)) {
             return sharedPreferences.getString(WebDAVSettingsActivity.KEY_WEB_URL, "");
         }
         return null;
-    }
-
-    public void setPreferenceSummary() {
-        mDetails.setText(getSyncPreferenceString(PreferenceManager.getDefaultSharedPreferences(getContext())));
     }
 }

@@ -30,13 +30,12 @@ import java.util.List;
 public class SettingsActivity extends PreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String KEY_SYNC_SOURCE = "syncSource";
+    final static public String DRIVE_ID = "driveId";
     public static final int SYNCHRONIZER_PREFERENCES = 10;
     private static final String SYNCHRONIZER_PLUGIN_ACTION = "com.coste.syncorg.SYNCHRONIZE";
     private String KEY_AUTO_SYNC_INTERVAL;
     private String KEY_VIEW_RECURSION_MAX;
     private String KEY_DEFAULT_TODO;
-    private String KEY_CALENDAR_NAME;
-    private String KEY_CALENDAR_REMINDER_INTERVAL;
     private String KEY_THEME;
     private String KEY_FONT_SIZE;
     private String KEY_QUICK_TODOS;
@@ -109,8 +108,6 @@ public class SettingsActivity extends PreferenceActivity implements
         updatePreferenceSummary(KEY_AUTO_SYNC_INTERVAL);
         updatePreferenceSummary(KEY_VIEW_RECURSION_MAX);
         updatePreferenceSummary(KEY_DEFAULT_TODO);
-        updatePreferenceSummary(KEY_CALENDAR_NAME);
-        updatePreferenceSummary(KEY_CALENDAR_REMINDER_INTERVAL);
         updatePreferenceSummary(KEY_THEME);
         updatePreferenceSummary(KEY_FONT_SIZE);
         updatePreferenceSummary(KEY_QUICK_TODOS);
@@ -158,10 +155,6 @@ public class SettingsActivity extends PreferenceActivity implements
                     R.array.viewRecursionLevels,
                     R.array.viewRecursionLevelsVals, value);
         } else if (key.equals(KEY_DEFAULT_TODO)) {
-            summary = appSettings.getString(key, "");
-        } else if (key.equals(KEY_CALENDAR_NAME)) {
-            summary = appSettings.getString(key, "");
-        } else if (key.equals(KEY_CALENDAR_REMINDER_INTERVAL)) {
             summary = appSettings.getString(key, "");
         } else if (key.equals(KEY_THEME)) {
             summary = appSettings.getString(key, "");

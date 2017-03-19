@@ -3,7 +3,7 @@ package com.coste.syncorg.gui.theme;
 import android.content.Context;
 import android.graphics.Color;
 
-import com.coste.syncorg.util.PreferenceUtils;
+import com.coste.syncorg.util.Preferences;
 
 public class DefaultTheme {
 
@@ -40,7 +40,7 @@ public class DefaultTheme {
 
 
     public static DefaultTheme getTheme(Context context) {
-        final String themeName = PreferenceUtils.getThemeName();
+        final String themeName = Preferences.getThemeName();
         if (themeName.equals("Light"))
             return new WhiteTheme();
         else if (themeName.equals("Monochrome"))

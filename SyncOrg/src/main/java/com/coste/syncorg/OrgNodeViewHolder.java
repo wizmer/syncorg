@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.coste.syncorg.orgdata.OrgNode;
 import com.coste.syncorg.orgdata.OrgNodeTree;
-import com.coste.syncorg.util.PreferenceUtils;
+import com.coste.syncorg.util.Preferences;
 import com.coste.syncorg.util.TodoDialog;
 
 import java.util.regex.Matcher;
@@ -58,7 +58,7 @@ public class OrgNodeViewHolder extends ItemViewHolder {
         childLevel = (Button) view.findViewById(R.id.insert_neighbourg_level);
         deleteNodeButton = (Button) view.findViewById(R.id.delete_node);
 
-        int fontSize = PreferenceUtils.getFontSize();
+        int fontSize = Preferences.getFontSize();
         todoButton.setTextSize(fontSize);
     }
 

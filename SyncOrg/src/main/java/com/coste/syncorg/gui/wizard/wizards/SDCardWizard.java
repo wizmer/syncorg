@@ -11,6 +11,7 @@ import com.coste.syncorg.R;
 import com.coste.syncorg.gui.wizard.FolderAdapter;
 import com.coste.syncorg.gui.wizard.LocalDirectoryBrowser;
 
+import static com.coste.syncorg.settings.SettingsActivity.KEY_SYNC_SOURCE;
 import static com.coste.syncorg.synchronizers.Synchronizer.SD_CARD;
 
 public class SDCardWizard extends AppCompatActivity {
@@ -39,7 +40,7 @@ public class SDCardWizard extends AppCompatActivity {
                 .getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = appSettings.edit();
 
-        editor.putString("syncSource", SD_CARD);
+        editor.putString(KEY_SYNC_SOURCE, SD_CARD);
         editor.putString("indexFilePath",
                 directoryAdapter.getCheckedDirectory());
 

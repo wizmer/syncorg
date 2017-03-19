@@ -11,7 +11,9 @@ import com.coste.syncorg.orgdata.SyncOrgApplication;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class PreferenceUtils {
+import static com.coste.syncorg.settings.SettingsActivity.KEY_SYNC_SOURCE;
+
+public class Preferences {
     private static final int DEFAULT_FONTSIZE = 14;
 
 
@@ -25,7 +27,7 @@ public class PreferenceUtils {
 
         HashSet<String> tagsSet = new HashSet<String>();
         for (String tag : tags.split(":")) {
-            if (TextUtils.isEmpty(tag) == false)
+            if (!TextUtils.isEmpty(tag))
                 tagsSet.add(tag);
         }
 
@@ -69,7 +71,7 @@ public class PreferenceUtils {
     public static boolean isSyncConfigured() {
         Context context = SyncOrgApplication.getContext();
         String syncSource = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString("syncSource", "");
+                .getString(KEY_SYNC_SOURCE, "");
 
         return !TextUtils.isEmpty(syncSource);
     }

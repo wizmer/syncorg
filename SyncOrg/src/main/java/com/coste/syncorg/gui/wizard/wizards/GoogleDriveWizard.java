@@ -8,25 +8,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.coste.google_drive.FolderPicker;
 import com.coste.syncorg.MainActivity;
 import com.coste.syncorg.R;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
-import static com.coste.syncorg.synchronizers.GoogleDriveSynchronizer.DRIVE_ID;
+import static com.coste.syncorg.settings.SettingsActivity.DRIVE_ID;
+import static com.coste.syncorg.settings.SettingsActivity.KEY_SYNC_SOURCE;
 import static com.coste.syncorg.synchronizers.Synchronizer.GOOGLE_DRIVE;
 
 
 public class GoogleDriveWizard extends AppCompatActivity {
     final private int PICKFILE_RESULT_CODE = 1;
-    String syncFolder = null;
-    TextView orgFolder;
     String driveId;
     Button folderButton;
     Button okButton;
@@ -46,8 +41,8 @@ public class GoogleDriveWizard extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(GoogleDriveWizard.this, FolderPicker.class);
                 startActivityForResult(intent, PICKFILE_RESULT_CODE);
-//                driveId.asDriveFolder().createFolder()
-//                        listChildren(getGoogleApiClient()).setResultCallback(childrenRetrievedCallback);
+//              driveId.asDriveFolder().createFolder()
+//              listChildren(getGoogleApiClient()).setResultCallback(childrenRetrievedCallback);
             }
         });
         if(driveId.equals("")){
@@ -107,7 +102,7 @@ public class GoogleDriveWizard extends AppCompatActivity {
                 .getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = appSettings.edit();
 
-        editor.putString("syncSource", GOOGLE_DRIVE);
+        editor.putString(KEY_SYNC_SOURCE, GOOGLE_DRIVE);
         editor.putString(DRIVE_ID, driveId);
         editor.apply();
     }

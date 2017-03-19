@@ -39,7 +39,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
-import static com.coste.syncorg.gui.wizard.wizards.NoSyncWizard.FOLDER_PATH;
+import static com.coste.syncorg.gui.wizard.wizards.ExternalSyncWizard.FOLDER_PATH;
 
 /**
  * Activities that contain this fragment must implement the

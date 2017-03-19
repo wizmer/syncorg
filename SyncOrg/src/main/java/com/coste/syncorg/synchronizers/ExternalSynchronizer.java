@@ -28,7 +28,7 @@ public class ExternalSynchronizer extends Synchronizer {
         syncFolder = preferences.getString("syncFolder", "null");
         File dir = new File(getAbsoluteFilesDir());
 
-        if (PermissionManager.permissionGranted(context) == false) return;
+        if (!PermissionManager.permissionGranted(context)) return;
 
         if (!dir.exists()) {
             createSyncFolder();
@@ -53,7 +53,7 @@ public class ExternalSynchronizer extends Synchronizer {
     @Override
     public SyncResult doInBackground(Void... voids) {
         SyncResult result = new SyncResult();
-        if (PermissionManager.permissionGranted(context) == false) return result;
+        if (!PermissionManager.permissionGranted(context)) return result;
 
         ArrayList<File> files = getFilesRecursively(new File(getAbsoluteFilesDir()));
 
@@ -71,7 +71,7 @@ public class ExternalSynchronizer extends Synchronizer {
         return result;
     }
 
-    ArrayList<File> getFilesRecursively(File dir) {
+    private ArrayList<File> getFilesRecursively(File dir) {
         ArrayList<File> result = new ArrayList<>();
         if (dir == null || dir.listFiles() == null) return result;
 

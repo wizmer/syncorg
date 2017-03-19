@@ -24,7 +24,11 @@ import com.coste.syncorg.R;
 import com.coste.syncorg.directory_chooser.FolderPickerActivity;
 import com.coste.syncorg.synchronizers.JGitWrapper;
 
+import java.io.File;
+
+import static com.coste.syncorg.settings.SettingsActivity.KEY_SYNC_SOURCE;
 import static com.coste.syncorg.synchronizers.Synchronizer.SSH;
+import static com.coste.syncorg.synchronizers.Synchronizer.getSynchronizer;
 
 public class SSHWizard extends AppCompatActivity {
     final private int PICKFILE_RESULT_CODE = 1;
@@ -93,7 +97,8 @@ public class SSHWizard extends AppCompatActivity {
         done.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (parentFolder.getText().equals("")) {
+                CharSequence parentFolderStr = parentFolder.getText();
+                if (parentFolderStr.equals("") || ! new File(parentFolderStr.toString()).exists()) {
                     Toast.makeText(SSHWizard.this,
                             R.string.specify_parent_folder, Toast.LENGTH_LONG).show();
                     return;
@@ -144,7 +149,7 @@ public class SSHWizard extends AppCompatActivity {
         sshPass.setText(appSettings.getString("scpPass", ""));
         sshHost.setText(appSettings.getString("scpHost", ""));
         sshPort.setText(appSettings.getString("scpPort", ""));
-        parentFolder.setText(appSettings.getString("syncFolder", ""));
+        parentFolder.setText(appSettings.getString("parentFolder", ""));
 
 
         auth_selector.setChecked(appSettings.getBoolean("usePassword", true));
@@ -157,7 +162,8 @@ public class SSHWizard extends AppCompatActivity {
         final String pathActual = sshPath.getText().toString();
         final String userActual = sshUser.getText().toString();
         final String hostActual = sshHost.getText().toString();
-        final String folderActual = parentFolder.getText().toString() + "/SyncOrg";
+        final String parentFolderStr = parentFolder.getText().toString();
+        final String syncFolder = parentFolderStr + "/SyncOrg";
 
         String portActual = sshPort.getText().toString();
         if (portActual.equals("")) portActual = "22";
@@ -168,20 +174,21 @@ public class SSHWizard extends AppCompatActivity {
 
         SharedPreferences.Editor editor = appSettings.edit();
 
-        editor.putString("syncSource", SSH);
+        editor.putString(KEY_SYNC_SOURCE, SSH);
 
         editor.putString("scpPath", pathActual);
         editor.putString("scpUser", userActual);
         editor.putString("scpHost", hostActual);
         editor.putString("scpPort", portActual);
-        editor.putString("syncFolder", folderActual);
+        editor.putString("parentFolder", parentFolderStr);
+        editor.putString("syncFolder", syncFolder);
 
         editor.putBoolean("usePassword", auth_selector.isChecked());
         editor.putString("scpPubFile", sshPubFileActual.getText().toString());
         editor.putString("scpPass", sshPass.getText().toString());
         editor.apply();
 
-        JGitWrapper.CloneGitRepoTask task = new JGitWrapper.CloneGitRepoTask(this, folderActual);
+        JGitWrapper.CloneGitRepoTask task = new JGitWrapper.CloneGitRepoTask(this, syncFolder);
         task.execute(pathActual, sshPass.getText().toString(), userActual, hostActual, portActual);
     }
 

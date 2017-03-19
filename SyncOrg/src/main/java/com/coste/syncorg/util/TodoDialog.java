@@ -28,7 +28,7 @@ public class TodoDialog {
         this.node = _node;
         this.button = _button;
 
-        ArrayList<String> todos = PreferenceUtils.getSelectedTodos();
+        ArrayList<String> todos = Preferences.getSelectedTodos();
 
         if (todos.size() == 0)
             todos = OrgProviderUtils.getTodos(context.getContentResolver());

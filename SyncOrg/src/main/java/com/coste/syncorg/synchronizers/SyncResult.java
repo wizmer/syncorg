@@ -10,7 +10,7 @@ public class SyncResult {
     HashSet<String> newFiles;
     HashSet<String> changedFiles;
     Set<String> deletedFiles;
-    State state;
+    State state = State.kFailed;
 
     SyncResult() {
         newFiles = new HashSet<>();

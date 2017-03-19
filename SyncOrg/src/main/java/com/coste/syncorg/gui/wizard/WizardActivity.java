@@ -11,11 +11,12 @@ import android.widget.RadioGroup;
 
 import com.coste.syncorg.R;
 import com.coste.syncorg.gui.wizard.wizards.GoogleDriveWizard;
-import com.coste.syncorg.gui.wizard.wizards.NoSyncWizard;
+import com.coste.syncorg.gui.wizard.wizards.ExternalSyncWizard;
 import com.coste.syncorg.gui.wizard.wizards.SDCardWizard;
 import com.coste.syncorg.gui.wizard.wizards.SSHWizard;
 import com.coste.syncorg.gui.wizard.wizards.WebDAVWizard;
 
+import static com.coste.syncorg.settings.SettingsActivity.KEY_SYNC_SOURCE;
 import static com.coste.syncorg.synchronizers.Synchronizer.EXTERNAL;
 import static com.coste.syncorg.synchronizers.Synchronizer.GOOGLE_DRIVE;
 import static com.coste.syncorg.synchronizers.Synchronizer.SD_CARD;
@@ -33,7 +34,7 @@ public class WizardActivity extends AppCompatActivity {
 
         SharedPreferences srcPrefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
-        String syncSource = srcPrefs.getString("syncSource", EXTERNAL);
+        String syncSource = srcPrefs.getString(KEY_SYNC_SOURCE, EXTERNAL);
         int id = getResources().getIdentifier(syncSource, "id", getPackageName());
         RadioButton radioButton = (RadioButton) findViewById(id);
         if (radioButton != null) radioButton.setChecked(true);
@@ -49,7 +50,7 @@ public class WizardActivity extends AppCompatActivity {
                         .getDefaultSharedPreferences(WizardActivity.this);
                 SharedPreferences.Editor editor = appSettings.edit();
                 String syncName = getResources().getResourceEntryName(id);
-                editor.putString("syncSource", syncName);
+                editor.putString(KEY_SYNC_SOURCE, syncName);
                 editor.apply();
 
                 switch (syncName) {
@@ -66,7 +67,7 @@ public class WizardActivity extends AppCompatActivity {
                         startActivity(new Intent(WizardActivity.this, SSHWizard.class));
                         break;
                     default:
-                        startActivity(new Intent(WizardActivity.this, NoSyncWizard.class));
+                        startActivity(new Intent(WizardActivity.this, ExternalSyncWizard.class));
                         break;
                 }
             }
