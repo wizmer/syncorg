@@ -18,7 +18,7 @@ A new implementation of [[https://github.com/matburt/mobileorg-android][MobileOr
 
 ** Want to help ?
 *** Everyone
-Register to the Beta Testing mailing program and give me some feedbacks.
+Register to the Beta Testing program and give me some feedbacks.
 
 https://play.google.com/apps/testing/com.coste.syncorg
 
