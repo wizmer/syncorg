@@ -18,7 +18,9 @@ A new implementation of [[https://github.com/matburt/mobileorg-android][MobileOr
 
 ** Want to help ?
 *** Everyone
-Register to the Beta Testing mailing list and give me some feedbacks. This will keep your app up to date with the beta version. To register, just send me an email.
+Register to the Beta Testing mailing program and give me some feedbacks.
+https://play.google.com/apps/testing/com.coste.syncorg
+
 *** Developpers
 See [[https://github.com/wizmer/syncorg/wiki/Contributing][the contibuting page]], section Android Studio Setup, if you want to build the project.
 
